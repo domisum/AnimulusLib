@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -17,7 +18,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.domisum.animulusapi.AnimulusAPI;
 import de.domisum.animulusapi.listener.NPCInteractPacketListener;
-import de.domisum.auxiliumapi.util.java.ThreadUtil;
 
 public class NPCManager implements Listener
 {
@@ -28,7 +28,7 @@ public class NPCManager implements Listener
 	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 40;
 
 	// STATUS
-	private Thread tickingThread;
+	private ScheduledFuture<?> tickingTask;
 	private int tickCount;
 
 	private Map<Integer, StateNPC> npcs = new HashMap<Integer, StateNPC>();
@@ -117,13 +117,13 @@ public class NPCManager implements Listener
 		};
 
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-		executor.schedule(run, MS_PER_TICK, TimeUnit.MILLISECONDS);
+		this.tickingTask = executor.scheduleWithFixedDelay(run, 0, MS_PER_TICK, TimeUnit.MILLISECONDS);
 	}
 
 	private void stopTickingThread()
 	{
-		this.tickingThread.interrupt();
-		ThreadUtil.join(this.tickingThread);
+		this.tickingTask.cancel(true);
+		this.tickingTask = null;
 	}
 
 
