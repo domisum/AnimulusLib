@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,7 +24,6 @@ public class NPCManager implements Listener
 
 	// CONSTANTS
 	private static final int MS_PER_TICK = 50;
-	private static final int NS_PER_TICK = MS_PER_TICK * 1000 * 1000;
 
 	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 40;
 
@@ -111,23 +112,12 @@ public class NPCManager implements Listener
 
 		Runnable run = () ->
 		{
-			long startNs = System.nanoTime();
-
-			while(!Thread.currentThread().isInterrupted())
-			{
-				tick();
-				this.tickCount++;
-
-				// calculate it in this complex way so no tick delays accumulate
-				long nsSinceLastTickStart = startNs % NS_PER_TICK;
-				long sleepNs = NS_PER_TICK - nsSinceLastTickStart;
-				ThreadUtil.sleepNs(sleepNs);
-			}
+			tick();
+			this.tickCount++;
 		};
 
-		this.tickingThread = new Thread(run);
-		this.tickingThread.setName("npcTickingThread");
-		this.tickingThread.start();
+		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+		executor.schedule(run, MS_PER_TICK, TimeUnit.MILLISECONDS);
 	}
 
 	private void stopTickingThread()
