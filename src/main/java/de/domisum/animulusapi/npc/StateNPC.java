@@ -436,6 +436,8 @@ public class StateNPC
 		sendPlayerInfo(players);
 		sendEntitySpawn(players);
 		sendHeadRotation(players);
+
+		sendEntityMetadata(players);
 		sendEntityEquipment(players);
 
 		sendPlayerInfoRemove(players);
