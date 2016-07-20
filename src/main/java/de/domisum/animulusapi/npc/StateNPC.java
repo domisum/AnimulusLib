@@ -535,6 +535,9 @@ public class StateNPC
 
 	protected void sendEntityMetadata(Player... players)
 	{
+		// the boolean determines the metadata sent to the player;
+		// true = all metadata
+		// false = the dirty metadata
 		PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(this.entityId, getMetadata(), true);
 
 		for(Player p : players)
