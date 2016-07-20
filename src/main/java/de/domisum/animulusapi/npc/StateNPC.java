@@ -89,7 +89,7 @@ public class StateNPC
 	protected void initialize()
 	{
 		this.entityId = getUnusedEntityId();
-		this.visibleTo = new HashSet<Player>();
+		this.visibleTo = new HashSet<>();
 	}
 
 	protected void terminate()
@@ -201,7 +201,7 @@ public class StateNPC
 
 	public Set<Player> getPlayersVisibleTo()
 	{
-		return new HashSet<Player>(this.visibleTo);
+		return new HashSet<>(this.visibleTo);
 	}
 
 	public boolean isVisibleTo(Player player)

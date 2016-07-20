@@ -31,8 +31,8 @@ public class NPCManager implements Listener
 	private ScheduledFuture<?> tickingTask;
 	private int tickCount;
 
-	private Map<Integer, StateNPC> npcs = new HashMap<Integer, StateNPC>();
-	private List<StateNPC> npcsToRemove = new CopyOnWriteArrayList<StateNPC>();
+	private Map<Integer, StateNPC> npcs = new HashMap<>();
+	private List<StateNPC> npcsToRemove = new CopyOnWriteArrayList<>();
 
 
 	// -------
