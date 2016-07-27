@@ -31,7 +31,7 @@ public class AnimulusAPI
 	{
 		npcManager = new NPCManager();
 
-		getLogger().info(this.getClass().getSimpleName() + " has been enabled\n");
+		getLogger().info(this.getClass().getSimpleName() + " has been enabled");
 	}
 
 	public void onDisable()
@@ -39,7 +39,7 @@ public class AnimulusAPI
 		if(npcManager != null)
 			npcManager.terminate();
 
-		getLogger().info(this.getClass().getSimpleName() + " has been disabled\n");
+		getLogger().info(this.getClass().getSimpleName() + " has been disabled");
 	}
 
 
