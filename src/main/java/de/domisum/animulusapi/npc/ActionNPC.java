@@ -117,7 +117,8 @@ public class ActionNPC extends StateNPC
 
 	private boolean openChest(Location chestLocation)
 	{
-		// TODO prevent chest closing animation when real player closes chest inventory and npc is still looking at it, this
+		// TODO npc api | prevent chest closing animation when real player closes chest inventory and npc is still looking at it,
+		// this
 		// happens since bukkit thinks nobody is looking into the chest
 
 
@@ -133,7 +134,7 @@ public class ActionNPC extends StateNPC
 		this.openedChest = (Chest) state;
 
 		sendChestStatus(chestLocation, true, getPlayersVisibleToArray());
-		// TODO double chests
+		// TODO npc api | double chests
 
 		return true;
 	}
