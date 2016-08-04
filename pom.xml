@@ -34,13 +34,13 @@
 		<dependency>
 			<groupId>de.domisum</groupId>
 			<artifactId>AuxiliumAPI</artifactId>
-			<version>0.0.31</version>
+			<version>LATEST</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>de.domisum</groupId>
 			<artifactId>CompitumAPI</artifactId>
-			<version>0.0.4</version>
+			<version>LATEST</version>
 		</dependency>
 		
 		<dependency>
