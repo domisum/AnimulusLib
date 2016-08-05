@@ -27,6 +27,14 @@ public class AnimulusAPI
 		onEnable();
 	}
 
+	public static void initialize(JavaPlugin plugin)
+	{
+		if(instance != null)
+			return;
+
+		new AnimulusAPI(plugin);
+	}
+
 	public void onEnable()
 	{
 		npcManager = new NPCManager();
