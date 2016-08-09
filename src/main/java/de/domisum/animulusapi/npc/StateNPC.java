@@ -1,9 +1,17 @@
 package de.domisum.animulusapi.npc;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.mojang.authlib.GameProfile;
+import de.domisum.animulusapi.AnimulusAPI;
+import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
+import de.domisum.auxiliumapi.util.bukkit.PacketUtil;
+import de.domisum.auxiliumapi.util.java.ReflectionUtil;
+import de.domisum.auxiliumapi.util.java.ThreadUtil;
+import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
+import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
+import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
+import net.minecraft.server.v1_9_R1.WorldSettings.EnumGamemode;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
@@ -12,31 +20,9 @@ import org.bukkit.craftbukkit.v1_9_R1.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.mojang.authlib.GameProfile;
-
-import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
-import de.domisum.auxiliumapi.util.bukkit.PacketUtil;
-import de.domisum.auxiliumapi.util.java.ReflectionUtil;
-import de.domisum.auxiliumapi.util.java.ThreadUtil;
-import net.minecraft.server.v1_9_R1.DataWatcher;
-import net.minecraft.server.v1_9_R1.DataWatcherObject;
-import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
-import net.minecraft.server.v1_9_R1.Entity;
-import net.minecraft.server.v1_9_R1.EnumItemSlot;
-import net.minecraft.server.v1_9_R1.PacketPlayOutAnimation;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityHeadRotation;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityTeleport;
-import net.minecraft.server.v1_9_R1.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
-import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
-import net.minecraft.server.v1_9_R1.WorldSettings.EnumGamemode;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class StateNPC
 {
@@ -313,7 +299,7 @@ public class StateNPC
 
 	protected void updateVisibilityForPlayer(Player player)
 	{
-		if(player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE * VISIBILITY_RANGE))
+		if(player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE))
 		{
 			if(!isVisibleTo(player))
 				becomeVisibleFor(player);
@@ -374,7 +360,7 @@ public class StateNPC
 	// -------
 	public void moveToNearby(Location target)
 	{
-		if((this.moveTeleportCounter++ % RELATIVE_MOVE_TELEPORT_INTERVAL) == 0)
+		if((this.moveTeleportCounter++%RELATIVE_MOVE_TELEPORT_INTERVAL) == 0)
 		{
 			teleport(target);
 			return;
@@ -470,8 +456,8 @@ public class StateNPC
 	{
 		PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", EnumPlayerInfoAction.ADD_PLAYER);
-		@SuppressWarnings("unchecked")
-		List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil.getDeclaredFieldValue(packet, "b");
+		@SuppressWarnings("unchecked") List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil
+				.getDeclaredFieldValue(packet, "b");
 		b.add(getPlayerInfoData(packet));
 
 		for(Player p : players)
@@ -482,11 +468,11 @@ public class StateNPC
 	{
 		PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", EnumPlayerInfoAction.REMOVE_PLAYER);
-		@SuppressWarnings("unchecked")
-		List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil.getDeclaredFieldValue(packet, "b");
+		@SuppressWarnings("unchecked") List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil
+				.getDeclaredFieldValue(packet, "b");
 		b.add(getPlayerInfoData(packet));
 
-		ThreadUtil.runDelayed(() ->
+		ThreadUtil.runDelayed(()->
 		{
 			for(Player p : players)
 				((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
@@ -516,7 +502,7 @@ public class StateNPC
 	protected void sendEntityDespawn(Player... players)
 	{
 		PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy();
-		ReflectionUtil.setDeclaredFieldValue(packet, "a", new int[] { this.entityId });
+		ReflectionUtil.setDeclaredFieldValue(packet, "a", new int[] {this.entityId});
 
 		for(Player p : players)
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
@@ -548,20 +534,20 @@ public class StateNPC
 	// MOVEMENT
 	protected void sendRelativeMoveLook(Location target, Player... players)
 	{
-		double dX = target.getX() - this.location.getX();
-		double dY = target.getY() - this.location.getY();
-		double dZ = target.getZ() - this.location.getZ();
+		double dX = target.getX()-this.location.getX();
+		double dY = target.getY()-this.location.getY();
+		double dZ = target.getZ()-this.location.getZ();
 
 		// @formatter:off
-		PacketPlayOutRelEntityMoveLook packet = new PacketPlayOutRelEntityMoveLook(
-				this.entityId,
-				PacketUtil.toPacketDistance(dX),
-				PacketUtil.toPacketDistance(dY),
-				PacketUtil.toPacketDistance(dZ),
-				PacketUtil.toPacketAngle(target.getYaw()),
-				PacketUtil.toPacketAngle(target.getPitch()),
-				true);
-		// @formatter:on
+        PacketPlayOutRelEntityMoveLook packet = new PacketPlayOutRelEntityMoveLook(
+                this.entityId,
+                PacketUtil.toPacketDistance(dX),
+                PacketUtil.toPacketDistance(dY),
+                PacketUtil.toPacketDistance(dZ),
+                PacketUtil.toPacketAngle(target.getYaw()),
+                PacketUtil.toPacketAngle(target.getPitch()),
+                true);
+        // @formatter:on
 
 		for(Player p : players)
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
@@ -632,7 +618,7 @@ public class StateNPC
 		// this means returning the entityCount as a new entityId is safe, if we increase the variable before returning
 
 		int entityCount = (int) ReflectionUtil.getDeclaredFieldValue(Entity.class, null, "entityCount");
-		ReflectionUtil.setDeclaredFieldValue(Entity.class, null, "entityCount", entityCount + 1);
+		ReflectionUtil.setDeclaredFieldValue(Entity.class, null, "entityCount", entityCount+1);
 
 		return entityCount;
 	}

@@ -1,10 +1,9 @@
 package de.domisum.animulusapi;
 
-import java.util.logging.Logger;
-
+import de.domisum.animulusapi.npc.NPCManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.domisum.animulusapi.npc.NPCManager;
+import java.util.logging.Logger;
 
 public class AnimulusAPI
 {
@@ -19,7 +18,7 @@ public class AnimulusAPI
 	// -------
 	// CONSTRUCTOR
 	// -------
-	protected AnimulusAPI(JavaPlugin plugin)
+	private AnimulusAPI(JavaPlugin plugin)
 	{
 		instance = this;
 		this.plugin = plugin;
@@ -44,19 +43,19 @@ public class AnimulusAPI
 		instance = null;
 	}
 
-	protected void onEnable()
+	private void onEnable()
 	{
 		npcManager = new NPCManager();
 
-		getLogger().info(this.getClass().getSimpleName() + " has been enabled");
+		getLogger().info(this.getClass().getSimpleName()+" has been enabled");
 	}
 
-	protected void onDisable()
+	private void onDisable()
 	{
 		if(npcManager != null)
 			npcManager.terminate();
 
-		getLogger().info(this.getClass().getSimpleName() + " has been disabled");
+		getLogger().info(this.getClass().getSimpleName()+" has been disabled");
 	}
 
 

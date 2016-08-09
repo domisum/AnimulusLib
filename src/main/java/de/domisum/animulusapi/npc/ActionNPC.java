@@ -1,16 +1,6 @@
 package de.domisum.animulusapi.npc;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.mojang.authlib.GameProfile;
-
 import de.domisum.animulusapi.AnimulusAPI;
 import de.domisum.animulusapi.block.BlockButton;
 import de.domisum.auxiliumapi.data.container.Duo;
@@ -22,13 +12,21 @@ import de.domisum.compitumapi.path.pathprocessors.WalkablePath;
 import net.minecraft.server.v1_9_R1.BlockPosition;
 import net.minecraft.server.v1_9_R1.PacketPlayOutBed;
 import net.minecraft.server.v1_9_R1.PacketPlayOutBlockAction;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class ActionNPC extends StateNPC
 {
 
 	// CONSTANTS
 	protected static final double ACTION_RADIUS = 4;
-	protected static final double ACTION_RADIUS_SQUARED = ACTION_RADIUS * ACTION_RADIUS;
+	protected static final double ACTION_RADIUS_SQUARED = ACTION_RADIUS*ACTION_RADIUS;
 
 	// STATUS
 	protected transient Location bedLocation = null;
@@ -43,8 +41,7 @@ public class ActionNPC extends StateNPC
 		super(gameProfile, location);
 	}
 
-	@Override
-	protected void terminate()
+	@Override protected void terminate()
 	{
 		super.terminate();
 
@@ -59,12 +56,12 @@ public class ActionNPC extends StateNPC
 	public double getWalkSpeed()
 	{
 		if(isSprinting())
-			return 5.6 / 20;
+			return 5.6/20;
 
 		if(isCrouched())
-			return 1.3 / 20;
+			return 1.3/20;
 
-		return 4.3 / 20;
+		return 4.3/20;
 	}
 
 
@@ -77,19 +74,19 @@ public class ActionNPC extends StateNPC
 		Duo<Boolean, Double> checkDistanceResult = checkDistance(chestLocation);
 		if(!checkDistanceResult.a)
 		{
-			AnimulusAPI.getInstance().getLogger()
-					.warning("The npc '" + this.id + "' could not put the item into the chest. The chest (" + chestLocation
-							+ ") is too far away from the npc (" + getEyeLocation() + "). Distance: " + checkDistanceResult.b
-							+ " / " + ACTION_RADIUS);
+			AnimulusAPI.getInstance().getLogger().warning(
+					"The npc '"+this.id+"' could not put the item into the chest. The chest ("+chestLocation
+							+") is too far away from the npc ("+getEyeLocation()+"). Distance: "+checkDistanceResult.b+" / "
+							+ACTION_RADIUS);
 			return;
 		}
 
 		// check if the block above the chest doesn't block it
 		if(chestLocation.clone().add(0, 1, 0).getBlock().getType().isSolid())
 		{
-			AnimulusAPI.getInstance().getLogger()
-					.warning("The npc '" + this.id + "' could not put the item into the chest. The chest (" + chestLocation
-							+ ") is blocked by a solid block above.");
+			AnimulusAPI.getInstance().getLogger().warning(
+					"The npc '"+this.id+"' could not put the item into the chest. The chest ("+chestLocation
+							+") is blocked by a solid block above.");
 		}
 
 		// turn towards chest
@@ -112,7 +109,7 @@ public class ActionNPC extends StateNPC
 
 		// look up again
 		Thread.sleep(RandomUtil.distribute(200, 50));
-		turnHeadTowards(LocationUtil.getCenter(chestLocation).add(0, getEyeHeight() - .6, 0), 3);
+		turnHeadTowards(LocationUtil.getCenter(chestLocation).add(0, getEyeHeight()-.6, 0), 3);
 	}
 
 	private boolean openChest(Location chestLocation)
@@ -125,8 +122,8 @@ public class ActionNPC extends StateNPC
 		BlockState state = chestLocation.getBlock().getState();// SynchronizationUtil.getBlockAt(chestLocation).getState();
 		if(!(state instanceof Chest))
 		{
-			AnimulusAPI.getInstance().getLogger().warning(
-					"The NPC '" + this.id + "' failed to open the chest at '" + chestLocation + "', since it isn't a chest");
+			AnimulusAPI.getInstance().getLogger()
+					.warning("The NPC '"+this.id+"' failed to open the chest at '"+chestLocation+"', since it isn't a chest");
 
 			return false;
 		}
@@ -145,7 +142,7 @@ public class ActionNPC extends StateNPC
 		if(!buttonLocation.getBlock().getType().name().contains("BUTTON"))
 		{
 			AnimulusAPI.getInstance().getLogger()
-					.warning("The npc '" + this.id + "' could not find a button at '" + buttonLocation + "'.");
+					.warning("The npc '"+this.id+"' could not find a button at '"+buttonLocation+"'.");
 			return;
 		}
 
@@ -153,10 +150,10 @@ public class ActionNPC extends StateNPC
 		Duo<Boolean, Double> checkDistanceResult = checkDistance(buttonLocation);
 		if(!checkDistanceResult.a)
 		{
-			AnimulusAPI.getInstance().getLogger()
-					.warning("The npc '" + this.id + "' could not press the button. The button (" + buttonLocation
-							+ ") is too far away from the npc (" + getEyeLocation() + "). Distance: " + checkDistanceResult.b
-							+ " / " + ACTION_RADIUS);
+			AnimulusAPI.getInstance().getLogger().warning(
+					"The npc '"+this.id+"' could not press the button. The button ("+buttonLocation
+							+") is too far away from the npc ("+getEyeLocation()+"). Distance: "+checkDistanceResult.b+" / "
+							+ACTION_RADIUS);
 			return;
 		}
 
@@ -169,8 +166,8 @@ public class ActionNPC extends StateNPC
 	}
 
 
-	@SuppressWarnings("deprecation")
-	public void placeBlock(Location blockLocation, Material material, byte data) throws InterruptedException
+	@SuppressWarnings("deprecation") public void placeBlock(Location blockLocation, Material material, byte data)
+			throws InterruptedException
 	{
 		// check if block can be set at location
 		Block block = blockLocation.getBlock();
@@ -181,10 +178,10 @@ public class ActionNPC extends StateNPC
 		Duo<Boolean, Double> checkDistanceResult = checkDistance(blockLocation);
 		if(!checkDistanceResult.a)
 		{
-			AnimulusAPI.getInstance().getLogger()
-					.warning("The npc '" + this.id + "' could not place a block. The location (" + blockLocation
-							+ ") is too far away from the npc (" + getEyeLocation() + "). Distance: " + checkDistanceResult.b
-							+ " / " + ACTION_RADIUS);
+			AnimulusAPI.getInstance().getLogger().warning(
+					"The npc '"+this.id+"' could not place a block. The location ("+blockLocation
+							+") is too far away from the npc ("+getEyeLocation()+"). Distance: "+checkDistanceResult.b+" / "
+							+ACTION_RADIUS);
 			return;
 		}
 
@@ -197,8 +194,7 @@ public class ActionNPC extends StateNPC
 		block.setData(data);
 	}
 
-	@SuppressWarnings("deprecation")
-	public void tillDirt(Location blockLocation) throws InterruptedException
+	@SuppressWarnings("deprecation") public void tillDirt(Location blockLocation) throws InterruptedException
 	{
 		Block block = blockLocation.getBlock();
 		if((block.getType() != Material.DIRT) && (block.getType() != Material.GRASS))
@@ -208,10 +204,10 @@ public class ActionNPC extends StateNPC
 		Duo<Boolean, Double> checkDistanceResult = checkDistance(blockLocation);
 		if(!checkDistanceResult.a)
 		{
-			AnimulusAPI.getInstance().getLogger()
-					.warning("The npc '" + this.id + "' could not till a block. The location (" + blockLocation
-							+ ") is too far away from the npc (" + getEyeLocation() + "). Distance: " + checkDistanceResult.b
-							+ " / " + ACTION_RADIUS);
+			AnimulusAPI.getInstance().getLogger().warning(
+					"The npc '"+this.id+"' could not till a block. The location ("+blockLocation
+							+") is too far away from the npc ("+getEyeLocation()+"). Distance: "+checkDistanceResult.b+" / "
+							+ACTION_RADIUS);
 			return;
 		}
 
@@ -262,7 +258,7 @@ public class ActionNPC extends StateNPC
 		WalkablePath walkablePath = new WalkablePath(aStar.getPath());
 
 		// walk path
-		double speed = getWalkSpeed() * speedMultiplier;
+		double speed = getWalkSpeed()*speedMultiplier;
 		float accuracy = 1;
 		double tolerance = 0.3f;
 
@@ -270,18 +266,18 @@ public class ActionNPC extends StateNPC
 		{
 			Location nextLocation = walkablePath.getNext();
 
-			double dX = nextLocation.getX() - this.location.getX();
-			double dY = nextLocation.getY() - this.location.getY();
-			double dZ = nextLocation.getZ() - this.location.getZ();
+			double dX = nextLocation.getX()-this.location.getX();
+			double dY = nextLocation.getY()-this.location.getY();
+			double dZ = nextLocation.getZ()-this.location.getZ();
 
-			while(this.location.distanceSquared(nextLocation) > (tolerance * tolerance))
+			while(this.location.distanceSquared(nextLocation) > (tolerance*tolerance))
 			{
-				double stepX = (dX < 0 ? -1 : 1) * Math.min(speed / accuracy, Math.abs(dX));
-				double stepY = (dY < 0 ? -1 : 1) * Math.min(speed / accuracy, Math.abs(dY));
-				double stepZ = (dZ < 0 ? -1 : 1) * Math.min(speed / accuracy, Math.abs(dZ));
+				double stepX = (dX < 0 ? -1 : 1)*Math.min(speed/accuracy, Math.abs(dX));
+				double stepY = (dY < 0 ? -1 : 1)*Math.min(speed/accuracy, Math.abs(dY));
+				double stepZ = (dZ < 0 ? -1 : 1)*Math.min(speed/accuracy, Math.abs(dZ));
 
-				float stepYaw = (nextLocation.getYaw() - this.location.getYaw()) / 5f / accuracy;
-				float stepPitch = (nextLocation.getPitch() - this.location.getPitch()) / 5f / accuracy;
+				float stepYaw = (nextLocation.getYaw()-this.location.getYaw())/5f/accuracy;
+				float stepPitch = (nextLocation.getPitch()-this.location.getPitch())/5f/accuracy;
 
 				dX -= stepX;
 				dY -= stepY;
@@ -289,12 +285,12 @@ public class ActionNPC extends StateNPC
 
 				Location newLocation = this.location.clone();
 				newLocation.add(stepX, stepY, stepZ);
-				newLocation.setYaw(this.location.getYaw() + stepYaw);
-				newLocation.setPitch(this.location.getPitch() + stepPitch);
+				newLocation.setYaw(this.location.getYaw()+stepYaw);
+				newLocation.setPitch(this.location.getPitch()+stepPitch);
 
 				moveToNearby(newLocation);
 
-				Thread.sleep(Math.round(50 / accuracy));
+				Thread.sleep(Math.round(50/accuracy));
 				if(Thread.currentThread().isInterrupted())
 					return;
 			}
@@ -317,7 +313,7 @@ public class ActionNPC extends StateNPC
 		Location startLocation = getLocation();
 		long startTime = System.currentTimeMillis();
 
-		while(System.currentTimeMillis() < (startTime + durationMs))
+		while(System.currentTimeMillis() < (startTime+durationMs))
 		{
 			Location strollLocation = findStrollLocation(startLocation, radius);
 			if(strollLocation == null)
@@ -336,12 +332,12 @@ public class ActionNPC extends StateNPC
 		// 5 tries to find a location
 		for(int i = 0; i < 5; i++)
 		{
-			double randomAngle = RandomUtil.nextDouble() * 2 * Math.PI;
-			double randomDistance = RandomUtil.nextDouble() * radius;
-			double dX = Math.sin(randomAngle) * randomDistance;
-			double dZ = Math.cos(randomAngle) * randomDistance;
+			double randomAngle = RandomUtil.nextDouble()*2*Math.PI;
+			double randomDistance = RandomUtil.nextDouble()*radius;
+			double dX = Math.sin(randomAngle)*randomDistance;
+			double dZ = Math.cos(randomAngle)*randomDistance;
 
-			for(int dY : new int[] { 0, 1, -1, 2, -2 })
+			for(int dY : new int[] {0, 1, -1, 2, -2})
 			{
 				Location location = base.clone().add(Math.round(dX), Math.round(dY), dZ);
 
@@ -364,23 +360,23 @@ public class ActionNPC extends StateNPC
 	{
 		double accuracy = 2;
 
-		float dYaw = yaw - this.location.getYaw();
-		float dPitch = pitch - this.location.getPitch();
+		float dYaw = yaw-this.location.getYaw();
+		float dPitch = pitch-this.location.getPitch();
 
 		while((Math.abs(dYaw) > 0.1) || (Math.abs(dPitch) > 0.1))
 		{
-			float stepYaw = (float) Math.min(speed * accuracy, Math.abs(dYaw)) * (dYaw < 0 ? -1 : 1);
-			float stepPitch = (float) Math.min(speed * accuracy, Math.abs(dPitch)) * (dPitch < 0 ? -1 : 1);
+			float stepYaw = (float) Math.min(speed*accuracy, Math.abs(dYaw))*(dYaw < 0 ? -1 : 1);
+			float stepPitch = (float) Math.min(speed*accuracy, Math.abs(dPitch))*(dPitch < 0 ? -1 : 1);
 
-			this.location.setYaw(this.location.getYaw() + stepYaw);
-			this.location.setPitch(this.location.getPitch() + stepPitch);
+			this.location.setYaw(this.location.getYaw()+stepYaw);
+			this.location.setPitch(this.location.getPitch()+stepPitch);
 
 			dYaw -= stepYaw;
 			dPitch -= stepPitch;
 
 			sendLookHeadRotation(getPlayersVisibleToArray());
 
-			Thread.sleep(Math.round(50 / accuracy));
+			Thread.sleep(Math.round(50/accuracy));
 		}
 	}
 
@@ -394,10 +390,9 @@ public class ActionNPC extends StateNPC
 		Duo<Boolean, Double> checkDistanceResult = checkDistance(bedLocation);
 		if(!checkDistanceResult.a)
 		{
-			AnimulusAPI.getInstance().getLogger()
-					.warning("The npc '" + this.id + "' could not enter the bed. The location (" + bedLocation
-							+ ") is too far away from the npc (" + getEyeLocation() + "). Distance: " + checkDistanceResult.b
-							+ " / " + ACTION_RADIUS);
+			AnimulusAPI.getInstance().getLogger().warning(
+					"The npc '"+this.id+"' could not enter the bed. The location ("+bedLocation+") is too far away from the npc ("
+							+getEyeLocation()+"). Distance: "+checkDistanceResult.b+" / "+ACTION_RADIUS);
 			return;
 		}
 
@@ -429,7 +424,7 @@ public class ActionNPC extends StateNPC
 	{
 		int searchRadius = 1;
 
-		for(int dY : new int[] { 0, -1, 1 })
+		for(int dY : new int[] {0, -1, 1})
 			for(int dX = -searchRadius; dX <= searchRadius; dX++)
 				for(int dZ = -searchRadius; dZ <= searchRadius; dZ++)
 				{
@@ -445,8 +440,7 @@ public class ActionNPC extends StateNPC
 	// -------
 	// PACKETS
 	// -------
-	@Override
-	protected void sendToPlayer(Player... players)
+	@Override protected void sendToPlayer(Player... players)
 	{
 		super.sendToPlayer(players);
 

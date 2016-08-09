@@ -1,13 +1,7 @@
 package de.domisum.animulusapi.npc;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
+import de.domisum.animulusapi.AnimulusAPI;
+import de.domisum.animulusapi.listener.NPCInteractPacketListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,8 +10,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.animulusapi.listener.NPCInteractPacketListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class NPCManager implements Listener
 {
@@ -110,7 +109,7 @@ public class NPCManager implements Listener
 		for(StateNPC npc : this.npcs.values())
 			npc.tick(0);
 
-		Runnable run = () ->
+		Runnable run = ()->
 		{
 			tick();
 			this.tickCount++;
@@ -135,7 +134,7 @@ public class NPCManager implements Listener
 
 		for(StateNPC npc : this.npcs.values())
 		{
-			if((this.tickCount % CHECK_PLAYER_DISTANCE_TICK_INTERVAL) == 0)
+			if((this.tickCount%CHECK_PLAYER_DISTANCE_TICK_INTERVAL) == 0)
 				npc.updateVisibleForPlayers();
 
 			if(npc.isVisibleToSomebody())
@@ -147,15 +146,13 @@ public class NPCManager implements Listener
 	// -------
 	// EVENTS
 	// -------
-	@EventHandler
-	public void playerJoin(PlayerQuitEvent event)
+	@EventHandler public void playerJoin(PlayerQuitEvent event)
 	{
 		for(StateNPC npc : this.npcs.values())
 			npc.updateVisibilityForPlayer(event.getPlayer());
 	}
 
-	@EventHandler
-	public void playerQuit(PlayerQuitEvent event)
+	@EventHandler public void playerQuit(PlayerQuitEvent event)
 	{
 		Player player = event.getPlayer();
 
@@ -164,14 +161,13 @@ public class NPCManager implements Listener
 	}
 
 
-	@EventHandler
-	public void playerRespawn(PlayerRespawnEvent event)
+	@EventHandler public void playerRespawn(PlayerRespawnEvent event)
 	{
 		Player player = event.getPlayer();
 		// this is needed since the world is sent anew when the player respawns
 		// delay because this event is called before the respawn and the location is not right
 
-		Runnable run = () ->
+		Runnable run = ()->
 		{
 			for(StateNPC npc : this.npcs.values())
 			{
