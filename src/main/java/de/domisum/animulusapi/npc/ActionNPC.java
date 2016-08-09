@@ -295,6 +295,8 @@ public class ActionNPC extends StateNPC
 				moveToNearby(newLocation);
 
 				Thread.sleep(Math.round(50 / accuracy));
+				if(Thread.currentThread().isInterrupted())
+					return;
 			}
 		}
 

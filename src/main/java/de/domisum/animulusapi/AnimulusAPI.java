@@ -19,7 +19,7 @@ public class AnimulusAPI
 	// -------
 	// CONSTRUCTOR
 	// -------
-	public AnimulusAPI(JavaPlugin plugin)
+	protected AnimulusAPI(JavaPlugin plugin)
 	{
 		instance = this;
 		this.plugin = plugin;
@@ -27,7 +27,7 @@ public class AnimulusAPI
 		onEnable();
 	}
 
-	public static void initialize(JavaPlugin plugin)
+	public static void enable(JavaPlugin plugin)
 	{
 		if(instance != null)
 			return;
@@ -35,14 +35,23 @@ public class AnimulusAPI
 		new AnimulusAPI(plugin);
 	}
 
-	public void onEnable()
+	public static void disable()
+	{
+		if(instance == null)
+			return;
+
+		getInstance().onDisable();
+		instance = null;
+	}
+
+	protected void onEnable()
 	{
 		npcManager = new NPCManager();
 
 		getLogger().info(this.getClass().getSimpleName() + " has been enabled");
 	}
 
-	public void onDisable()
+	protected void onDisable()
 	{
 		if(npcManager != null)
 			npcManager.terminate();
