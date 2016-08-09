@@ -456,8 +456,8 @@ public class StateNPC
 	{
 		PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", EnumPlayerInfoAction.ADD_PLAYER);
-		@SuppressWarnings("unchecked") List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil
-				.getDeclaredFieldValue(packet, "b");
+		@SuppressWarnings("unchecked")
+		List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil.getDeclaredFieldValue(packet, "b");
 		b.add(getPlayerInfoData(packet));
 
 		for(Player p : players)
@@ -468,8 +468,8 @@ public class StateNPC
 	{
 		PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", EnumPlayerInfoAction.REMOVE_PLAYER);
-		@SuppressWarnings("unchecked") List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil
-				.getDeclaredFieldValue(packet, "b");
+		@SuppressWarnings("unchecked")
+		List<PlayerInfoData> b = (List<PlayerInfoData>) ReflectionUtil.getDeclaredFieldValue(packet, "b");
 		b.add(getPlayerInfoData(packet));
 
 		ThreadUtil.runDelayed(()->

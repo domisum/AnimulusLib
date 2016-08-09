@@ -41,7 +41,8 @@ public class ActionNPC extends StateNPC
 		super(gameProfile, location);
 	}
 
-	@Override protected void terminate()
+	@Override
+	protected void terminate()
 	{
 		super.terminate();
 
@@ -166,8 +167,8 @@ public class ActionNPC extends StateNPC
 	}
 
 
-	@SuppressWarnings("deprecation") public void placeBlock(Location blockLocation, Material material, byte data)
-			throws InterruptedException
+	@SuppressWarnings("deprecation")
+	public void placeBlock(Location blockLocation, Material material, byte data) throws InterruptedException
 	{
 		// check if block can be set at location
 		Block block = blockLocation.getBlock();
@@ -194,7 +195,8 @@ public class ActionNPC extends StateNPC
 		block.setData(data);
 	}
 
-	@SuppressWarnings("deprecation") public void tillDirt(Location blockLocation) throws InterruptedException
+	@SuppressWarnings("deprecation")
+	public void tillDirt(Location blockLocation) throws InterruptedException
 	{
 		Block block = blockLocation.getBlock();
 		if((block.getType() != Material.DIRT) && (block.getType() != Material.GRASS))
@@ -440,7 +442,8 @@ public class ActionNPC extends StateNPC
 	// -------
 	// PACKETS
 	// -------
-	@Override protected void sendToPlayer(Player... players)
+	@Override
+	protected void sendToPlayer(Player... players)
 	{
 		super.sendToPlayer(players);
 

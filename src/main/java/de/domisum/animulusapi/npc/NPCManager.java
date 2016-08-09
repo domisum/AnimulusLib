@@ -146,13 +146,15 @@ public class NPCManager implements Listener
 	// -------
 	// EVENTS
 	// -------
-	@EventHandler public void playerJoin(PlayerQuitEvent event)
+	@EventHandler
+	public void playerJoin(PlayerQuitEvent event)
 	{
 		for(StateNPC npc : this.npcs.values())
 			npc.updateVisibilityForPlayer(event.getPlayer());
 	}
 
-	@EventHandler public void playerQuit(PlayerQuitEvent event)
+	@EventHandler
+	public void playerQuit(PlayerQuitEvent event)
 	{
 		Player player = event.getPlayer();
 
@@ -161,7 +163,8 @@ public class NPCManager implements Listener
 	}
 
 
-	@EventHandler public void playerRespawn(PlayerRespawnEvent event)
+	@EventHandler
+	public void playerRespawn(PlayerRespawnEvent event)
 	{
 		Player player = event.getPlayer();
 		// this is needed since the world is sent anew when the player respawns
