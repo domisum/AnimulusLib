@@ -28,7 +28,7 @@ public class StateNPC
 {
 
 	// CONSTANTS
-	protected static final double VISIBILITY_RANGE = 60d;
+	protected static final double VISIBILITY_RANGE = 45d;
 	protected static final long TABLIST_REMOVE_DELAY_MS = 5000;
 	protected static final long RELATIVE_MOVE_TELEPORT_INTERVAL = 40;
 
