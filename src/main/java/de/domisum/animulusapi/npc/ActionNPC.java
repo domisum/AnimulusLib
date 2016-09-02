@@ -6,6 +6,7 @@ import de.domisum.animulusapi.block.BlockButton;
 import de.domisum.auxiliumapi.data.container.Duo;
 import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.java.ReflectionUtil;
+import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
 import de.domisum.auxiliumapi.util.math.RandomUtil;
 import de.domisum.compitumapi.path.pathfinders.AStar;
 import de.domisum.compitumapi.path.pathprocessors.WalkablePath;
@@ -36,6 +37,12 @@ public class ActionNPC extends StateNPC
 	// -------
 	// CONSTRUCTOR
 	// -------
+	@DeserializationNoArgsConstructor
+	public ActionNPC()
+	{
+		super();
+	}
+
 	protected ActionNPC(GameProfile gameProfile, Location location)
 	{
 		super(gameProfile, location);
