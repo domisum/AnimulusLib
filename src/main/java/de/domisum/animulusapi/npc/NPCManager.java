@@ -2,6 +2,7 @@ package de.domisum.animulusapi.npc;
 
 import de.domisum.animulusapi.AnimulusAPI;
 import de.domisum.animulusapi.listener.NPCInteractPacketListener;
+import de.domisum.auxiliumapi.util.DebugUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -111,8 +112,14 @@ public class NPCManager implements Listener
 
 		Runnable run = ()->
 		{
-			tick();
-			this.tickCount++;
+			try
+			{
+				tick();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		};
 
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
@@ -140,6 +147,8 @@ public class NPCManager implements Listener
 			if(npc.isVisibleToSomebody())
 				npc.tick(this.tickCount);
 		}
+
+		this.tickCount++;
 	}
 
 
