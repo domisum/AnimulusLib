@@ -6,6 +6,7 @@ import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.bukkit.PacketUtil;
 import de.domisum.auxiliumapi.util.java.ReflectionUtil;
 import de.domisum.auxiliumapi.util.java.ThreadUtil;
+import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
 import net.minecraft.server.v1_9_R1.*;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
@@ -64,6 +65,12 @@ public class StateNPC
 	// -------
 	// CONSTRUCTOR
 	// -------
+	@DeserializationNoArgsConstructor
+	public StateNPC()
+	{
+
+	}
+
 	protected StateNPC(GameProfile gameProfile, Location location)
 	{
 		this.gameProfile = gameProfile;
