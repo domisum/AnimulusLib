@@ -6,6 +6,7 @@ import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.bukkit.PacketUtil;
 import de.domisum.auxiliumapi.util.java.ReflectionUtil;
 import de.domisum.auxiliumapi.util.java.ThreadUtil;
+import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
 import net.minecraft.server.v1_9_R1.*;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
@@ -46,20 +47,20 @@ public class StateNPC
 	protected transient boolean onFire = false;
 	protected transient boolean crouched = false;
 	protected transient boolean sprinting = false;
-	protected transient boolean isEating = false; // TODO npc api | implement these
+	protected transient boolean isEating = false; // TODO implement these
 	protected transient boolean isDrinking = false;
 	protected transient boolean isBlocking = false;
-	protected transient boolean isInvisible = false; // TODO npc api | does this work?
+	protected transient boolean isInvisible = false; // TODO does this work?
 	protected transient boolean isGlowing = false;
 	protected transient boolean isFlyingWithElytra = false;
 
-	protected transient byte numberOfArrowsInBody = 0;
+	private transient byte numberOfArrowsInBody = 0;
 
 	// PLAYERS
-	protected transient Set<Player> visibleTo;
+	private transient Set<Player> visibleTo;
 
 	// TEMP
-	protected transient int moveTeleportCounter = 0;
+	private transient int moveTeleportCounter = 0;
 
 
 	// -------
@@ -91,7 +92,7 @@ public class StateNPC
 		this.visibleTo.clear();
 	}
 
-
+	@APIUsage
 	public void despawn()
 	{
 		AnimulusAPI.getNPCManager().removeNPC(this);
@@ -102,21 +103,25 @@ public class StateNPC
 	// -------
 	// GETTERS
 	// -------
+	@APIUsage
 	public String getId()
 	{
 		return this.id;
 	}
 
+	@APIUsage
 	public int getEntityId()
 	{
 		return this.entityId;
 	}
 
+	@APIUsage
 	public Location getLocation()
 	{
 		return this.location.clone();
 	}
 
+	@APIUsage
 	public double getEyeHeight()
 	{
 		if(this.crouched)
@@ -125,39 +130,45 @@ public class StateNPC
 		return 1.62;
 	}
 
+	@APIUsage
 	public Location getEyeLocation()
 	{
 		return this.location.clone().add(0, getEyeHeight(), 0);
 	}
 
+	@APIUsage
 	public ItemStack getItemInHand()
 	{
 		return this.itemInHand;
 	}
 
 
+	@APIUsage
 	public boolean isOnFire()
 	{
 		return this.onFire;
 	}
 
+	@APIUsage
 	public boolean isCrouched()
 	{
 		return this.crouched;
 	}
 
+	@APIUsage
 	public boolean isSprinting()
 	{
 		return this.sprinting;
 	}
 
+	@APIUsage
 	public boolean isGlowing()
 	{
 		return this.isGlowing;
 	}
 
 
-	protected DataWatcher getMetadata()
+	private DataWatcher getMetadata()
 	{
 		DataWatcher metadata = new DataWatcher(null);
 		// http://wiki.vg/Entities#Entity_Metadata_Format
@@ -178,35 +189,39 @@ public class StateNPC
 			metadataBaseInfo |= 0x40;
 		if(this.isFlyingWithElytra)
 			metadataBaseInfo |= 0x80;
-		metadata.register(new DataWatcherObject<Byte>(0, DataWatcherRegistry.a), metadataBaseInfo);
+		metadata.register(new DataWatcherObject<>(0, DataWatcherRegistry.a), metadataBaseInfo);
 
 		// arrows in body
-		metadata.register(new DataWatcherObject<Byte>(9, DataWatcherRegistry.a), this.numberOfArrowsInBody);
+		metadata.register(new DataWatcherObject<>(9, DataWatcherRegistry.a), this.numberOfArrowsInBody);
 		// !!! seems to have changed to 10 in v1.9/v1.10
 
 		// skin parts
 		byte skinParts = 0b01111111; // all parts displayed (first bit is unused)
-		metadata.register(new DataWatcherObject<Byte>(13, DataWatcherRegistry.a), skinParts);
+		metadata.register(new DataWatcherObject<>(13, DataWatcherRegistry.a), skinParts);
 
 		return metadata;
 	}
 
 
+	@APIUsage
 	public Set<Player> getPlayersVisibleTo()
 	{
 		return new HashSet<>(this.visibleTo);
 	}
 
+	@APIUsage
 	public boolean isVisibleTo(Player player)
 	{
 		return this.visibleTo.contains(player);
 	}
 
+	@APIUsage
 	public boolean isVisibleToSomebody()
 	{
 		return !this.visibleTo.isEmpty();
 	}
 
+	@APIUsage
 	public Player[] getPlayersVisibleToArray()
 	{
 		return this.visibleTo.toArray(new Player[this.visibleTo.size()]);
@@ -216,11 +231,13 @@ public class StateNPC
 	// -------
 	// SETTERS
 	// -------
+	@APIUsage
 	public void setId(String id)
 	{
 		this.id = id;
 	}
 
+	@APIUsage
 	public void setItemInHand(ItemStack itemStack)
 	{
 		this.itemInHand = itemStack;
@@ -228,12 +245,14 @@ public class StateNPC
 		sendEntityEquipmentChange(EnumItemSlot.MAINHAND, itemStack, getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void setItemInOffHand(ItemStack itemStack)
 	{
 		this.itemInOffHand = itemStack;
 		sendEntityEquipmentChange(EnumItemSlot.OFFHAND, itemStack, getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void setArmor(int slot, ItemStack itemStack)
 	{
 		this.armor[slot] = itemStack;
@@ -242,6 +261,7 @@ public class StateNPC
 	}
 
 
+	@APIUsage
 	public void setOnFire(boolean onFire)
 	{
 		if(this.onFire == onFire)
@@ -251,6 +271,7 @@ public class StateNPC
 		sendEntityMetadata(getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void setCrouched(boolean crouched)
 	{
 		if(this.crouched == crouched)
@@ -263,6 +284,7 @@ public class StateNPC
 		sendEntityMetadata(getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void setSprinting(boolean sprinting)
 	{
 		if(this.sprinting == sprinting)
@@ -275,6 +297,7 @@ public class StateNPC
 		sendEntityMetadata(getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void setGlowing(boolean glowing)
 	{
 		if(this.isGlowing == glowing)
@@ -285,6 +308,7 @@ public class StateNPC
 	}
 
 
+	@APIUsage
 	public void setNumberOfArrowsInBody(byte numberOfArrowsInBody)
 	{
 		if(this.numberOfArrowsInBody == numberOfArrowsInBody)
@@ -298,12 +322,14 @@ public class StateNPC
 	// -------
 	// PLAYERS
 	// -------
+	@APIUsage
 	protected void updateVisibleForPlayers()
 	{
 		for(Player p : Bukkit.getOnlinePlayers())
 			updateVisibilityForPlayer(p);
 	}
 
+	@APIUsage
 	protected void updateVisibilityForPlayer(Player player)
 	{
 		if(player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE))
@@ -318,13 +344,14 @@ public class StateNPC
 		}
 	}
 
+	@APIUsage
 	public void becomeVisibleFor(Player player)
 	{
 		this.visibleTo.add(player);
 		sendToPlayer(player);
 	}
 
-
+	@APIUsage
 	public void becomeInvisibleFor(Player player, boolean sendPackets)
 	{
 		this.visibleTo.remove(player);
@@ -337,11 +364,13 @@ public class StateNPC
 	// -------
 	// INTERACTION
 	// -------
+	@APIUsage
 	public void playerLeftClick(Player player)
 	{
 
 	}
 
+	@APIUsage
 	public void playerRightClick(Player player)
 	{
 
@@ -351,11 +380,13 @@ public class StateNPC
 	// -------
 	// ACTION
 	// -------
+	@APIUsage
 	public void swingArm()
 	{
 		sendAnimation(0, getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void swingOffhandArm()
 	{
 		sendAnimation(3, getPlayersVisibleToArray());
@@ -365,6 +396,7 @@ public class StateNPC
 	// -------
 	// MOVEMENT
 	// -------
+	@APIUsage
 	public void moveToNearby(Location target)
 	{
 		if((this.moveTeleportCounter++%RELATIVE_MOVE_TELEPORT_INTERVAL) == 0)
@@ -378,6 +410,7 @@ public class StateNPC
 		sendHeadRotation(getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void teleport(Location target)
 	{
 		this.location = target;
@@ -390,6 +423,7 @@ public class StateNPC
 	}
 
 
+	@APIUsage
 	public void lookAt(Location lookAt)
 	{
 		this.location = LocationUtil.lookAt(this.location, lookAt);
@@ -397,6 +431,7 @@ public class StateNPC
 	}
 
 
+	@APIUsage
 	public boolean canStandAt(Location location)
 	{
 		if(location.getBlock().getType().isSolid())
@@ -415,6 +450,7 @@ public class StateNPC
 	// -------
 	// TICKING
 	// -------
+	@APIUsage
 	protected void tick(int tick)
 	{
 
@@ -575,13 +611,13 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	protected void sendLookHeadRotation(Player... players)
+	void sendLookHeadRotation(Player... players)
 	{
 		sendLook(players);
 		sendHeadRotation(players);
 	}
 
-	protected void sendLook(Player... players)
+	private void sendLook(Player... players)
 	{
 		PacketPlayOutEntityLook packet = new PacketPlayOutEntityLook(this.entityId,
 				PacketUtil.toPacketAngle(this.location.getYaw()), PacketUtil.toPacketAngle(this.location.getPitch()), true);
@@ -590,7 +626,7 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	protected void sendHeadRotation(Player... players)
+	private void sendHeadRotation(Player... players)
 	{
 		PacketPlayOutEntityHeadRotation packet = new PacketPlayOutEntityHeadRotation();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);
@@ -602,7 +638,7 @@ public class StateNPC
 
 
 	// ACTION
-	protected void sendAnimation(int animationId, Player... players)
+	void sendAnimation(int animationId, Player... players)
 	{
 		PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);
@@ -616,7 +652,7 @@ public class StateNPC
 	// -------
 	// UTIL
 	// -------
-	protected static int getUnusedEntityId()
+	private static int getUnusedEntityId()
 	{
 		// the entityId of a new (net.minecraft.server.)Entity is set like this:
 		// this.id = (entityCount++);
@@ -630,7 +666,7 @@ public class StateNPC
 		return entityCount;
 	}
 
-	protected static EnumItemSlot getArmorItemSlot(int slot)
+	private static EnumItemSlot getArmorItemSlot(int slot)
 	{
 		if(slot == 0)
 			return EnumItemSlot.FEET;

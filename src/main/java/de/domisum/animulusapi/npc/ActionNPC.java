@@ -6,6 +6,7 @@ import de.domisum.animulusapi.block.BlockButton;
 import de.domisum.auxiliumapi.data.container.Duo;
 import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.java.ReflectionUtil;
+import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
 import de.domisum.auxiliumapi.util.math.RandomUtil;
 import de.domisum.compitumapi.path.pathfinders.AStar;
@@ -22,16 +23,17 @@ import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@APIUsage
 public class ActionNPC extends StateNPC
 {
 
 	// CONSTANTS
-	protected static final double ACTION_RADIUS = 4;
-	protected static final double ACTION_RADIUS_SQUARED = ACTION_RADIUS*ACTION_RADIUS;
+	private static final double ACTION_RADIUS = 4;
+	private static final double ACTION_RADIUS_SQUARED = ACTION_RADIUS*ACTION_RADIUS;
 
 	// STATUS
-	protected transient Location bedLocation = null;
-	protected transient Chest openedChest = null;
+	private transient Location bedLocation = null;
+	private transient Chest openedChest = null;
 
 
 	// -------
@@ -43,7 +45,8 @@ public class ActionNPC extends StateNPC
 		super();
 	}
 
-	protected ActionNPC(GameProfile gameProfile, Location location)
+	@APIUsage
+	public ActionNPC(GameProfile gameProfile, Location location)
 	{
 		super(gameProfile, location);
 	}
@@ -61,6 +64,7 @@ public class ActionNPC extends StateNPC
 	// -------
 	// GETTERS
 	// -------
+	@APIUsage
 	public double getWalkSpeed()
 	{
 		if(isSprinting())
@@ -76,6 +80,7 @@ public class ActionNPC extends StateNPC
 	// -------
 	// ACTION
 	// -------
+	@APIUsage
 	public void putItemStackIntoChest(Location chestLocation, ItemStack itemStack) throws InterruptedException
 	{
 		// check if chest is too far away
@@ -144,6 +149,7 @@ public class ActionNPC extends StateNPC
 		return true;
 	}
 
+	@APIUsage
 	public void pressButton(Location buttonLocation) throws InterruptedException
 	{
 		// check if there is a button at the specified location
@@ -175,6 +181,7 @@ public class ActionNPC extends StateNPC
 
 
 	@SuppressWarnings("deprecation")
+	@APIUsage
 	public void placeBlock(Location blockLocation, Material material, byte data) throws InterruptedException
 	{
 		// check if block can be set at location
@@ -203,6 +210,7 @@ public class ActionNPC extends StateNPC
 	}
 
 	@SuppressWarnings("deprecation")
+	@APIUsage
 	public void tillDirt(Location blockLocation) throws InterruptedException
 	{
 		Block block = blockLocation.getBlock();
@@ -234,20 +242,22 @@ public class ActionNPC extends StateNPC
 	{
 		double distanceSquared = getEyeLocation().distanceSquared(location);
 		if(distanceSquared < ACTION_RADIUS_SQUARED)
-			return new Duo<Boolean, Double>(true, 0d);
+			return new Duo<>(true, 0d);
 
-		return new Duo<Boolean, Double>(false, Math.sqrt(distanceSquared));
+		return new Duo<>(false, Math.sqrt(distanceSquared));
 	}
 
 
 	// -------
 	// MOVEMENT
 	// -------
+	@APIUsage
 	public void walkTo(Location target) throws InterruptedException
 	{
 		walkTo(target, 1);
 	}
 
+	@APIUsage
 	public void walkTo(Location target, double speedMultiplier) throws InterruptedException
 	{
 		// find path
@@ -299,7 +309,7 @@ public class ActionNPC extends StateNPC
 
 				moveToNearby(newLocation);
 
-				Thread.sleep(Math.round(50/accuracy));
+				ThreadUtil.sleep(Math.round(50/accuracy));
 				if(Thread.currentThread().isInterrupted())
 					return;
 			}
@@ -311,12 +321,14 @@ public class ActionNPC extends StateNPC
 		moveToNearby(LocationUtil.getFloorCenter(rotatedTarget));
 	}
 
+	@APIUsage
 	protected void onWalkingFail(Exception e)
 	{
 		e.printStackTrace();
 	}
 
 
+	@APIUsage
 	public void stroll(double radius, long durationMs) throws InterruptedException
 	{
 		Location startLocation = getLocation();
@@ -359,12 +371,14 @@ public class ActionNPC extends StateNPC
 	}
 
 
+	@APIUsage
 	public void turnHeadTowards(Location lookAt, float speed) throws InterruptedException
 	{
 		Location directionLocation = LocationUtil.lookAt(getEyeLocation(), lookAt);
 		turnHeadTowards(directionLocation.getYaw(), directionLocation.getPitch(), speed);
 	}
 
+	@APIUsage
 	public void turnHeadTowards(float yaw, float pitch, float speed) throws InterruptedException
 	{
 		double accuracy = 2;
@@ -390,6 +404,7 @@ public class ActionNPC extends StateNPC
 	}
 
 
+	@APIUsage
 	public void enterBed(Location bedLocation) throws InterruptedException
 	{
 		if(bedLocation.getBlock().getType() != Material.BED_BLOCK)
@@ -415,6 +430,7 @@ public class ActionNPC extends StateNPC
 		sendEnterBed(bedLocation, getPlayersVisibleToArray());
 	}
 
+	@APIUsage
 	public void leaveBed()
 	{
 		if(this.bedLocation == null)
@@ -428,6 +444,7 @@ public class ActionNPC extends StateNPC
 		sendAnimation(2, getPlayersVisibleToArray());
 		teleport(leaveLocation);
 	}
+
 
 	private Location findBedLeaveLocation()
 	{
@@ -463,7 +480,7 @@ public class ActionNPC extends StateNPC
 
 
 	// ACTION
-	protected void sendChestStatus(Location location, boolean open, Player... players)
+	private void sendChestStatus(Location location, boolean open, Player... players)
 	{
 		PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(
 				new BlockPosition(location.getX(), location.getY(), location.getZ()),
@@ -475,7 +492,7 @@ public class ActionNPC extends StateNPC
 
 
 	// MOVEMENT
-	protected void sendEnterBed(Location location, Player... players)
+	private void sendEnterBed(Location location, Player... players)
 	{
 		PacketPlayOutBed packet = new PacketPlayOutBed();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);

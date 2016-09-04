@@ -1,6 +1,8 @@
 package de.domisum.animulusapi;
 
 import de.domisum.animulusapi.npc.NPCManager;
+import de.domisum.auxiliumapi.AuxiliumAPI;
+import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -26,6 +28,7 @@ public class AnimulusAPI
 		onEnable();
 	}
 
+	@APIUsage
 	public static void enable(JavaPlugin plugin)
 	{
 		if(instance != null)
@@ -34,6 +37,7 @@ public class AnimulusAPI
 		new AnimulusAPI(plugin);
 	}
 
+	@APIUsage
 	public static void disable()
 	{
 		if(instance == null)
@@ -45,6 +49,8 @@ public class AnimulusAPI
 
 	private void onEnable()
 	{
+		AuxiliumAPI.enable(this.plugin);
+
 		npcManager = new NPCManager();
 
 		getLogger().info(this.getClass().getSimpleName()+" has been enabled");

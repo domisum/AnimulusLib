@@ -2,7 +2,7 @@ package de.domisum.animulusapi.npc;
 
 import de.domisum.animulusapi.AnimulusAPI;
 import de.domisum.animulusapi.listener.NPCInteractPacketListener;
-import de.domisum.auxiliumapi.util.DebugUtil;
+import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -90,11 +90,13 @@ public class NPCManager implements Listener
 	// -------
 	// CHANGERS
 	// -------
+	@APIUsage
 	public void addNPC(StateNPC npc)
 	{
 		this.npcs.put(npc.getEntityId(), npc);
 	}
 
+	@APIUsage
 	public void removeNPC(StateNPC npc)
 	{
 		this.npcsToRemove.add(npc);
