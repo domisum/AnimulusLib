@@ -28,10 +28,10 @@ public class NPCManager implements Listener
 	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 40;
 
 	// STATUS
-	private ScheduledFuture<?> tickingTask;
-	private int tickCount;
+	private ScheduledFuture<?> updatingTask;
+	private int updateCount;
 
-	private Map<Integer, StateNPC> npcs = new HashMap<>();
+	private Map<Integer, StateNPC> npcs = new HashMap<>(); // <entityId, npc>
 	private List<StateNPC> npcsToRemove = new CopyOnWriteArrayList<>();
 
 
@@ -42,7 +42,7 @@ public class NPCManager implements Listener
 	{
 		registerListener();
 
-		startTickingThread();
+		startUpdatingTask();
 	}
 
 	private void registerListener()
@@ -55,7 +55,7 @@ public class NPCManager implements Listener
 
 	public void terminate()
 	{
-		stopTickingThread();
+		stopUpdatingTask();
 
 		terminateNPCs();
 	}
@@ -72,11 +72,17 @@ public class NPCManager implements Listener
 	// -------
 	// GETTERS
 	// -------
-	public StateNPC getNPC(int id)
+	public int getUpdateCount()
 	{
-		return this.npcs.get(id);
+		return this.updateCount;
 	}
 
+	public StateNPC getNPC(int entityId)
+	{
+		return this.npcs.get(entityId);
+	}
+
+	@APIUsage
 	public StateNPC getNPC(String id)
 	{
 		for(StateNPC npc : this.npcs.values())
@@ -106,17 +112,18 @@ public class NPCManager implements Listener
 	// -------
 	// TICKING
 	// -------
-	private void startTickingThread()
+	private void startUpdatingTask()
 	{
+		// TODO this is unclean, test to check if can be removed
 		// starting tick to kick off NPCTasks
 		for(StateNPC npc : this.npcs.values())
-			npc.tick(0);
+			npc.update();
 
 		Runnable run = ()->
 		{
 			try
 			{
-				tick();
+				update();
 			}
 			catch(Exception e)
 			{
@@ -125,17 +132,17 @@ public class NPCManager implements Listener
 		};
 
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-		this.tickingTask = executor.scheduleWithFixedDelay(run, 0, MS_PER_TICK, TimeUnit.MILLISECONDS);
+		this.updatingTask = executor.scheduleWithFixedDelay(run, 0, MS_PER_TICK, TimeUnit.MILLISECONDS);
 	}
 
-	private void stopTickingThread()
+	private void stopUpdatingTask()
 	{
-		this.tickingTask.cancel(true);
-		this.tickingTask = null;
+		this.updatingTask.cancel(true);
+		this.updatingTask = null;
 	}
 
 
-	private void tick()
+	private void update()
 	{
 		for(StateNPC toRemove : this.npcsToRemove)
 			this.npcs.values().remove(toRemove);
@@ -143,14 +150,14 @@ public class NPCManager implements Listener
 
 		for(StateNPC npc : this.npcs.values())
 		{
-			if((this.tickCount%CHECK_PLAYER_DISTANCE_TICK_INTERVAL) == 0)
+			if((this.updateCount%CHECK_PLAYER_DISTANCE_TICK_INTERVAL) == 0)
 				npc.updateVisibleForPlayers();
 
 			if(npc.isVisibleToSomebody())
-				npc.tick(this.tickCount);
+				npc.update();
 		}
 
-		this.tickCount++;
+		this.updateCount++;
 	}
 
 

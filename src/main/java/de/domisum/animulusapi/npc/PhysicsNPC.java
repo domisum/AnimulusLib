@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import java.util.List;
 
 @APIUsage
-public class PhysicsNPC extends ActionNPC
+public class PhysicsNPC extends StateNPC
 {
 
 	// CONSTANTS
@@ -46,12 +46,22 @@ public class PhysicsNPC extends ActionNPC
 
 
 	// -------
+	// GETTERS
+	// -------
+	@APIUsage
+	public boolean isOnGround()
+	{
+		return this.onGround;
+	}
+
+
+	// -------
 	// UPDATING
 	// -------
 	@Override
-	public void tick(int tickCount)
+	public void update()
 	{
-		super.tick(tickCount);
+		super.update();
 
 		applyPhysics();
 	}

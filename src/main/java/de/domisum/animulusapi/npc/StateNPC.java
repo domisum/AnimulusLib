@@ -423,6 +423,14 @@ public class StateNPC
 	}
 
 
+	public void setYawPitch(float yaw, float pitch)
+	{
+		this.location.setYaw(yaw);
+		this.location.setPitch(pitch);
+
+		sendLookHeadRotation(getPlayersVisibleToArray());
+	}
+
 	@APIUsage
 	public void lookAt(Location lookAt)
 	{
@@ -448,10 +456,10 @@ public class StateNPC
 
 
 	// -------
-	// TICKING
+	// UPDATING
 	// -------
 	@APIUsage
-	protected void tick(int tick)
+	protected void update()
 	{
 
 	}
