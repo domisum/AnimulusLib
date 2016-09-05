@@ -17,7 +17,7 @@ public class PhysicsNPC extends ActionNPC
 
 	// CONSTANTS
 	private static final double ACCELERATION = 0.981;
-	private static final double AABB_XZ_LENGTH = 0.8;
+	private static final double AABB_XZ_LENGTH = 0.6;
 	private static final double AABB_Y_LENGTH = 1.8;
 
 	// PROPERTIES
