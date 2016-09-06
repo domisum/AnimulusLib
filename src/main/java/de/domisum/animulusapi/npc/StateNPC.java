@@ -54,7 +54,7 @@ public class StateNPC
 	protected transient boolean isGlowing = false;
 	protected transient boolean isFlyingWithElytra = false;
 
-	private transient byte numberOfArrowsInBody = 0;
+	private transient int numberOfArrowsInBody = 0;
 
 	// PLAYERS
 	private transient Set<Player> visibleTo;
@@ -180,6 +180,12 @@ public class StateNPC
 	}
 
 	@APIUsage
+	public boolean isHandActive()
+	{
+		return isEating() || isDrinking() || isBlocking();
+	}
+
+	@APIUsage
 	public boolean isGlowing()
 	{
 		return this.isGlowing;
@@ -199,8 +205,9 @@ public class StateNPC
 			metadataBaseInfo |= 0x02;
 		if(this.isSprinting)
 			metadataBaseInfo |= 0x08;
-		if(this.isEating || this.isDrinking || this.isBlocking)
-			metadataBaseInfo |= 0x10;
+		// this seems to be unused now, using the byte with key 5
+		/*if(this.isEating || this.isDrinking || this.isBlocking)
+			metadataBaseInfo |= 0x10;*/
 		if(this.isInvisible)
 			metadataBaseInfo |= 0x20;
 		if(this.isGlowing)
@@ -209,16 +216,30 @@ public class StateNPC
 			metadataBaseInfo |= 0x80;
 		metadata.register(new DataWatcherObject<>(0, DataWatcherRegistry.a), metadataBaseInfo);
 
-		// hand usage
-		//metadata.register(new DataWatcherObject<>(5, DataWatcherRegistry.a), 0x01);
+		// hand active
+		metadata.register(new DataWatcherObject<>(5, DataWatcherRegistry.a), (byte) (isHandActive() ? 1 : 0));
 
 		// arrows in body
-		metadata.register(new DataWatcherObject<>(9, DataWatcherRegistry.a), this.numberOfArrowsInBody);
+		metadata.register(new DataWatcherObject<>(9, DataWatcherRegistry.b), this.numberOfArrowsInBody);
 		// !!! seems to have changed to 10 in v1.9/v1.10
 
 		// skin parts
 		byte skinParts = 0b01111111; // all parts displayed (first bit is unused)
-		metadata.register(new DataWatcherObject<>(13, DataWatcherRegistry.a), skinParts);
+		metadata.register(new DataWatcherObject<>(12, DataWatcherRegistry.a), skinParts);
+
+		// TEST VALUES
+		/*metadata.register(new DataWatcherObject<>(1, DataWatcherRegistry.b), 300);
+		metadata.register(new DataWatcherObject<>(2, DataWatcherRegistry.d), "");
+		metadata.register(new DataWatcherObject<>(3, DataWatcherRegistry.h), false);
+		metadata.register(new DataWatcherObject<>(4, DataWatcherRegistry.h), false);
+		metadata.register(new DataWatcherObject<>(6, DataWatcherRegistry.c), 20.0f);
+		metadata.register(new DataWatcherObject<>(7, DataWatcherRegistry.b), 0);
+		metadata.register(new DataWatcherObject<>(8, DataWatcherRegistry.h), false);
+		//metadata.register(new DataWatcherObject<>(9, DataWatcherRegistry.a), 0);
+		metadata.register(new DataWatcherObject<>(10, DataWatcherRegistry.c), 0.0f);
+		metadata.register(new DataWatcherObject<>(11, DataWatcherRegistry.b), 13);
+		//metadata.register(new DataWatcherObject<>(12, DataWatcherRegistry.a), 127);
+		metadata.register(new DataWatcherObject<>(13, DataWatcherRegistry.a), (byte) 1);*/
 
 		return metadata;
 	}
@@ -321,6 +342,8 @@ public class StateNPC
 	@APIUsage
 	public void setEating(boolean eating)
 	{
+		// TODO maybe check if the item in the hand is eatable (or drinkable or blockable for the other hand activations)
+
 		if(this.isEating == eating)
 			return;
 

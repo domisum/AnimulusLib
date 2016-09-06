@@ -3,6 +3,8 @@ package de.domisum.animulusapi.npc.task.tasks.item;
 import de.domisum.animulusapi.npc.task.NPCTask;
 import de.domisum.animulusapi.npc.task.NPCTaskSlot;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
 @APIUsage
@@ -26,7 +28,7 @@ public class NPCTaskEatItem extends NPCTask
 	@APIUsage
 	public NPCTaskEatItem(ItemStack itemStack)
 	{
-		this(itemStack, 30);
+		this(itemStack, 32);
 	}
 
 	@APIUsage
@@ -65,11 +67,21 @@ public class NPCTaskEatItem extends NPCTask
 		if(this.elapsedTicks >= this.durationTicks)
 		{
 			end();
+			playSound(Sound.ENTITY_PLAYER_BURP);
 			return false;
 		}
 
+		if(this.elapsedTicks%4 == 0)
+			playSound(Sound.ENTITY_GENERIC_EAT);
+
 		this.elapsedTicks++;
 		return true;
+	}
+
+	private void playSound(Sound sound)
+	{
+		Location soundLocation = this.npc.getEyeLocation();
+		soundLocation.getWorld().playSound(soundLocation, sound, 2, 1);
 	}
 
 	@Override
