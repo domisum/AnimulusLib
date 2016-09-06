@@ -51,9 +51,10 @@ public abstract class NPCTask
 	// SETTERS
 	// -------
 	@APIUsage
-	public void setRunSeparately(boolean runSeparately)
+	public NPCTask setRunSeparately(boolean runSeparately)
 	{
 		this.runSeparately = runSeparately;
+		return this;
 	}
 
 
