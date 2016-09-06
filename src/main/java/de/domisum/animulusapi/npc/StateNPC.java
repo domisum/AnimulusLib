@@ -44,9 +44,9 @@ public class StateNPC
 	protected transient ItemStack itemInOffHand = null;
 	protected transient ItemStack[] armor = new ItemStack[4]; // 0: boots, 1: leggings, 2: chestplate, 3: helmet
 
-	protected transient boolean onFire = false;
-	protected transient boolean crouched = false;
-	protected transient boolean sprinting = false;
+	protected transient boolean isOnFire = false;
+	protected transient boolean isCrouched = false;
+	protected transient boolean isSprinting = false;
 	protected transient boolean isEating = false; // TODO implement these
 	protected transient boolean isDrinking = false;
 	protected transient boolean isBlocking = false;
@@ -124,7 +124,7 @@ public class StateNPC
 	@APIUsage
 	public double getEyeHeight()
 	{
-		if(this.crouched)
+		if(this.isCrouched)
 			return 1.54;
 
 		return 1.62;
@@ -146,19 +146,37 @@ public class StateNPC
 	@APIUsage
 	public boolean isOnFire()
 	{
-		return this.onFire;
+		return this.isOnFire;
 	}
 
 	@APIUsage
 	public boolean isCrouched()
 	{
-		return this.crouched;
+		return this.isCrouched;
 	}
 
 	@APIUsage
 	public boolean isSprinting()
 	{
-		return this.sprinting;
+		return this.isSprinting;
+	}
+
+	@APIUsage
+	public boolean isEating()
+	{
+		return this.isEating;
+	}
+
+	@APIUsage
+	public boolean isDrinking()
+	{
+		return this.isDrinking;
+	}
+
+	@APIUsage
+	public boolean isBlocking()
+	{
+		return this.isBlocking;
 	}
 
 	@APIUsage
@@ -175,11 +193,11 @@ public class StateNPC
 
 		// base information
 		byte metadataBaseInfo = 0;
-		if(this.onFire)
+		if(this.isOnFire)
 			metadataBaseInfo |= 0x01;
-		if(this.crouched)
+		if(this.isCrouched)
 			metadataBaseInfo |= 0x02;
-		if(this.sprinting)
+		if(this.isSprinting)
 			metadataBaseInfo |= 0x08;
 		if(this.isEating || this.isDrinking || this.isBlocking)
 			metadataBaseInfo |= 0x10;
@@ -264,38 +282,84 @@ public class StateNPC
 	@APIUsage
 	public void setOnFire(boolean onFire)
 	{
-		if(this.onFire == onFire)
+		if(this.isOnFire == onFire)
 			return;
 
-		this.onFire = onFire;
+		this.isOnFire = onFire;
 		sendEntityMetadata(getPlayersVisibleToArray());
 	}
 
 	@APIUsage
 	public void setCrouched(boolean crouched)
 	{
-		if(this.crouched == crouched)
+		if(this.isCrouched == crouched)
 			return;
 
 		if(isSprinting())
 			throw new IllegalStateException("Can't crouch while sprinting");
 
-		this.crouched = crouched;
+		this.isCrouched = crouched;
 		sendEntityMetadata(getPlayersVisibleToArray());
 	}
 
 	@APIUsage
 	public void setSprinting(boolean sprinting)
 	{
-		if(this.sprinting == sprinting)
+		if(this.isSprinting == sprinting)
 			return;
 
 		if(isCrouched())
 			throw new IllegalStateException("Can't sprint while crouching");
 
-		this.sprinting = sprinting;
+		this.isSprinting = sprinting;
 		sendEntityMetadata(getPlayersVisibleToArray());
 	}
+
+	@APIUsage
+	public void setEating(boolean eating)
+	{
+		if(this.isEating == eating)
+			return;
+
+		if(isDrinking())
+			throw new IllegalStateException("Can't eat while drinking");
+		if(isBlocking())
+			throw new IllegalStateException("Can't eat while blocking");
+
+		this.isEating = eating;
+		sendEntityMetadata(getPlayersVisibleToArray());
+	}
+
+	@APIUsage
+	public void setDrinking(boolean drinking)
+	{
+		if(this.isDrinking == drinking)
+			return;
+
+		if(isEating())
+			throw new IllegalStateException("Can't drink while eating");
+		if(isBlocking())
+			throw new IllegalStateException("Can't drink while blocking");
+
+		this.isDrinking = drinking;
+		sendEntityMetadata(getPlayersVisibleToArray());
+	}
+
+	@APIUsage
+	public void setBlocking(boolean blocking)
+	{
+		if(this.isBlocking == blocking)
+			return;
+
+		if(isEating())
+			throw new IllegalStateException("Can't block while eating");
+		if(isDrinking())
+			throw new IllegalStateException("Can't block while drinking");
+
+		this.isBlocking = blocking;
+		sendEntityMetadata(getPlayersVisibleToArray());
+	}
+
 
 	@APIUsage
 	public void setGlowing(boolean glowing)
@@ -332,7 +396,8 @@ public class StateNPC
 	@APIUsage
 	protected void updateVisibilityForPlayer(Player player)
 	{
-		if(player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE))
+		boolean sameWorld = player.getWorld() == this.location.getWorld();
+		if(!sameWorld ? false : player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE))
 		{
 			if(!isVisibleTo(player))
 				becomeVisibleFor(player);
@@ -399,6 +464,9 @@ public class StateNPC
 	@APIUsage
 	public void moveToNearby(Location target)
 	{
+		if(target.equals(this.location))
+			return;
+
 		if((this.moveTeleportCounter++%RELATIVE_MOVE_TELEPORT_INTERVAL) == 0)
 		{
 			teleport(target);
