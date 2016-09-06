@@ -209,6 +209,9 @@ public class StateNPC
 			metadataBaseInfo |= 0x80;
 		metadata.register(new DataWatcherObject<>(0, DataWatcherRegistry.a), metadataBaseInfo);
 
+		// hand usage
+		//metadata.register(new DataWatcherObject<>(5, DataWatcherRegistry.a), 0x01);
+
 		// arrows in body
 		metadata.register(new DataWatcherObject<>(9, DataWatcherRegistry.a), this.numberOfArrowsInBody);
 		// !!! seems to have changed to 10 in v1.9/v1.10
