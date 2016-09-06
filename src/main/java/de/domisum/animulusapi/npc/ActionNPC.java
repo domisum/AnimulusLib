@@ -33,7 +33,8 @@ public class ActionNPC extends StateNPC
 	private static final double ACTION_RADIUS_SQUARED = ACTION_RADIUS*ACTION_RADIUS;
 
 	// STATUS
-	private transient Location bedLocation = null;
+	@APIUsage
+	public transient Location bedLocation = null; // this is temporarily for usage with zombie corpses
 	private transient Chest openedChest = null;
 
 
