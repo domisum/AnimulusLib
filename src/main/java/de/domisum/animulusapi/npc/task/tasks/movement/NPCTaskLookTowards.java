@@ -1,4 +1,4 @@
-package de.domisum.animulusapi.npc.task.tasks;
+package de.domisum.animulusapi.npc.task.tasks.movement;
 
 import de.domisum.animulusapi.npc.task.NPCTask;
 import de.domisum.animulusapi.npc.task.NPCTaskSlot;
