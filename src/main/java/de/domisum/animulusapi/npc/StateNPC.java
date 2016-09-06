@@ -519,8 +519,8 @@ public class StateNPC
 
 	public void setYawPitch(float yaw, float pitch)
 	{
-		this.location.setYaw(yaw);
-		this.location.setPitch(pitch);
+		this.location.setYaw(yaw%360);
+		this.location.setPitch(pitch%360);
 
 		sendLookHeadRotation(getPlayersVisibleToArray());
 	}
