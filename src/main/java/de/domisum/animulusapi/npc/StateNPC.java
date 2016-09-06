@@ -197,7 +197,7 @@ public class StateNPC
 
 		// skin parts
 		byte skinParts = 127; // all parts displayed (first bit is unused)
-		metadata.register(new DataWatcherObject<>(13, DataWatcherRegistry.a), skinParts);
+		metadata.register(new DataWatcherObject<>(12, DataWatcherRegistry.a), skinParts);
 
 		return metadata;
 	}
