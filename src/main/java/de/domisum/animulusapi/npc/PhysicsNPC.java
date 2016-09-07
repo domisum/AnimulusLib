@@ -23,7 +23,7 @@ public class PhysicsNPC extends StateNPC
 	private static final double HOVER_HEIGHT = 0.01;
 
 	// PROPERTIES
-	private Vector3D movement = new Vector3D();
+	protected Vector3D velocity = new Vector3D();
 	private boolean onGround = false;
 
 	// REFERENCES
@@ -68,6 +68,22 @@ public class PhysicsNPC extends StateNPC
 		return 4.3/20d;
 	}
 
+	@APIUsage
+	public Vector3D getVelocity()
+	{
+		return this.velocity;
+	}
+
+
+	// -------
+	// SETTERS
+	// -------
+	@APIUsage
+	public void setVelocity(Vector3D velocity)
+	{
+		this.velocity = velocity;
+	}
+
 
 	// -------
 	// UPDATING
@@ -82,28 +98,46 @@ public class PhysicsNPC extends StateNPC
 
 	private void applyPhysics()
 	{
-		this.movement = this.movement.add(0, -ACCELERATION, 0);
+		applyGravity();
+		doBlockCollision();
 
+		moveToNearby(this.location.clone().add(this.velocity.x, this.velocity.y, this.velocity.z), true);
+		applyDrag();
+	}
+
+	private void applyGravity()
+	{
+		this.velocity = this.velocity.add(0, -ACCELERATION, 0);
+	}
+
+	private void doBlockCollision()
+	{
 		// method c() means offset
 		// method a() means addCoord
 		AxisAlignedBB aabb = this.baseAABB.c(this.location.getX(), this.location.getY(), this.location.getZ());
-		AxisAlignedBB addedAABB = aabb.a(this.movement.x, this.movement.y, this.movement.z);
+		AxisAlignedBB addedAABB = aabb.a(this.velocity.x, this.velocity.y, this.velocity.z);
 
 		WorldServer nmsWorld = ((CraftWorld) this.location.getWorld()).getHandle();
-		double mY = this.movement.y;
+		double mY = this.velocity.y;
 		List list = nmsWorld.getCubes(null, addedAABB);
 		int i = 0;
 		for(int j = list.size(); i < j; i++)
 			mY = ((AxisAlignedBB) list.get(i)).b(aabb, mY);
 
-		this.onGround = mY >= this.movement.y;
+		this.onGround = mY >= this.velocity.y && this.velocity.y <= 0;
 
 		if(mY < 0)
 			mY += HOVER_HEIGHT;
-		this.movement = new Vector3D(this.movement.x, mY, this.movement.z);
-		moveToNearby(this.location.clone().add(this.movement.x, this.movement.y, this.movement.z), true);
+		this.velocity = new Vector3D(this.velocity.x, mY, this.velocity.z);
+	}
 
-		//DebugUtil.say("location: "+this.location+"movement: "+this.movement+" onGround: "+this.onGround+" mY: "+mY);
+	private void applyDrag()
+	{
+		double newVX = this.velocity.x*0.6;
+		double newVY = this.velocity.y*0.98;
+		double newVZ = this.velocity.z*0.6;
+
+		this.velocity = new Vector3D(newVX, newVY, newVZ);
 	}
 
 
@@ -112,10 +146,7 @@ public class PhysicsNPC extends StateNPC
 	// -------
 	public void jump()
 	{
-		if(this.movement.y >= 0.6)
-			return;
-
-		this.movement = this.movement.add(0, 0.6, 0);
+		this.velocity = new Vector3D(this.velocity.x, 0.6, this.velocity.z);
 	}
 
 }
