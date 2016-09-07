@@ -91,6 +91,10 @@ public class TaskNPC extends PhysicsNPC
 		if(this.taskQueue.size() == 0)
 			return;
 
+		for(NPCTask activeTask : this.activeTasks)
+			if(activeTask.isRunSeparately())
+				return;
+
 		NPCTask task = this.taskQueue.get(0);
 		if(!areTaskSlotsUnblocked(task))
 			return;
