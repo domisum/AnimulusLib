@@ -4,6 +4,7 @@ import de.domisum.animulusapi.AnimulusAPI;
 import de.domisum.animulusapi.npc.task.NPCTask;
 import de.domisum.animulusapi.npc.task.NPCTaskSlot;
 import de.domisum.auxiliumapi.data.container.Duo;
+import de.domisum.auxiliumapi.data.container.math.Vector2D;
 import de.domisum.auxiliumapi.data.container.math.Vector3D;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import de.domisum.compitumapi.CompitumAPI;
@@ -83,7 +84,7 @@ public class NPCTaskMoveTo extends NPCTask
 		double dY = currentWaypoint.a.y-loc.getY();
 		double dZ = currentWaypoint.a.z-loc.getZ();
 
-		if(dX*dX+dZ*dZ < 1)
+		if(dX*dX+dZ*dZ < 0.1)
 		{
 			this.currentWaypointIndex++;
 			return true;
@@ -92,11 +93,20 @@ public class NPCTaskMoveTo extends NPCTask
 		if(dY > 0.6 && this.npc.isOnGround())
 			this.npc.jump();
 
-		double stepX = (dX < 0 ? -1 : 1)*Math.min(Math.abs(dX), this.npc.getWalkSpeed()*this.speedMultiplier);
-		double stepZ = (dZ < 0 ? -1 : 1)*Math.min(Math.abs(dZ), this.npc.getWalkSpeed()*this.speedMultiplier);
+		double speed = this.npc.getWalkSpeed()*this.speedMultiplier;
+		double stepX = (dX < 0 ? -1 : 1)*Math.min(Math.abs(dX), speed);
+		double stepZ = (dZ < 0 ? -1 : 1)*Math.min(Math.abs(dZ), speed);
 
-		Location targetLocation = loc.clone().add(stepX, 0, stepZ);
-		this.npc.moveToNearby(targetLocation);
+		Vector2D mov = new Vector2D(stepX, stepZ);
+		double movLength = mov.length();
+		if(movLength > speed)
+			mov = mov.multiply(speed/movLength);
+
+		// inair acceleration is not that good
+		if(!this.npc.isOnGround())
+			mov = mov.multiply(0.3);
+
+		this.npc.setVelocity(new Vector3D(mov.x, this.npc.getVelocity().y, mov.y));
 		return true;
 	}
 
