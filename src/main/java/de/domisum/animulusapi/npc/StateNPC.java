@@ -75,7 +75,7 @@ public class StateNPC
 	protected StateNPC(GameProfile gameProfile, Location location)
 	{
 		this.gameProfile = gameProfile;
-		this.location = location;
+		this.location = location.clone();
 
 		initialize();
 	}
