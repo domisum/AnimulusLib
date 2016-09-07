@@ -32,7 +32,7 @@ public class StateNPC
 	// CONSTANTS
 	protected static final double VISIBILITY_RANGE = 45d;
 	protected static final long TABLIST_REMOVE_DELAY_MS = 5000;
-	protected static final long RELATIVE_MOVE_TELEPORT_INTERVAL = 40;
+	protected static final long RELATIVE_MOVE_TELEPORT_INTERVAL = 10;
 
 	// STATUS
 	protected transient String id;
@@ -490,12 +490,20 @@ public class StateNPC
 	@APIUsage
 	public void moveToNearby(Location target)
 	{
+		moveToNearby(target, false);
+	}
+
+	@APIUsage
+	public void moveToNearby(Location target, boolean forceExact)
+	{
 		if(target.equals(this.location))
 			return;
 
-		if((this.moveTeleportCounter++%RELATIVE_MOVE_TELEPORT_INTERVAL) == 0)
+		if((this.moveTeleportCounter++%RELATIVE_MOVE_TELEPORT_INTERVAL) == 0 || forceExact)
 		{
-			teleport(target);
+			this.location = target;
+			sendTeleport(getPlayersVisibleToArray());
+			sendLookHeadRotation(getPlayersVisibleToArray());
 			return;
 		}
 

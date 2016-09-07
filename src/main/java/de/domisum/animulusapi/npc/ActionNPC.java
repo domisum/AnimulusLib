@@ -69,12 +69,12 @@ public class ActionNPC extends StateNPC
 	public double getWalkSpeed()
 	{
 		if(isSprinting())
-			return 5.6/20;
+			return 5.6/20d;
 
 		if(isCrouched())
-			return 1.3/20;
+			return 1.3/20d;
 
-		return 4.3/20;
+		return 4.3/20d;
 	}
 
 

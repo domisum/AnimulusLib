@@ -1,7 +1,6 @@
 package de.domisum.animulusapi.npc;
 
 import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.animulusapi.listener.NPCInteractPacketListener;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,7 +46,8 @@ public class NPCManager implements Listener
 
 	private void registerListener()
 	{
-		new NPCInteractPacketListener();
+		// TODO enable this listener again
+		// new NPCInteractPacketListener();
 
 		JavaPlugin instance = AnimulusAPI.getInstance().getPlugin();
 		instance.getServer().getPluginManager().registerEvents(this, instance);

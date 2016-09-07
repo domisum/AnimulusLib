@@ -16,9 +16,11 @@ public class PhysicsNPC extends StateNPC
 {
 
 	// CONSTANTS
-	private static final double ACCELERATION = 0.981;
+	private static final double ACCELERATION = 0.08;
 	private static final double AABB_XZ_LENGTH = 0.6;
 	private static final double AABB_Y_LENGTH = 1.8;
+
+	private static final double HOVER_HEIGHT = 0.01;
 
 	// PROPERTIES
 	private Vector3D movement = new Vector3D();
@@ -54,6 +56,18 @@ public class PhysicsNPC extends StateNPC
 		return this.onGround;
 	}
 
+	@APIUsage
+	public double getWalkSpeed()
+	{
+		if(isSprinting())
+			return 5.6/20d;
+
+		if(isCrouched())
+			return 1.3/20d;
+
+		return 4.3/20d;
+	}
+
 
 	// -------
 	// UPDATING
@@ -83,11 +97,25 @@ public class PhysicsNPC extends StateNPC
 			mY = ((AxisAlignedBB) list.get(i)).b(aabb, mY);
 
 		this.onGround = mY >= this.movement.y;
-		this.movement = new Vector3D(this.movement.x, mY, this.movement.z);
 
-		moveToNearby(this.location.clone().add(this.movement.x, this.movement.y, this.movement.z));
+		if(mY < 0)
+			mY += HOVER_HEIGHT;
+		this.movement = new Vector3D(this.movement.x, mY, this.movement.z);
+		moveToNearby(this.location.clone().add(this.movement.x, this.movement.y, this.movement.z), true);
 
 		//DebugUtil.say("location: "+this.location+"movement: "+this.movement+" onGround: "+this.onGround+" mY: "+mY);
+	}
+
+
+	// -------
+	// PHYSICS INTERACTION
+	// -------
+	public void jump()
+	{
+		if(this.movement.y >= 0.6)
+			return;
+
+		this.movement = this.movement.add(0, 0.6, 0);
 	}
 
 }
