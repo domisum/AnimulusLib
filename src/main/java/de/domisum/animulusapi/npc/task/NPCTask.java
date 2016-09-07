@@ -36,7 +36,7 @@ public abstract class NPCTask
 	// -------
 	public abstract NPCTaskSlot[] USED_TASK_SLOTS();
 
-	boolean isRunSeparately()
+	protected boolean isRunSeparately()
 	{
 		return this.runSeparately;
 	}
