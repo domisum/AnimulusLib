@@ -23,8 +23,9 @@ public class PhysicsNPC extends StateNPC
 	private static final double HOVER_HEIGHT = 0.01;
 
 	// PROPERTIES
-	protected Vector3D velocity = new Vector3D();
+	private Vector3D velocity = new Vector3D();
 	private boolean onGround = false;
+	private int ticksOnGround = 0;
 
 	// REFERENCES
 	private AxisAlignedBB baseAABB = new AxisAlignedBB(-AABB_XZ_LENGTH/2d, 0, -AABB_XZ_LENGTH/2d, AABB_XZ_LENGTH/2d,
@@ -112,23 +113,50 @@ public class PhysicsNPC extends StateNPC
 
 	private void doBlockCollision()
 	{
-		// method c() means offset
-		// method a() means addCoord
-		AxisAlignedBB aabb = this.baseAABB.c(this.location.getX(), this.location.getY(), this.location.getZ());
-		AxisAlignedBB addedAABB = aabb.a(this.velocity.x, this.velocity.y, this.velocity.z);
-
+		// GENERAL COLLISION
 		WorldServer nmsWorld = ((CraftWorld) this.location.getWorld()).getHandle();
+
+		// method #c() means offset
+		// method #a() means addCoord
+		AxisAlignedBB aabb = this.baseAABB.c(this.location.getX(), this.location.getY(), this.location.getZ());
+		AxisAlignedBB movedAABB = aabb.a(this.velocity.x, this.velocity.y, this.velocity.z);
+		List<AxisAlignedBB> nearbyBlockAABBs = nmsWorld.getCubes(null, movedAABB);
+
+
+		double mX = this.velocity.x;
 		double mY = this.velocity.y;
-		List list = nmsWorld.getCubes(null, addedAABB);
-		int i = 0;
-		for(int j = list.size(); i < j; i++)
-			mY = ((AxisAlignedBB) list.get(i)).b(aabb, mY);
+		double mZ = this.velocity.z;
+
+		// y-collision, method #b() means y-offset
+		for(AxisAlignedBB a : nearbyBlockAABBs)
+			mY = a.b(aabb, mY);
+		aabb = aabb.c(0, mY, 0);
+
+		// x-collision, method #a() means x-offset
+		for(AxisAlignedBB a : nearbyBlockAABBs)
+			mX = a.a(aabb, mX);
+		aabb = aabb.c(mX, 0, 0);
+
+		// z-collision, method #c() means z-offset
+		for(AxisAlignedBB a : nearbyBlockAABBs)
+			mZ = a.c(aabb, mZ);
+		// aabb = aabb.c(0, 0, mZ);
+
 
 		this.onGround = mY >= this.velocity.y && this.velocity.y <= 0;
+		if(this.onGround)
+			this.ticksOnGround++;
+		else
+			this.ticksOnGround = 0;
 
 		if(mY < 0)
 			mY += HOVER_HEIGHT;
-		this.velocity = new Vector3D(this.velocity.x, mY, this.velocity.z);
+
+		// MOVING UP STAIRS
+		// TODO
+
+
+		this.velocity = new Vector3D(mX, mY, mZ);
 	}
 
 	private void applyDrag()
@@ -146,6 +174,12 @@ public class PhysicsNPC extends StateNPC
 	// -------
 	public void jump()
 	{
+		if(!this.onGround)
+			return;
+
+		if(this.ticksOnGround < 5)
+			return;
+
 		this.velocity = new Vector3D(this.velocity.x, 0.6, this.velocity.z);
 	}
 
