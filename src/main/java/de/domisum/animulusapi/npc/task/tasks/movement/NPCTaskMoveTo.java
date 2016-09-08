@@ -90,8 +90,8 @@ public class NPCTaskMoveTo extends NPCTask
 			return true;
 		}
 
-		if(dY > 0.6 && this.npc.isOnGround())
-			this.npc.jump();
+		/*if(dY > 0.6 && this.npc.isOnGround())
+			this.npc.jump();*/
 
 		double speed = this.npc.getWalkSpeed()*this.speedMultiplier;
 		double stepX = (dX < 0 ? -1 : 1)*Math.min(Math.abs(dX), speed);
