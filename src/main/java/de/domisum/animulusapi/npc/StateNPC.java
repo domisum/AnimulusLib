@@ -30,29 +30,27 @@ public class StateNPC
 {
 
 	// CONSTANTS
-	protected static final double VISIBILITY_RANGE = 45d;
-	protected static final long TABLIST_REMOVE_DELAY_MS = 5000;
-	protected static final long RELATIVE_MOVE_TELEPORT_INTERVAL = 10;
+	private static final double VISIBILITY_RANGE = 60d;
+	private static final long TABLIST_REMOVE_DELAY_MS = 4000;
+	private static final long RELATIVE_MOVE_TELEPORT_INTERVAL = 10;
 
 	// STATUS
-	protected transient String id;
-	protected transient int entityId;
-	protected transient GameProfile gameProfile;
+	transient String id;
+	transient int entityId;
+	private transient GameProfile gameProfile;
 
 	protected transient Location location;
-	protected transient ItemStack itemInHand = null;
-	protected transient ItemStack itemInOffHand = null;
-	protected transient ItemStack[] armor = new ItemStack[4]; // 0: boots, 1: leggings, 2: chestplate, 3: helmet
+	private transient ItemStack itemInHand = null;
+	private transient ItemStack itemInOffHand = null;
+	private transient ItemStack[] armor = new ItemStack[4]; // 0: boots, 1: leggings, 2: chestplate, 3: helmet
 
-	protected transient boolean isOnFire = false;
-	protected transient boolean isCrouched = false;
-	protected transient boolean isSprinting = false;
-	protected transient boolean isEating = false; // TODO implement these
-	protected transient boolean isDrinking = false;
-	protected transient boolean isBlocking = false;
-	protected transient boolean isInvisible = false; // TODO does this work?
-	protected transient boolean isGlowing = false;
-	protected transient boolean isFlyingWithElytra = false;
+	private transient boolean isOnFire = false;
+	private transient boolean isCrouched = false;
+	private transient boolean isSprinting = false;
+	private transient boolean isEating = false;
+	private transient boolean isDrinking = false;
+	private transient boolean isBlocking = false;
+	private transient boolean isGlowing = false;
 
 	private transient int numberOfArrowsInBody = 0;
 
@@ -72,7 +70,7 @@ public class StateNPC
 
 	}
 
-	protected StateNPC(GameProfile gameProfile, Location location)
+	StateNPC(GameProfile gameProfile, Location location)
 	{
 		this.gameProfile = gameProfile;
 		this.location = location.clone();
@@ -80,7 +78,7 @@ public class StateNPC
 		initialize();
 	}
 
-	protected void initialize()
+	private void initialize()
 	{
 		this.entityId = getUnusedEntityId();
 		this.visibleTo = new HashSet<>();
@@ -208,12 +206,10 @@ public class StateNPC
 		// this seems to be unused now, using the byte with key 5
 		/*if(this.isEating || this.isDrinking || this.isBlocking)
 			metadataBaseInfo |= 0x10;*/
-		if(this.isInvisible)
-			metadataBaseInfo |= 0x20;
 		if(this.isGlowing)
 			metadataBaseInfo |= 0x40;
-		if(this.isFlyingWithElytra)
-			metadataBaseInfo |= 0x80;
+		/*if(this.isFlyingWithElytra)
+			metadataBaseInfo |= 0x80;*/
 		metadata.register(new DataWatcherObject<>(0, DataWatcherRegistry.a), metadataBaseInfo);
 
 		// hand active
@@ -582,7 +578,7 @@ public class StateNPC
 		sendPlayerInfoRemove(players);
 	}
 
-	protected void sendEntityEquipment(Player... players)
+	private void sendEntityEquipment(Player... players)
 	{
 		for(int slot = 0; slot < 4; slot++)
 			sendEntityEquipmentChange(getArmorItemSlot(slot), this.armor[slot], players);
@@ -592,20 +588,20 @@ public class StateNPC
 	}
 
 
-	protected void sendRemoveToPlayer(Player... players)
+	private void sendRemoveToPlayer(Player... players)
 	{
 		sendEntityDespawn(players);
 	}
 
 
 	// PLAYER INFO
-	protected PlayerInfoData getPlayerInfoData(PacketPlayOutPlayerInfo packetPlayOutPlayerInfo)
+	private PlayerInfoData getPlayerInfoData(PacketPlayOutPlayerInfo packetPlayOutPlayerInfo)
 	{
 		return packetPlayOutPlayerInfo.new PlayerInfoData(this.gameProfile, 0, EnumGamemode.NOT_SET,
 				CraftChatMessage.fromString("")[0]);
 	}
 
-	protected void sendPlayerInfo(Player... players)
+	private void sendPlayerInfo(Player... players)
 	{
 		PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", EnumPlayerInfoAction.ADD_PLAYER);
@@ -617,7 +613,7 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	protected void sendPlayerInfoRemove(Player... players)
+	private void sendPlayerInfoRemove(Player... players)
 	{
 		PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", EnumPlayerInfoAction.REMOVE_PLAYER);
@@ -634,7 +630,7 @@ public class StateNPC
 
 
 	// ENTITY SPAWN
-	protected void sendEntitySpawn(Player... players)
+	private void sendEntitySpawn(Player... players)
 	{
 		PacketPlayOutNamedEntitySpawn packet = new PacketPlayOutNamedEntitySpawn();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);
@@ -652,7 +648,7 @@ public class StateNPC
 
 
 	// ENTITY DESPAWN
-	protected void sendEntityDespawn(Player... players)
+	private void sendEntityDespawn(Player... players)
 	{
 		PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", new int[] {this.entityId});
@@ -663,7 +659,7 @@ public class StateNPC
 
 
 	// ENTITY CHANGE
-	protected void sendEntityEquipmentChange(EnumItemSlot slot, ItemStack itemStack, Player... players)
+	private void sendEntityEquipmentChange(EnumItemSlot slot, ItemStack itemStack, Player... players)
 	{
 		PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(this.entityId, slot,
 				CraftItemStack.asNMSCopy(itemStack));
@@ -672,7 +668,7 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	protected void sendEntityMetadata(Player... players)
+	private void sendEntityMetadata(Player... players)
 	{
 		// the boolean determines the metadata sent to the player;
 		// true = all metadata
@@ -685,7 +681,7 @@ public class StateNPC
 
 
 	// MOVEMENT
-	protected void sendRelativeMoveLook(Location target, Player... players)
+	private void sendRelativeMoveLook(Location target, Player... players)
 	{
 		double dX = target.getX()-this.location.getX();
 		double dY = target.getY()-this.location.getY();
@@ -706,7 +702,7 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	protected void sendTeleport(Player... players)
+	private void sendTeleport(Player... players)
 	{
 		PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);
