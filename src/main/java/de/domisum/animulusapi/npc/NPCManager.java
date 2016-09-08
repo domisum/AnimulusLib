@@ -33,6 +33,8 @@ public class NPCManager implements Listener
 	private Map<Integer, StateNPC> npcs = new HashMap<>(); // <entityId, npc>
 	private List<StateNPC> npcsToRemove = new CopyOnWriteArrayList<>();
 
+	/*private List<Long> lastNPCUpdateDurations = new ArrayList<>();*/
+
 
 	// -------
 	// CONSTRUCTOR
@@ -72,6 +74,7 @@ public class NPCManager implements Listener
 	// -------
 	// GETTERS
 	// -------
+	@APIUsage
 	public int getUpdateCount()
 	{
 		return this.updateCount;
@@ -144,6 +147,8 @@ public class NPCManager implements Listener
 
 	private void update()
 	{
+		/*long startNano = System.nanoTime();*/
+
 		for(StateNPC toRemove : this.npcsToRemove)
 			this.npcs.values().remove(toRemove);
 		this.npcsToRemove.clear();
@@ -158,6 +163,13 @@ public class NPCManager implements Listener
 		}
 
 		this.updateCount++;
+
+		// benchmarking
+		/*long endNano = System.nanoTime();
+		long durationNano = endNano-startNano;
+		this.lastNPCUpdateDurations.add(durationNano);
+		if(this.lastNPCUpdateDurations.size() > 20*60)
+			this.lastNPCUpdateDurations.remove(0);*/
 	}
 
 
