@@ -24,7 +24,7 @@ public class NPCManager implements Listener
 	// CONSTANTS
 	private static final int MS_PER_TICK = 50;
 
-	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 40;
+	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 20;
 
 	// STATUS
 	private ScheduledFuture<?> updatingTask;

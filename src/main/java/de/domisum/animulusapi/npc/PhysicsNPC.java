@@ -152,7 +152,7 @@ public class PhysicsNPC extends StateNPC
 		if(mY < 0)
 			mY += HOVER_HEIGHT;
 
-		// MOVING UP STAIRS
+		// MOVING UP STAIRS and slabs
 		// TODO
 
 
