@@ -272,7 +272,7 @@ public class PhysicsNPC extends StateNPC
 		if(!this.onGround)
 			return;
 
-		if(this.ticksOnGround < 5)
+		if(this.ticksOnGround < 10)
 			return;
 
 		this.velocity = new Vector3D(this.velocity.x, 0.6, this.velocity.z);

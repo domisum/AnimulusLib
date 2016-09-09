@@ -8,6 +8,7 @@ import de.domisum.auxiliumapi.data.container.math.Vector2D;
 import de.domisum.auxiliumapi.data.container.math.Vector3D;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import de.domisum.compitumapi.CompitumAPI;
+import de.domisum.compitumapi.transitionalpath.node.TransitionType;
 import de.domisum.compitumapi.transitionalpath.path.TransitionalPath;
 import org.bukkit.Location;
 
@@ -90,8 +91,8 @@ public class NPCTaskMoveTo extends NPCTask
 			return true;
 		}
 
-		/*if(dY > 0.6 && this.npc.isOnGround())
-			this.npc.jump();*/
+		if(dY > 0 && currentWaypoint.b == TransitionType.JUMP)
+			this.npc.jump();
 
 		double speed = this.npc.getWalkSpeed()*this.speedMultiplier;
 		double stepX = (dX < 0 ? -1 : 1)*Math.min(Math.abs(dX), speed);
