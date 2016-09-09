@@ -239,7 +239,6 @@ public class PhysicsNPC extends StateNPC
 				aabb = aabb4;
 			}
 
-			double asdf = mY;
 			for(AxisAlignedBB a : stepsNearbyBlockAABBs)
 				mY = a.b(aabb, mY);
 			/*aabb = aabb.c(0, mY, 0);*/
