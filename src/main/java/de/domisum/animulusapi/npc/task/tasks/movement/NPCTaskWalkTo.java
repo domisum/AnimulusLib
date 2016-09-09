@@ -13,7 +13,7 @@ import de.domisum.compitumapi.transitionalpath.path.TransitionalPath;
 import org.bukkit.Location;
 
 @APIUsage
-public class NPCTaskMoveTo extends NPCTask
+public class NPCTaskWalkTo extends NPCTask
 {
 
 	// CONSTANTS
@@ -32,13 +32,13 @@ public class NPCTaskMoveTo extends NPCTask
 	// CONSTRUCTOR
 	// -------
 	@APIUsage
-	public NPCTaskMoveTo(Location target)
+	public NPCTaskWalkTo(Location target)
 	{
 		this(target, 1);
 	}
 
 	@APIUsage
-	public NPCTaskMoveTo(Location target, double speedMultiplier)
+	public NPCTaskWalkTo(Location target, double speedMultiplier)
 	{
 		super();
 
