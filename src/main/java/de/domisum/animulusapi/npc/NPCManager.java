@@ -117,11 +117,6 @@ public class NPCManager implements Listener
 	// -------
 	private void startUpdatingTask()
 	{
-		// TODO this is unclean, test to check if can be removed
-		// starting tick to kick off NPCTasks
-		for(StateNPC npc : this.npcs.values())
-			npc.update();
-
 		Runnable run = ()->
 		{
 			try
