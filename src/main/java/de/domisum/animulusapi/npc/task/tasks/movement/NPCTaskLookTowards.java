@@ -2,7 +2,9 @@ package de.domisum.animulusapi.npc.task.tasks.movement;
 
 import de.domisum.animulusapi.npc.task.NPCTask;
 import de.domisum.animulusapi.npc.task.NPCTaskSlot;
+import de.domisum.auxiliumapi.data.container.Duo;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
+import de.domisum.auxiliumapi.util.math.MathUtil;
 import org.bukkit.Location;
 
 @APIUsage
@@ -64,35 +66,42 @@ public class NPCTaskLookTowards extends NPCTask
 	protected boolean onUpdate()
 	{
 		Location currentLocation = this.npc.getLocation();
+		Duo<Float, Float> stepYawAndPitch = getStepYawAndPitch(currentLocation, this.targetYaw, this.targetPitch,
+				BASE_SPEED*this.speedMultiplier);
 
-		float dYaw = (this.targetYaw-currentLocation.getYaw())%360;
+
+		if(Math.abs(stepYawAndPitch.a)+Math.abs(stepYawAndPitch.b) < TOLERANCE)
+			return false;
+
+
+		this.npc.setYawPitch(currentLocation.getYaw()+stepYawAndPitch.a, currentLocation.getPitch()+stepYawAndPitch.b);
+		return true;
+	}
+	
+	@Override
+	protected void onCancel()
+	{
+
+	}
+
+
+	// -------
+	// UTIL
+	// -------
+	@APIUsage
+	public static Duo<Float, Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch, double speed)
+	{
+		float dYaw = (targetYaw-currentLocation.getYaw())%360;
 		if(dYaw < 0)
 			dYaw += 360;
 		if(dYaw > 180)
 			dYaw -= 360;
 
-		float dPitch = this.targetPitch-currentLocation.getPitch();
+		float dPitch = targetPitch-currentLocation.getPitch();
 
-		if(Math.abs(dYaw)+Math.abs(dPitch) < TOLERANCE)
-			return false;
-
-		float stepDYaw = getClampedDelta(dYaw);
-		float stepDPitch = getClampedDelta(dPitch);
-
-		this.npc.setYawPitch(currentLocation.getYaw()+stepDYaw, currentLocation.getPitch()+stepDPitch);
-		return true;
-	}
-
-	private float getClampedDelta(float value)
-	{
-		return (float) ((value < 0 ? -1 : 1)*Math.min(Math.abs(value), BASE_SPEED*this.speedMultiplier));
-	}
-
-
-	@Override
-	protected void onCancel()
-	{
-
+		float stepDYaw = (float) MathUtil.clampAbs(dYaw, speed);
+		float stepDPitch = (float) MathUtil.clampAbs(dPitch, speed);
+		return new Duo<>(stepDYaw, stepDPitch);
 	}
 
 }
