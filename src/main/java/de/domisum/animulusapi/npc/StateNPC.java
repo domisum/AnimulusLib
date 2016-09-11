@@ -35,9 +35,10 @@ public class StateNPC
 	private static final long RELATIVE_MOVE_TELEPORT_INTERVAL = 10;
 
 	// STATUS
-	transient String id;
-	transient int entityId;
-	private transient GameProfile gameProfile;
+	private transient String id;
+	private transient int entityId;
+	@APIUsage
+	protected transient GameProfile gameProfile;
 
 	protected transient Location location;
 	private transient ItemStack itemInHand = null;
@@ -78,7 +79,8 @@ public class StateNPC
 		initialize();
 	}
 
-	private void initialize()
+	@APIUsage
+	protected void initialize()
 	{
 		this.entityId = getUnusedEntityId();
 		this.visibleTo = new HashSet<>();
@@ -288,6 +290,12 @@ public class StateNPC
 	{
 		this.itemInOffHand = itemStack;
 		sendEntityEquipmentChange(EnumItemSlot.OFFHAND, itemStack, getPlayersVisibleToArray());
+	}
+
+	@APIUsage
+	public void setArmor(ItemStack[] armor)
+	{
+		this.armor = armor;
 	}
 
 	@APIUsage
