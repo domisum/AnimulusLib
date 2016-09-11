@@ -95,7 +95,6 @@ public class NPCTaskStroll extends NPCTask
 			walkTask = null;
 			currentTarget = null;
 
-			ticksToWait = RandomUtil.distribute(4*20, 2*20);
 		}
 
 		return false;
