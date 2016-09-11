@@ -54,48 +54,48 @@ public class NPCTaskStroll extends NPCTask
 	@Override
 	protected void onStart()
 	{
-		startLocation = npc.getLocation();
+		this.startLocation = this.npc.getLocation();
 	}
 
 	@Override
 	protected boolean onUpdate()
 	{
-		if(durationTicks > 0) // if duration <= 0, then do this forever
-			if(ticksStrolled >= durationTicks)
+		if(this.durationTicks > 0) // if duration <= 0, then do this forever
+			if(this.ticksStrolled >= this.durationTicks)
 			{
-				if(walkTask != null)
-					walkTask.onCancel();
+				if(this.walkTask != null)
+					this.walkTask.onCancel();
 
 				return true;
 			}
-		ticksStrolled++;
+		this.ticksStrolled++;
 
-		if(ticksToWait > 0)
+		if(this.ticksToWait > 0)
 		{
-			ticksToWait--;
+			this.ticksToWait--;
 			return false;
 		}
 
-		if(currentTarget == null)
+		if(this.currentTarget == null)
 		{
-			currentTarget = findStrollLocation(startLocation, 7);
-			if(currentTarget == null)
+			this.currentTarget = findStrollLocation(this.startLocation, 7);
+			if(this.currentTarget == null)
 				return false;
 
-			walkTask = new NPCTaskWalkTo(currentTarget, 0.9);
-			walkTask.initialize(npc);
-			walkTask.onStart();
+			this.walkTask = new NPCTaskWalkTo(this.currentTarget, 0.9);
+			this.walkTask.initialize(this.npc);
+			this.walkTask.onStart();
 
 			return false;
 		}
 
-		boolean arrived = walkTask.onUpdate();
+		boolean arrived = this.walkTask.onUpdate();
 		if(arrived)
 		{
-			walkTask = null;
-			currentTarget = null;
+			this.walkTask = null;
+			this.currentTarget = null;
 
-			ticksToWait = RandomUtil.distribute(4*20, 3*20);
+			this.ticksToWait = RandomUtil.distribute(4*20, 3*20);
 		}
 
 		return false;
