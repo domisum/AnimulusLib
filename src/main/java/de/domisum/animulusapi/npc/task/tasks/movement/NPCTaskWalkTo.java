@@ -75,7 +75,7 @@ public class NPCTaskWalkTo extends NPCTask
 		{
 			this.npc.onWalkingFail();
 			AnimulusAPI.getInstance().getLogger().warning(
-					"No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
+					npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
 							.getLocationAsString(this.target));
 			if(pathfinder.getError() != null)
 				AnimulusAPI.getInstance().getLogger().severe("Error: '"+pathfinder.getError()+"'");
