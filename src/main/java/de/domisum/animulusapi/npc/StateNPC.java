@@ -56,7 +56,7 @@ public class StateNPC
 	private transient int numberOfArrowsInBody = 0;
 
 	// PLAYERS
-	private transient Set<Player> visibleTo;
+	private transient Set<Player> visibleTo = new HashSet<>();
 
 	// TEMP
 	private transient int moveTeleportCounter = 0;
@@ -83,7 +83,6 @@ public class StateNPC
 	protected void initialize()
 	{
 		this.entityId = getUnusedEntityId();
-		this.visibleTo = new HashSet<>();
 	}
 
 	protected void terminate()

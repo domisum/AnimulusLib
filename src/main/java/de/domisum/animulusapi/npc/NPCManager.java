@@ -103,6 +103,8 @@ public class NPCManager implements Listener
 	public void addNPC(StateNPC npc)
 	{
 		this.npcs.put(npc.getEntityId(), npc);
+
+		npc.initialize();
 	}
 
 	@APIUsage
