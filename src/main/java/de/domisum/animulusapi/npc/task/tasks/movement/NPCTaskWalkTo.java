@@ -67,6 +67,8 @@ public class NPCTaskWalkTo extends NPCTask
 		this.path = CompitumAPI.findPlayerPath(start, this.target);
 		if(this.path == null)
 		{
+			npc.onWalkingFail();
+
 			AnimulusAPI.getInstance().getLogger().severe("Failed pathfinding from '"+start+"' to '"+this.target+"'");
 			this.cancel();
 		}
