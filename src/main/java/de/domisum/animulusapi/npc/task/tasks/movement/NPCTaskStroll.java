@@ -2,7 +2,6 @@ package de.domisum.animulusapi.npc.task.tasks.movement;
 
 import de.domisum.animulusapi.npc.task.NPCTask;
 import de.domisum.animulusapi.npc.task.NPCTaskSlot;
-import de.domisum.auxiliumapi.util.DebugUtil;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import de.domisum.auxiliumapi.util.math.RandomUtil;
 import org.bukkit.Location;
@@ -61,8 +60,6 @@ public class NPCTaskStroll extends NPCTask
 	@Override
 	protected boolean onUpdate()
 	{
-		DebugUtil.say("duration: "+durationTicks+" elapsed: "+ticksStrolled);
-
 		if(durationTicks > 0) // if duration <= 0, then do this forever
 			if(ticksStrolled >= durationTicks)
 			{
@@ -82,7 +79,6 @@ public class NPCTaskStroll extends NPCTask
 		if(currentTarget == null)
 		{
 			currentTarget = findStrollLocation(startLocation, 7);
-			DebugUtil.say("currentTarget: "+currentTarget);
 			if(currentTarget == null)
 				return false;
 
