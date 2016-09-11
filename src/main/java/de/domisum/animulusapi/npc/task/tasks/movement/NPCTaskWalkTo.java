@@ -6,12 +6,13 @@ import de.domisum.animulusapi.npc.task.NPCTaskSlot;
 import de.domisum.auxiliumapi.data.container.Duo;
 import de.domisum.auxiliumapi.data.container.math.Vector2D;
 import de.domisum.auxiliumapi.data.container.math.Vector3D;
+import de.domisum.auxiliumapi.util.TextUtil;
 import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import de.domisum.auxiliumapi.util.math.MathUtil;
-import de.domisum.compitumapi.CompitumAPI;
 import de.domisum.compitumapi.transitionalpath.node.TransitionType;
 import de.domisum.compitumapi.transitionalpath.path.TransitionalPath;
+import de.domisum.compitumapi.universal.UniversalPathfinder;
 import org.bukkit.Location;
 
 @APIUsage
@@ -66,19 +67,32 @@ public class NPCTaskWalkTo extends NPCTask
 	protected void onStart()
 	{
 		Location start = this.npc.getLocation();
-		this.path = CompitumAPI.findPlayerPath(start, this.target);
+
+		UniversalPathfinder pathfinder = new UniversalPathfinder(start, target);
+		pathfinder.findPath();
+
 		if(this.path == null)
 		{
 			this.npc.onWalkingFail();
+			AnimulusAPI.getInstance().getLogger().warning(
+					"No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
+							.getLocationAsString(this.target));
+			if(pathfinder.getError() != null)
+				AnimulusAPI.getInstance().getLogger().severe("Error: '"+pathfinder.getError()+"'");
 
-			AnimulusAPI.getInstance().getLogger().severe("Failed pathfinding from '"+start+"' to '"+this.target+"'");
 			this.cancel();
+			return;
 		}
+
+		path = pathfinder.getPath();
 	}
 
 	@Override
 	protected boolean onUpdate()
 	{
+		if(path == null)
+			return false;
+
 		if(this.currentWaypointIndex >= this.path.getNumberOfWaypoints())
 			return false;
 
