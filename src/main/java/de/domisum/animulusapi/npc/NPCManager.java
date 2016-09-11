@@ -1,6 +1,7 @@
 package de.domisum.animulusapi.npc;
 
 import de.domisum.animulusapi.AnimulusAPI;
+import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -157,7 +158,8 @@ public class NPCManager implements Listener
 				npc.updateVisibleForPlayers();
 
 			if(npc.isVisibleToSomebody())
-				npc.update();
+				if(LocationUtil.isChunkLoaded(npc.getLocation()))
+					npc.update();
 		}
 
 		this.updateCount++;

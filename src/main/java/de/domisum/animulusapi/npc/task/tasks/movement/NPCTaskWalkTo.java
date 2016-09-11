@@ -70,6 +70,7 @@ public class NPCTaskWalkTo extends NPCTask
 
 		UniversalPathfinder pathfinder = new UniversalPathfinder(start, target);
 		pathfinder.findPath();
+		path = pathfinder.getPath();
 
 		if(this.path == null)
 		{
@@ -77,14 +78,12 @@ public class NPCTaskWalkTo extends NPCTask
 			AnimulusAPI.getInstance().getLogger().warning(
 					npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
 							.getLocationAsString(this.target));
+			AnimulusAPI.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
 			if(pathfinder.getError() != null)
 				AnimulusAPI.getInstance().getLogger().severe("Error: '"+pathfinder.getError()+"'");
 
 			this.cancel();
-			return;
 		}
-
-		path = pathfinder.getPath();
 	}
 
 	@Override
