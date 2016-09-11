@@ -710,7 +710,8 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	private void sendTeleport(Player... players)
+	@APIUsage
+	protected void sendTeleport(Player... players)
 	{
 		PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);
@@ -725,7 +726,7 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	void sendLookHeadRotation(Player... players)
+	private void sendLookHeadRotation(Player... players)
 	{
 		sendLook(players);
 		sendHeadRotation(players);
