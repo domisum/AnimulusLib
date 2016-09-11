@@ -2,6 +2,7 @@ package de.domisum.animulusapi.npc.task;
 
 import com.mojang.authlib.GameProfile;
 import de.domisum.animulusapi.npc.PhysicsNPC;
+import de.domisum.animulusapi.npc.ai.NPCBrain;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
 import org.bukkit.Location;
@@ -17,7 +18,10 @@ import java.util.Set;
 public class TaskNPC extends PhysicsNPC
 {
 
-	// STATUS
+	// REFERENCES
+	private NPCBrain brain;
+
+	// TASKS
 	private Set<NPCTask> activeTasks = new HashSet<>();
 	private List<NPCTask> taskQueue = new ArrayList<>();
 
@@ -41,6 +45,17 @@ public class TaskNPC extends PhysicsNPC
 
 
 	// -------
+	// SETTERS
+	// -------
+	@APIUsage
+	public void setBrain(NPCBrain brain)
+	{
+		this.brain = brain;
+		brain.initialize(this);
+	}
+
+
+	// -------
 	// QUEUE
 	// -------
 	@APIUsage
@@ -58,6 +73,9 @@ public class TaskNPC extends PhysicsNPC
 	public void update()
 	{
 		super.update();
+
+		if(brain != null)
+			brain.update();
 
 		updateActiveTasks();
 		tryStartNextTask();
@@ -134,6 +152,16 @@ public class TaskNPC extends PhysicsNPC
 				return false;
 
 		return true;
+	}
+
+
+	// -------
+	// TASKS
+	// -------
+	@APIUsage
+	public void onWalkingFail()
+	{
+
 	}
 
 }
