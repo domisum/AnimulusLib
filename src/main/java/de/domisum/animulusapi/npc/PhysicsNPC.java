@@ -67,7 +67,7 @@ public class PhysicsNPC extends StateNPC
 		if(isCrouched())
 			return 1.3/20d;
 
-		return 4.3/20d;
+		return 4.0/20d; // normal value: 4.3/20d;
 	}
 
 	@APIUsage

@@ -77,7 +77,7 @@ public class NPCTaskLookTowards extends NPCTask
 		this.npc.setYawPitch(currentLocation.getYaw()+stepYawAndPitch.a, currentLocation.getPitch()+stepYawAndPitch.b);
 		return true;
 	}
-	
+
 	@Override
 	protected void onCancel()
 	{

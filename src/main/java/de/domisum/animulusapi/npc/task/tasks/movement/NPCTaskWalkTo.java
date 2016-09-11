@@ -6,7 +6,9 @@ import de.domisum.animulusapi.npc.task.NPCTaskSlot;
 import de.domisum.auxiliumapi.data.container.Duo;
 import de.domisum.auxiliumapi.data.container.math.Vector2D;
 import de.domisum.auxiliumapi.data.container.math.Vector3D;
+import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
+import de.domisum.auxiliumapi.util.math.MathUtil;
 import de.domisum.compitumapi.CompitumAPI;
 import de.domisum.compitumapi.transitionalpath.node.TransitionType;
 import de.domisum.compitumapi.transitionalpath.path.TransitionalPath;
@@ -67,7 +69,7 @@ public class NPCTaskWalkTo extends NPCTask
 		this.path = CompitumAPI.findPlayerPath(start, this.target);
 		if(this.path == null)
 		{
-			npc.onWalkingFail();
+			this.npc.onWalkingFail();
 
 			AnimulusAPI.getInstance().getLogger().severe("Failed pathfinding from '"+start+"' to '"+this.target+"'");
 			this.cancel();
@@ -110,6 +112,20 @@ public class NPCTaskWalkTo extends NPCTask
 			mov = mov.multiply(0.3);
 
 		this.npc.setVelocity(new Vector3D(mov.x, this.npc.getVelocity().y, mov.y));
+
+
+		// HEAD ROTATION
+		Location waypointLocation = new Location(loc.getWorld(), currentWaypoint.a.x, currentWaypoint.a.y, currentWaypoint.a.z);
+		Location directionLoc = LocationUtil.lookAt(loc, waypointLocation);
+
+		float targetYaw = directionLoc.getYaw();
+		float targetPitch = directionLoc.getPitch();
+		targetPitch = (float) MathUtil.clampAbs(targetPitch, 25);
+
+		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitch(loc, targetYaw, targetPitch, 10);
+		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
+
+
 		return true;
 	}
 
