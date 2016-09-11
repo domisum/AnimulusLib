@@ -45,6 +45,21 @@ public class TaskNPC extends PhysicsNPC
 
 
 	// -------
+	// GETTERS
+	// -------
+	@APIUsage
+	public Set<NPCTask> getActiveTasks()
+	{
+		return activeTasks;
+	}
+
+	@APIUsage
+	public List<NPCTask> getTaskQueue()
+	{
+		return taskQueue;
+	}
+
+	// -------
 	// SETTERS
 	// -------
 	@APIUsage
