@@ -71,11 +71,11 @@ public class NPCTaskLookTowards extends NPCTask
 
 
 		if(Math.abs(stepYawAndPitch.a)+Math.abs(stepYawAndPitch.b) < TOLERANCE)
-			return false;
+			return true;
 
 
 		this.npc.setYawPitch(currentLocation.getYaw()+stepYawAndPitch.a, currentLocation.getPitch()+stepYawAndPitch.b);
-		return true;
+		return false;
 	}
 
 	@Override

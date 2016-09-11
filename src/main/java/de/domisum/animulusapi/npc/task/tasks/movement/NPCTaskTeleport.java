@@ -52,7 +52,7 @@ public class NPCTaskTeleport extends NPCTask
 	{
 		npc.teleport(target);
 
-		return false;
+		return true;
 	}
 
 	@Override

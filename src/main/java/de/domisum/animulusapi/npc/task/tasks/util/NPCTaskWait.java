@@ -58,10 +58,10 @@ public class NPCTaskWait extends NPCTask
 	protected boolean onUpdate()
 	{
 		if(this.ticksWaited >= this.durationTicks)
-			return false;
+			return true;
 
 		this.ticksWaited++;
-		return true;
+		return false;
 	}
 
 

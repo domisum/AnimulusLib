@@ -106,7 +106,7 @@ public class TaskNPC extends PhysicsNPC
 			// do it in this way to only call the onUpdate method when the task isn't canceled
 			boolean remove = task.isCanceled();
 			if(!remove)
-				if(!task.onUpdate())
+				if(task.onUpdate())
 					remove = true;
 
 			if(remove)

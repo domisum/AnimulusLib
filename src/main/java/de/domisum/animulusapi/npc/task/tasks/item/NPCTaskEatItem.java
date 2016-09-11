@@ -68,14 +68,14 @@ public class NPCTaskEatItem extends NPCTask
 		{
 			end();
 			playSound(Sound.ENTITY_PLAYER_BURP);
-			return false;
+			return true;
 		}
 
 		if(this.elapsedTicks%4 == 0)
 			playSound(Sound.ENTITY_GENERIC_EAT);
 
 		this.elapsedTicks++;
-		return true;
+		return false;
 	}
 
 	private void playSound(Sound sound)

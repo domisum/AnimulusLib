@@ -25,7 +25,7 @@ public abstract class NPCTask
 
 	}
 
-	void initialize(TaskNPC npc)
+	public void initialize(TaskNPC npc)
 	{
 		this.npc = npc;
 	}

@@ -90,10 +90,10 @@ public class NPCTaskWalkTo extends NPCTask
 	protected boolean onUpdate()
 	{
 		if(path == null)
-			return false;
+			return true;
 
 		if(this.currentWaypointIndex >= this.path.getNumberOfWaypoints())
-			return false;
+			return true;
 
 		Location loc = this.npc.getLocation();
 		Duo<Vector3D, Integer> currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex);
@@ -105,7 +105,7 @@ public class NPCTaskWalkTo extends NPCTask
 		if(dX*dX+dZ*dZ < 0.1)
 		{
 			this.currentWaypointIndex++;
-			return true;
+			return false;
 		}
 
 		if(dY > 0 && currentWaypoint.b == TransitionType.JUMP)
@@ -139,7 +139,7 @@ public class NPCTaskWalkTo extends NPCTask
 		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
 
 
-		return true;
+		return false;
 	}
 
 	@Override
