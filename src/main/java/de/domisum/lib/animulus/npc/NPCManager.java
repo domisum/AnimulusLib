@@ -1,8 +1,8 @@
-package de.domisum.animulusapi.npc;
+package de.domisum.lib.animulus.npc;
 
-import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
+import de.domisum.lib.animulus.AnimulusLib;
+import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,7 +52,7 @@ public class NPCManager implements Listener
 		// TODO enable this listener again
 		// new NPCInteractPacketListener();
 
-		JavaPlugin instance = AnimulusAPI.getInstance().getPlugin();
+		JavaPlugin instance = AnimulusLib.getInstance().getPlugin();
 		instance.getServer().getPluginManager().registerEvents(this, instance);
 	}
 
@@ -209,7 +209,7 @@ public class NPCManager implements Listener
 			}
 		};
 
-		Bukkit.getScheduler().runTaskLater(AnimulusAPI.getInstance().getPlugin(), run, 1);
+		Bukkit.getScheduler().runTaskLater(AnimulusLib.getInstance().getPlugin(), run, 1);
 	}
 
 }

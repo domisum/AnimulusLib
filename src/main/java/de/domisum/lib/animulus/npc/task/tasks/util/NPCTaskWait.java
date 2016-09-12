@@ -1,8 +1,8 @@
-package de.domisum.animulusapi.npc.task.tasks.util;
+package de.domisum.lib.animulus.npc.task.tasks.util;
 
-import de.domisum.animulusapi.npc.task.NPCTask;
-import de.domisum.animulusapi.npc.task.NPCTaskSlot;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
+import de.domisum.lib.animulus.npc.task.NPCTask;
+import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 
 @APIUsage
 public class NPCTaskWait extends NPCTask

@@ -1,13 +1,13 @@
-package de.domisum.animulusapi.npc;
+package de.domisum.lib.animulus.npc;
 
 import com.mojang.authlib.GameProfile;
-import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
-import de.domisum.auxiliumapi.util.bukkit.PacketUtil;
-import de.domisum.auxiliumapi.util.java.ReflectionUtil;
-import de.domisum.auxiliumapi.util.java.ThreadUtil;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
-import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
+import de.domisum.lib.animulus.AnimulusLib;
+import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
+import de.domisum.lib.auxilium.util.bukkit.PacketUtil;
+import de.domisum.lib.auxilium.util.java.ReflectionUtil;
+import de.domisum.lib.auxilium.util.java.ThreadUtil;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 import net.minecraft.server.v1_9_R1.*;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
@@ -94,7 +94,7 @@ public class StateNPC
 	@APIUsage
 	public void despawn()
 	{
-		AnimulusAPI.getNPCManager().removeNPC(this);
+		AnimulusLib.getNPCManager().removeNPC(this);
 		terminate();
 	}
 

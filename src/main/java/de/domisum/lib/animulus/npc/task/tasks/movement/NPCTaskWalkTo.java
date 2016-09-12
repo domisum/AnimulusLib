@@ -1,18 +1,18 @@
-package de.domisum.animulusapi.npc.task.tasks.movement;
+package de.domisum.lib.animulus.npc.task.tasks.movement;
 
-import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.animulusapi.npc.task.NPCTask;
-import de.domisum.animulusapi.npc.task.NPCTaskSlot;
-import de.domisum.auxiliumapi.data.container.Duo;
-import de.domisum.auxiliumapi.data.container.math.Vector2D;
-import de.domisum.auxiliumapi.data.container.math.Vector3D;
-import de.domisum.auxiliumapi.util.TextUtil;
-import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
-import de.domisum.auxiliumapi.util.math.MathUtil;
-import de.domisum.compitumapi.transitionalpath.node.TransitionType;
-import de.domisum.compitumapi.transitionalpath.path.TransitionalPath;
-import de.domisum.compitumapi.universal.UniversalPathfinder;
+import de.domisum.lib.animulus.AnimulusLib;
+import de.domisum.lib.animulus.npc.task.NPCTask;
+import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
+import de.domisum.lib.auxilium.data.container.Duo;
+import de.domisum.lib.auxilium.data.container.math.Vector2D;
+import de.domisum.lib.auxilium.data.container.math.Vector3D;
+import de.domisum.lib.auxilium.util.TextUtil;
+import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.math.MathUtil;
+import de.domisum.lib.compitum.transitionalpath.node.TransitionType;
+import de.domisum.lib.compitum.transitionalpath.path.TransitionalPath;
+import de.domisum.lib.compitum.universal.UniversalPathfinder;
 import org.bukkit.Location;
 
 @APIUsage
@@ -75,12 +75,12 @@ public class NPCTaskWalkTo extends NPCTask
 		if(this.path == null)
 		{
 			this.npc.onWalkingFail();
-			AnimulusAPI.getInstance().getLogger().warning(
+			AnimulusLib.getInstance().getLogger().warning(
 					npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
 							.getLocationAsString(this.target));
-			AnimulusAPI.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
+			AnimulusLib.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
 			if(pathfinder.getError() != null)
-				AnimulusAPI.getInstance().getLogger().severe("Error: '"+pathfinder.getError()+"'");
+				AnimulusLib.getInstance().getLogger().severe("Error: '"+pathfinder.getError()+"'");
 
 			this.cancel();
 		}

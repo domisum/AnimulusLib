@@ -1,4 +1,4 @@
-package de.domisum.animulusapi.listener;
+package de.domisum.lib.animulus.listener;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -6,8 +6,8 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.EntityUseAction;
-import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.animulusapi.npc.StateNPC;
+import de.domisum.lib.animulus.AnimulusLib;
+import de.domisum.lib.animulus.npc.StateNPC;
 import org.bukkit.entity.Player;
 
 public class NPCInteractPacketListener
@@ -23,7 +23,7 @@ public class NPCInteractPacketListener
 
 	private void listenForPackets()
 	{
-		PacketAdapter packetAdapter = new PacketAdapter(AnimulusAPI.getInstance().getPlugin(), ListenerPriority.NORMAL,
+		PacketAdapter packetAdapter = new PacketAdapter(AnimulusLib.getInstance().getPlugin(), ListenerPriority.NORMAL,
 				PacketType.Play.Client.USE_ENTITY)
 		{
 			@Override
@@ -36,7 +36,7 @@ public class NPCInteractPacketListener
 
 				Player player = packetEvent.getPlayer();
 				int entityId = packetEvent.getPacket().getIntegers().read(0);
-				StateNPC npc = AnimulusAPI.getNPCManager().getNPC(entityId);
+				StateNPC npc = AnimulusLib.getNPCManager().getNPC(entityId);
 
 				// clicked actual player
 				if(npc == null)

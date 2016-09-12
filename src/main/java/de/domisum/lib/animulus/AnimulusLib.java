@@ -1,17 +1,17 @@
-package de.domisum.animulusapi;
+package de.domisum.lib.animulus;
 
-import de.domisum.animulusapi.npc.NPCManager;
-import de.domisum.auxiliumapi.AuxiliumAPI;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
+import de.domisum.lib.animulus.npc.NPCManager;
+import de.domisum.lib.auxilium.AuxiliumLib;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public class AnimulusAPI
+public class AnimulusLib
 {
 
 	// REFERENCES
-	private static AnimulusAPI instance;
+	private static AnimulusLib instance;
 	private JavaPlugin plugin;
 
 	private static NPCManager npcManager;
@@ -20,7 +20,7 @@ public class AnimulusAPI
 	// -------
 	// CONSTRUCTOR
 	// -------
-	private AnimulusAPI(JavaPlugin plugin)
+	private AnimulusLib(JavaPlugin plugin)
 	{
 		instance = this;
 		this.plugin = plugin;
@@ -34,7 +34,7 @@ public class AnimulusAPI
 		if(instance != null)
 			return;
 
-		new AnimulusAPI(plugin);
+		new AnimulusLib(plugin);
 	}
 
 	@APIUsage
@@ -49,7 +49,7 @@ public class AnimulusAPI
 
 	private void onEnable()
 	{
-		AuxiliumAPI.enable(this.plugin);
+		AuxiliumLib.enable(this.plugin);
 
 		npcManager = new NPCManager();
 
@@ -61,6 +61,8 @@ public class AnimulusAPI
 		if(npcManager != null)
 			npcManager.terminate();
 
+		AuxiliumLib.disable();
+
 		getLogger().info(this.getClass().getSimpleName()+" has been disabled");
 	}
 
@@ -68,7 +70,7 @@ public class AnimulusAPI
 	// -------
 	// GETTERS
 	// -------
-	public static AnimulusAPI getInstance()
+	public static AnimulusLib getInstance()
 	{
 		return instance;
 	}

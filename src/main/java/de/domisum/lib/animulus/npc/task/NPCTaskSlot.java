@@ -1,4 +1,4 @@
-package de.domisum.animulusapi.npc.task;
+package de.domisum.lib.animulus.npc.task;
 
 public enum NPCTaskSlot
 {

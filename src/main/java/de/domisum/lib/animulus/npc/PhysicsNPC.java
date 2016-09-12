@@ -1,9 +1,9 @@
-package de.domisum.animulusapi.npc;
+package de.domisum.lib.animulus.npc;
 
 import com.mojang.authlib.GameProfile;
-import de.domisum.auxiliumapi.data.container.math.Vector3D;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
-import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
+import de.domisum.lib.auxilium.data.container.math.Vector3D;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 import net.minecraft.server.v1_9_R1.AxisAlignedBB;
 import net.minecraft.server.v1_9_R1.WorldServer;
 import org.bukkit.Location;

@@ -1,8 +1,8 @@
-package de.domisum.animulusapi.npc.task.tasks.item;
+package de.domisum.lib.animulus.npc.task.tasks.item;
 
-import de.domisum.animulusapi.npc.task.NPCTask;
-import de.domisum.animulusapi.npc.task.NPCTaskSlot;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
+import de.domisum.lib.animulus.npc.task.NPCTask;
+import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;

@@ -1,7 +1,7 @@
-package de.domisum.animulusapi.npc.task;
+package de.domisum.lib.animulus.npc.task;
 
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
-import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 
 public abstract class NPCTask
 {

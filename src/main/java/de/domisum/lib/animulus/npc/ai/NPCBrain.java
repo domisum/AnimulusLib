@@ -1,6 +1,6 @@
-package de.domisum.animulusapi.npc.ai;
+package de.domisum.lib.animulus.npc.ai;
 
-import de.domisum.animulusapi.npc.task.TaskNPC;
+import de.domisum.lib.animulus.npc.task.TaskNPC;
 
 public interface NPCBrain
 {

@@ -1,10 +1,10 @@
-package de.domisum.animulusapi.npc.task;
+package de.domisum.lib.animulus.npc.task;
 
 import com.mojang.authlib.GameProfile;
-import de.domisum.animulusapi.npc.PhysicsNPC;
-import de.domisum.animulusapi.npc.ai.NPCBrain;
-import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
-import de.domisum.auxiliumapi.util.java.annotations.DeserializationNoArgsConstructor;
+import de.domisum.lib.animulus.npc.PhysicsNPC;
+import de.domisum.lib.animulus.npc.ai.NPCBrain;
+import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 import org.bukkit.Location;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
-package de.domisum.animulusapi.block;
+package de.domisum.lib.animulus.block;
 
-import de.domisum.animulusapi.AnimulusAPI;
+import de.domisum.lib.animulus.AnimulusLib;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -71,7 +71,7 @@ public class BlockButton
 	// -------
 	public boolean press() throws InterruptedException
 	{
-		Future<Boolean> future = Bukkit.getScheduler().callSyncMethod(AnimulusAPI.getInstance().getPlugin(), this::pressRaw);
+		Future<Boolean> future = Bukkit.getScheduler().callSyncMethod(AnimulusLib.getInstance().getPlugin(), this::pressRaw);
 
 		try
 		{
