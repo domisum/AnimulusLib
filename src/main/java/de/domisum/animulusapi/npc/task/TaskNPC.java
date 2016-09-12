@@ -112,8 +112,6 @@ public class TaskNPC extends PhysicsNPC
 			if(remove)
 			{
 				activeTasksIterator.remove();
-
-				// TODO is this the right time to call this?
 				determineBlockedTaskSlots();
 			}
 		}
