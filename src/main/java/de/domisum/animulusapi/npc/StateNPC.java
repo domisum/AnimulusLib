@@ -426,7 +426,7 @@ public class StateNPC
 	protected void updateVisibilityForPlayer(Player player)
 	{
 		boolean sameWorld = player.getWorld() == this.location.getWorld();
-		if(!sameWorld ? false : player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE))
+		if(sameWorld ? player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE) : false)
 		{
 			if(!isVisibleTo(player))
 				becomeVisibleFor(player);
@@ -752,6 +752,7 @@ public class StateNPC
 
 
 	// ACTION
+	@APIUsage
 	void sendAnimation(int animationId, Player... players)
 	{
 		PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
