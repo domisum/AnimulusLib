@@ -1,7 +1,7 @@
 package de.domisum.animulusapi.npc;
 
 import de.domisum.animulusapi.AnimulusAPI;
-import de.domisum.animulusapi.listener.NPCInteractPacketListener;
+import de.domisum.auxiliumapi.util.bukkit.LocationUtil;
 import de.domisum.auxiliumapi.util.java.annotations.APIUsage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,14 +25,16 @@ public class NPCManager implements Listener
 	// CONSTANTS
 	private static final int MS_PER_TICK = 50;
 
-	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 40;
+	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 20;
 
 	// STATUS
-	private ScheduledFuture<?> tickingTask;
-	private int tickCount;
+	private ScheduledFuture<?> updatingTask;
+	private int updateCount;
 
-	private Map<Integer, StateNPC> npcs = new HashMap<>();
+	private Map<Integer, StateNPC> npcs = new HashMap<>(); // <entityId, npc>
 	private List<StateNPC> npcsToRemove = new CopyOnWriteArrayList<>();
+
+	/*private List<Long> lastNPCUpdateDurations = new ArrayList<>();*/
 
 
 	// -------
@@ -42,12 +44,13 @@ public class NPCManager implements Listener
 	{
 		registerListener();
 
-		startTickingThread();
+		startUpdatingTask();
 	}
 
 	private void registerListener()
 	{
-		new NPCInteractPacketListener();
+		// TODO enable this listener again
+		// new NPCInteractPacketListener();
 
 		JavaPlugin instance = AnimulusAPI.getInstance().getPlugin();
 		instance.getServer().getPluginManager().registerEvents(this, instance);
@@ -55,7 +58,7 @@ public class NPCManager implements Listener
 
 	public void terminate()
 	{
-		stopTickingThread();
+		stopUpdatingTask();
 
 		terminateNPCs();
 	}
@@ -72,11 +75,18 @@ public class NPCManager implements Listener
 	// -------
 	// GETTERS
 	// -------
-	public StateNPC getNPC(int id)
+	@APIUsage
+	public int getUpdateCount()
 	{
-		return this.npcs.get(id);
+		return this.updateCount;
 	}
 
+	public StateNPC getNPC(int entityId)
+	{
+		return this.npcs.get(entityId);
+	}
+
+	@APIUsage
 	public StateNPC getNPC(String id)
 	{
 		for(StateNPC npc : this.npcs.values())
@@ -93,6 +103,9 @@ public class NPCManager implements Listener
 	@APIUsage
 	public void addNPC(StateNPC npc)
 	{
+		// this sets the entity id, so do this first
+		npc.initialize();
+
 		this.npcs.put(npc.getEntityId(), npc);
 	}
 
@@ -106,17 +119,13 @@ public class NPCManager implements Listener
 	// -------
 	// TICKING
 	// -------
-	private void startTickingThread()
+	private void startUpdatingTask()
 	{
-		// starting tick to kick off NPCTasks
-		for(StateNPC npc : this.npcs.values())
-			npc.tick(0);
-
 		Runnable run = ()->
 		{
 			try
 			{
-				tick();
+				update();
 			}
 			catch(Exception e)
 			{
@@ -125,32 +134,42 @@ public class NPCManager implements Listener
 		};
 
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-		this.tickingTask = executor.scheduleWithFixedDelay(run, 0, MS_PER_TICK, TimeUnit.MILLISECONDS);
+		this.updatingTask = executor.scheduleWithFixedDelay(run, 0, MS_PER_TICK, TimeUnit.MILLISECONDS);
 	}
 
-	private void stopTickingThread()
+	private void stopUpdatingTask()
 	{
-		this.tickingTask.cancel(true);
-		this.tickingTask = null;
+		this.updatingTask.cancel(true);
+		this.updatingTask = null;
 	}
 
 
-	private void tick()
+	private void update()
 	{
+		/*long startNano = System.nanoTime();*/
+
 		for(StateNPC toRemove : this.npcsToRemove)
 			this.npcs.values().remove(toRemove);
 		this.npcsToRemove.clear();
 
 		for(StateNPC npc : this.npcs.values())
 		{
-			if((this.tickCount%CHECK_PLAYER_DISTANCE_TICK_INTERVAL) == 0)
+			if((this.updateCount%CHECK_PLAYER_DISTANCE_TICK_INTERVAL) == 0)
 				npc.updateVisibleForPlayers();
 
 			if(npc.isVisibleToSomebody())
-				npc.tick(this.tickCount);
+				if(LocationUtil.isChunkLoaded(npc.getLocation()))
+					npc.update();
 		}
 
-		this.tickCount++;
+		this.updateCount++;
+
+		// benchmarking
+		/*long endNano = System.nanoTime();
+		long durationNano = endNano-startNano;
+		this.lastNPCUpdateDurations.add(durationNano);
+		if(this.lastNPCUpdateDurations.size() > 20*60)
+			this.lastNPCUpdateDurations.remove(0);*/
 	}
 
 
