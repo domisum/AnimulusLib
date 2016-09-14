@@ -11,9 +11,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -31,7 +31,7 @@ public class NPCManager implements Listener
 	private ScheduledFuture<?> updatingTask;
 	private int updateCount;
 
-	private Map<Integer, StateNPC> npcs = new HashMap<>(); // <entityId, npc>
+	private Map<Integer, StateNPC> npcs = new ConcurrentHashMap<>(); // <entityId, npc>
 	private List<StateNPC> npcsToRemove = new CopyOnWriteArrayList<>();
 
 	/*private List<Long> lastNPCUpdateDurations = new ArrayList<>();*/
