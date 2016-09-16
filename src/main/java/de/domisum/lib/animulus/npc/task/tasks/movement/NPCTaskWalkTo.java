@@ -30,6 +30,9 @@ public class NPCTaskWalkTo extends NPCTask
 	private TransitionalPath path;
 	private int currentWaypointIndex = 0;
 
+	private int reuseLastDirectionTicks = 0;
+	private Vector2D lastDirection;
+
 
 	// -------
 	// CONSTRUCTOR
@@ -102,9 +105,10 @@ public class NPCTaskWalkTo extends NPCTask
 		double dY = currentWaypoint.a.y-loc.getY();
 		double dZ = currentWaypoint.a.z-loc.getZ();
 
-		if(dX*dX+dZ*dZ < 0.1)
+		if(dX*dX+dZ*dZ < 0.01)
 		{
 			this.currentWaypointIndex++;
+			this.reuseLastDirectionTicks = 2;
 			return false;
 		}
 
@@ -115,6 +119,12 @@ public class NPCTaskWalkTo extends NPCTask
 
 		Vector2D mov = new Vector2D(dX, dZ);
 		double movLength = mov.length();
+		if(this.reuseLastDirectionTicks > 0)
+		{
+			mov = this.lastDirection.multiply(movLength);
+			this.reuseLastDirectionTicks--;
+		}
+		Vector2D direction = mov.divide(movLength);
 		if(movLength > speed)
 			mov = mov.multiply(speed/movLength);
 
@@ -123,6 +133,8 @@ public class NPCTaskWalkTo extends NPCTask
 			mov = mov.multiply(0.3);
 
 		this.npc.setVelocity(new Vector3D(mov.x, this.npc.getVelocity().y, mov.y));
+
+		this.lastDirection = direction;
 
 
 		// HEAD ROTATION
