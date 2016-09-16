@@ -68,15 +68,15 @@ public class NPCTaskWalkTo extends NPCTask
 	{
 		Location start = this.npc.getLocation();
 
-		UniversalPathfinder pathfinder = new UniversalPathfinder(start, target);
+		UniversalPathfinder pathfinder = new UniversalPathfinder(start, this.target);
 		pathfinder.findPath();
-		path = pathfinder.getPath();
+		this.path = pathfinder.getPath();
 
 		if(this.path == null)
 		{
 			this.npc.onWalkingFail();
 			AnimulusLib.getInstance().getLogger().warning(
-					npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
+					this.npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
 							.getLocationAsString(this.target));
 			AnimulusLib.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
 			if(pathfinder.getError() != null)
@@ -89,7 +89,7 @@ public class NPCTaskWalkTo extends NPCTask
 	@Override
 	protected boolean onUpdate()
 	{
-		if(path == null)
+		if(this.path == null)
 			return true;
 
 		if(this.currentWaypointIndex >= this.path.getNumberOfWaypoints())
@@ -112,10 +112,8 @@ public class NPCTaskWalkTo extends NPCTask
 			this.npc.jump();
 
 		double speed = this.npc.getWalkSpeed()*this.speedMultiplier;
-		double stepX = (dX < 0 ? -1 : 1)*Math.min(Math.abs(dX), speed);
-		double stepZ = (dZ < 0 ? -1 : 1)*Math.min(Math.abs(dZ), speed);
 
-		Vector2D mov = new Vector2D(stepX, stepZ);
+		Vector2D mov = new Vector2D(dX, dZ);
 		double movLength = mov.length();
 		if(movLength > speed)
 			mov = mov.multiply(speed/movLength);
@@ -137,7 +135,6 @@ public class NPCTaskWalkTo extends NPCTask
 
 		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitch(loc, targetYaw, targetPitch, 10);
 		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
-
 
 		return false;
 	}
