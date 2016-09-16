@@ -1,6 +1,7 @@
 package de.domisum.lib.animulus.npc;
 
 import de.domisum.lib.animulus.AnimulusLib;
+import de.domisum.lib.animulus.listener.NPCInteractPacketListener;
 import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import org.bukkit.Bukkit;
@@ -27,6 +28,9 @@ public class NPCManager implements Listener
 
 	private static final int CHECK_PLAYER_DISTANCE_TICK_INTERVAL = 20;
 
+	// REFERENCES
+	private NPCInteractPacketListener npcInteractPacketListener;
+
 	// STATUS
 	private ScheduledFuture<?> updatingTask;
 	private int updateCount;
@@ -49,8 +53,7 @@ public class NPCManager implements Listener
 
 	private void registerListener()
 	{
-		// TODO enable this listener again
-		// new NPCInteractPacketListener();
+		this.npcInteractPacketListener = new NPCInteractPacketListener();
 
 		JavaPlugin instance = AnimulusLib.getInstance().getPlugin();
 		instance.getServer().getPluginManager().registerEvents(this, instance);
@@ -58,6 +61,12 @@ public class NPCManager implements Listener
 
 	public void terminate()
 	{
+		if(this.npcInteractPacketListener != null)
+		{
+			this.npcInteractPacketListener.terminate();
+			this.npcInteractPacketListener = null;
+		}
+
 		stopUpdatingTask();
 
 		terminateNPCs();

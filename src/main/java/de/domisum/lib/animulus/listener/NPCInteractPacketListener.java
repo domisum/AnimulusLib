@@ -13,6 +13,10 @@ import org.bukkit.entity.Player;
 public class NPCInteractPacketListener
 {
 
+	// REFERENCES
+	private PacketAdapter packetAdapter;
+
+
 	// -------
 	// CONSTRUCTOR
 	// -------
@@ -23,7 +27,7 @@ public class NPCInteractPacketListener
 
 	private void listenForPackets()
 	{
-		PacketAdapter packetAdapter = new PacketAdapter(AnimulusLib.getInstance().getPlugin(), ListenerPriority.NORMAL,
+		this.packetAdapter = new PacketAdapter(AnimulusLib.getInstance().getPlugin(), ListenerPriority.NORMAL,
 				PacketType.Play.Client.USE_ENTITY)
 		{
 			@Override
@@ -49,7 +53,12 @@ public class NPCInteractPacketListener
 			}
 		};
 
-		ProtocolLibrary.getProtocolManager().addPacketListener(packetAdapter);
+		ProtocolLibrary.getProtocolManager().addPacketListener(this.packetAdapter);
+	}
+
+	public void terminate()
+	{
+		ProtocolLibrary.getProtocolManager().removePacketListener(this.packetAdapter);
 	}
 
 }
