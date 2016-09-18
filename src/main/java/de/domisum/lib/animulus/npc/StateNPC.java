@@ -95,7 +95,7 @@ public class StateNPC
 	public void despawn()
 	{
 		AnimulusLib.getNPCManager().removeNPC(this);
-		terminate();
+		// terminate(); the method above already calls terminate
 	}
 
 

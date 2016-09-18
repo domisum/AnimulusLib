@@ -50,13 +50,13 @@ public class TaskNPC extends PhysicsNPC
 	@APIUsage
 	public Set<NPCTask> getActiveTasks()
 	{
-		return activeTasks;
+		return this.activeTasks;
 	}
 
 	@APIUsage
 	public List<NPCTask> getTaskQueue()
 	{
-		return taskQueue;
+		return this.taskQueue;
 	}
 
 	// -------
@@ -89,8 +89,8 @@ public class TaskNPC extends PhysicsNPC
 	{
 		super.update();
 
-		if(brain != null)
-			brain.update();
+		if(this.brain != null)
+			this.brain.update();
 
 		updateActiveTasks();
 		tryStartNextTask();
