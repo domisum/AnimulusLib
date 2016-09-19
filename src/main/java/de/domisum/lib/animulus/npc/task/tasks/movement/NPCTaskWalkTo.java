@@ -21,6 +21,8 @@ public class NPCTaskWalkTo extends NPCTask
 
 	// CONSTANTS
 	private static NPCTaskSlot[] USED_TASK_SLOTS = new NPCTaskSlot[] {NPCTaskSlot.MOVEMENT, NPCTaskSlot.HEAD_ROTATION};
+	private static final double NO_MOVEMENT_THRESHOLD = 0.001;
+	private static final int NO_MOVEMENT_STUCK_REPETITIONS = 20;
 
 	// PROPERTIES
 	private Location target;
@@ -29,6 +31,9 @@ public class NPCTaskWalkTo extends NPCTask
 	// STATUS
 	private TransitionalPath path;
 	private int currentWaypointIndex = 0;
+
+	private Vector3D lastPosition;
+	private int unchangedPositionsInRow = 0;
 
 	private int reuseLastDirectionTicks = 0;
 	private Vector2D lastDirection;
@@ -98,6 +103,17 @@ public class NPCTaskWalkTo extends NPCTask
 		if(this.currentWaypointIndex >= this.path.getNumberOfWaypoints())
 			return true;
 
+		if(this.lastPosition != null)
+			if(this.npc.getPosition().subtract(this.lastPosition).lengthSquared() < NO_MOVEMENT_THRESHOLD)
+			{
+				this.unchangedPositionsInRow++;
+				if(this.unchangedPositionsInRow >= NO_MOVEMENT_STUCK_REPETITIONS)
+				{
+					this.npc.onWalkingFail();
+					return true;
+				}
+			}
+
 		Location loc = this.npc.getLocation();
 		Duo<Vector3D, Integer> currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex);
 
@@ -148,6 +164,8 @@ public class NPCTaskWalkTo extends NPCTask
 		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitch(loc, targetYaw, targetPitch, 10);
 		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
 
+
+		this.lastPosition = this.npc.getPosition();
 		return false;
 	}
 

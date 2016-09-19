@@ -2,6 +2,7 @@ package de.domisum.lib.animulus.npc;
 
 import com.mojang.authlib.GameProfile;
 import de.domisum.lib.animulus.AnimulusLib;
+import de.domisum.lib.auxilium.data.container.math.Vector3D;
 import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
 import de.domisum.lib.auxilium.util.bukkit.PacketUtil;
 import de.domisum.lib.auxilium.util.java.ReflectionUtil;
@@ -118,6 +119,12 @@ public class StateNPC
 	public Location getLocation()
 	{
 		return this.location.clone();
+	}
+
+	@APIUsage
+	public Vector3D getPosition()
+	{
+		return new Vector3D(this.location);
 	}
 
 	@APIUsage
@@ -426,7 +433,7 @@ public class StateNPC
 	protected void updateVisibilityForPlayer(Player player)
 	{
 		boolean sameWorld = player.getWorld() == this.location.getWorld();
-		if(sameWorld ? player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE) : false)
+		if(sameWorld && player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE))
 		{
 			if(!isVisibleTo(player))
 				becomeVisibleFor(player);
@@ -553,10 +560,8 @@ public class StateNPC
 		if(location.clone().add(0, 1, 0).getBlock().getType().isSolid())
 			return false;
 
-		if(!location.clone().add(0, -1, 0).getBlock().getType().isSolid())
-			return false;
+		return location.clone().add(0, -1, 0).getBlock().getType().isSolid();
 
-		return true;
 	}
 
 
