@@ -59,6 +59,7 @@ public class TaskNPC extends PhysicsNPC
 		return this.taskQueue;
 	}
 
+
 	// -------
 	// SETTERS
 	// -------
@@ -103,11 +104,10 @@ public class TaskNPC extends PhysicsNPC
 		{
 			NPCTask task = activeTasksIterator.next();
 
-			// do it in this way to only call the onUpdate method when the task isn't canceled
+			// do it in this way to only call the onUpdate method when the task isn't already canceled
 			boolean remove = task.isCanceled();
 			if(!remove)
-				if(task.onUpdate())
-					remove = true;
+				remove = task.onUpdate();
 
 			if(remove)
 			{
