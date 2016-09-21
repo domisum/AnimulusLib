@@ -1,6 +1,7 @@
 package de.domisum.lib.animulus.npc.task.tasks.movement;
 
 import de.domisum.lib.animulus.AnimulusLib;
+import de.domisum.lib.animulus.npc.PhysicsNPC;
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
 import de.domisum.lib.auxilium.data.container.Duo;
@@ -9,6 +10,7 @@ import de.domisum.lib.auxilium.data.container.math.Vector3D;
 import de.domisum.lib.auxilium.util.TextUtil;
 import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.debug.DebugUtil;
 import de.domisum.lib.auxilium.util.math.MathUtil;
 import de.domisum.lib.compitum.transitionalpath.node.TransitionType;
 import de.domisum.lib.compitum.transitionalpath.path.TransitionalPath;
@@ -21,7 +23,7 @@ public class NPCTaskWalkTo extends NPCTask
 
 	// CONSTANTS
 	private static NPCTaskSlot[] USED_TASK_SLOTS = new NPCTaskSlot[] {NPCTaskSlot.MOVEMENT, NPCTaskSlot.HEAD_ROTATION};
-	private static final double NO_MOVEMENT_THRESHOLD = 0.001;
+	private static final double NO_MOVEMENT_THRESHOLD = 0.01;
 	private static final int NO_MOVEMENT_STUCK_REPETITIONS = 20;
 
 	// PROPERTIES
@@ -31,12 +33,17 @@ public class NPCTaskWalkTo extends NPCTask
 	// STATUS
 	private TransitionalPath path;
 	private int currentWaypointIndex = 0;
+	private Duo<Vector3D, Integer> currentWaypoint;
 
 	private Vector3D lastPosition;
 	private int unchangedPositionsInRow = 0;
 
+	// walking
 	private int reuseLastDirectionTicks = 0;
 	private Vector2D lastDirection;
+
+
+	// TODO stepping sounds
 
 
 	// -------
@@ -114,21 +121,47 @@ public class NPCTaskWalkTo extends NPCTask
 				}
 			}
 
-		Location loc = this.npc.getLocation();
-		Duo<Vector3D, Integer> currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex);
 
-		double dX = currentWaypoint.a.x-loc.getX();
-		double dY = currentWaypoint.a.y-loc.getY();
-		double dZ = currentWaypoint.a.z-loc.getZ();
+		this.currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex);
+		int transitionType = this.currentWaypoint.b;
+		if(transitionType == TransitionType.WALK || transitionType == TransitionType.JUMP)
+			walk();
+		else if(transitionType == TransitionType.CLIMB)
+			climb();
+		else
+			throw new UnsupportedOperationException("The TransitionType '"+transitionType+"' is not supported");
+
+
+		this.lastPosition = this.npc.getPosition();
+		return false;
+	}
+
+	@Override
+	protected void onCancel()
+	{
+
+	}
+
+
+	// -------
+	// MOVEMENT TYPES
+	// -------
+	private void walk()
+	{
+		Location loc = this.npc.getLocation();
+
+		double dX = this.currentWaypoint.a.x-loc.getX();
+		double dY = this.currentWaypoint.a.y-loc.getY();
+		double dZ = this.currentWaypoint.a.z-loc.getZ();
 
 		if(dX*dX+dZ*dZ < 0.01)
 		{
 			this.currentWaypointIndex++;
 			this.reuseLastDirectionTicks = 2;
-			return false;
+			return;
 		}
 
-		if(dY > 0 && currentWaypoint.b == TransitionType.JUMP)
+		if(dY > 0 && this.currentWaypoint.b == TransitionType.JUMP)
 			this.npc.jump();
 
 		double speed = this.npc.getWalkSpeed()*this.speedMultiplier;
@@ -154,7 +187,8 @@ public class NPCTaskWalkTo extends NPCTask
 
 
 		// HEAD ROTATION
-		Location waypointLocation = new Location(loc.getWorld(), currentWaypoint.a.x, currentWaypoint.a.y, currentWaypoint.a.z);
+		Location waypointLocation = new Location(loc.getWorld(), this.currentWaypoint.a.x, this.currentWaypoint.a.y,
+				this.currentWaypoint.a.z);
 		Location directionLoc = LocationUtil.lookAt(loc, waypointLocation);
 
 		float targetYaw = directionLoc.getYaw();
@@ -163,16 +197,24 @@ public class NPCTaskWalkTo extends NPCTask
 
 		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitch(loc, targetYaw, targetPitch, 10);
 		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
-
-
-		this.lastPosition = this.npc.getPosition();
-		return false;
 	}
 
-	@Override
-	protected void onCancel()
+	private void climb()
 	{
+		Location location = this.npc.getLocation();
 
+		double dY = this.currentWaypoint.a.y-location.getY();
+
+		double stepY = MathUtil.clampAbs(dY, PhysicsNPC.CLIMBING_BLOCKS_PER_SECOND/20d);
+		this.npc.setVelocity(new Vector3D(0, stepY, 0));
+		DebugUtil.say("stepY: "+stepY);
+
+		if(Math.abs(dY) < 0.1)
+		{
+			this.currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex+1);
+			DebugUtil.say("walk");
+			walk();
+		}
 	}
 
 }
