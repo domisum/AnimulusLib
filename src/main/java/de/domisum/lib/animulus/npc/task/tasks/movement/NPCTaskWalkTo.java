@@ -21,6 +21,8 @@ public class NPCTaskWalkTo extends NPCTask
 
 	// CONSTANTS
 	private static NPCTaskSlot[] USED_TASK_SLOTS = new NPCTaskSlot[] {NPCTaskSlot.MOVEMENT, NPCTaskSlot.HEAD_ROTATION};
+	private static final double NO_MOVEMENT_THRESHOLD = 0.001;
+	private static final int NO_MOVEMENT_STUCK_REPETITIONS = 20;
 
 	// PROPERTIES
 	private Location target;
@@ -29,6 +31,12 @@ public class NPCTaskWalkTo extends NPCTask
 	// STATUS
 	private TransitionalPath path;
 	private int currentWaypointIndex = 0;
+
+	private Vector3D lastPosition;
+	private int unchangedPositionsInRow = 0;
+
+	private int reuseLastDirectionTicks = 0;
+	private Vector2D lastDirection;
 
 
 	// -------
@@ -68,19 +76,19 @@ public class NPCTaskWalkTo extends NPCTask
 	{
 		Location start = this.npc.getLocation();
 
-		UniversalPathfinder pathfinder = new UniversalPathfinder(start, target);
+		UniversalPathfinder pathfinder = new UniversalPathfinder(start, this.target);
 		pathfinder.findPath();
-		path = pathfinder.getPath();
+		this.path = pathfinder.getPath();
 
 		if(this.path == null)
 		{
 			this.npc.onWalkingFail();
 			AnimulusLib.getInstance().getLogger().warning(
-					npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
+					this.npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
 							.getLocationAsString(this.target));
 			AnimulusLib.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
-			if(pathfinder.getError() != null)
-				AnimulusLib.getInstance().getLogger().severe("Error: '"+pathfinder.getError()+"'");
+			if(pathfinder.getFailure() != null)
+				AnimulusLib.getInstance().getLogger().severe("Error: '"+pathfinder.getFailure()+"'");
 
 			this.cancel();
 		}
@@ -89,11 +97,22 @@ public class NPCTaskWalkTo extends NPCTask
 	@Override
 	protected boolean onUpdate()
 	{
-		if(path == null)
+		if(this.path == null)
 			return true;
 
 		if(this.currentWaypointIndex >= this.path.getNumberOfWaypoints())
 			return true;
+
+		if(this.lastPosition != null)
+			if(this.npc.getPosition().subtract(this.lastPosition).lengthSquared() < NO_MOVEMENT_THRESHOLD)
+			{
+				this.unchangedPositionsInRow++;
+				if(this.unchangedPositionsInRow >= NO_MOVEMENT_STUCK_REPETITIONS)
+				{
+					this.npc.onWalkingFail();
+					return true;
+				}
+			}
 
 		Location loc = this.npc.getLocation();
 		Duo<Vector3D, Integer> currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex);
@@ -102,9 +121,10 @@ public class NPCTaskWalkTo extends NPCTask
 		double dY = currentWaypoint.a.y-loc.getY();
 		double dZ = currentWaypoint.a.z-loc.getZ();
 
-		if(dX*dX+dZ*dZ < 0.1)
+		if(dX*dX+dZ*dZ < 0.01)
 		{
 			this.currentWaypointIndex++;
+			this.reuseLastDirectionTicks = 2;
 			return false;
 		}
 
@@ -112,11 +132,15 @@ public class NPCTaskWalkTo extends NPCTask
 			this.npc.jump();
 
 		double speed = this.npc.getWalkSpeed()*this.speedMultiplier;
-		double stepX = (dX < 0 ? -1 : 1)*Math.min(Math.abs(dX), speed);
-		double stepZ = (dZ < 0 ? -1 : 1)*Math.min(Math.abs(dZ), speed);
 
-		Vector2D mov = new Vector2D(stepX, stepZ);
+		Vector2D mov = new Vector2D(dX, dZ);
 		double movLength = mov.length();
+		if(this.reuseLastDirectionTicks > 0)
+		{
+			mov = this.lastDirection.multiply(movLength);
+			this.reuseLastDirectionTicks--;
+		}
+		Vector2D direction = mov.divide(movLength);
 		if(movLength > speed)
 			mov = mov.multiply(speed/movLength);
 
@@ -125,6 +149,8 @@ public class NPCTaskWalkTo extends NPCTask
 			mov = mov.multiply(0.3);
 
 		this.npc.setVelocity(new Vector3D(mov.x, this.npc.getVelocity().y, mov.y));
+
+		this.lastDirection = direction;
 
 
 		// HEAD ROTATION
@@ -139,6 +165,7 @@ public class NPCTaskWalkTo extends NPCTask
 		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
 
 
+		this.lastPosition = this.npc.getPosition();
 		return false;
 	}
 

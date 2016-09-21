@@ -50,14 +50,15 @@ public class TaskNPC extends PhysicsNPC
 	@APIUsage
 	public Set<NPCTask> getActiveTasks()
 	{
-		return activeTasks;
+		return this.activeTasks;
 	}
 
 	@APIUsage
 	public List<NPCTask> getTaskQueue()
 	{
-		return taskQueue;
+		return this.taskQueue;
 	}
+
 
 	// -------
 	// SETTERS
@@ -89,8 +90,8 @@ public class TaskNPC extends PhysicsNPC
 	{
 		super.update();
 
-		if(brain != null)
-			brain.update();
+		if(this.brain != null)
+			this.brain.update();
 
 		updateActiveTasks();
 		tryStartNextTask();
@@ -103,11 +104,10 @@ public class TaskNPC extends PhysicsNPC
 		{
 			NPCTask task = activeTasksIterator.next();
 
-			// do it in this way to only call the onUpdate method when the task isn't canceled
+			// do it in this way to only call the onUpdate method when the task isn't already canceled
 			boolean remove = task.isCanceled();
 			if(!remove)
-				if(task.onUpdate())
-					remove = true;
+				remove = task.onUpdate();
 
 			if(remove)
 			{

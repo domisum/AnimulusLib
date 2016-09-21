@@ -122,6 +122,7 @@ public class NPCManager implements Listener
 	public void removeNPC(StateNPC npc)
 	{
 		this.npcsToRemove.add(npc);
+		npc.terminate();
 	}
 
 
@@ -168,7 +169,17 @@ public class NPCManager implements Listener
 
 			if(npc.isVisibleToSomebody())
 				if(LocationUtil.isChunkLoaded(npc.getLocation()))
-					npc.update();
+				{
+					try
+					{
+						npc.update();
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+						removeNPC(npc);
+					}
+				}
 		}
 
 		this.updateCount++;
