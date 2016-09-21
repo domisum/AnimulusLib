@@ -7,6 +7,7 @@ import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstr
 import net.minecraft.server.v1_9_R1.AxisAlignedBB;
 import net.minecraft.server.v1_9_R1.WorldServer;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class PhysicsNPC extends StateNPC
 
 	private static final double HOVER_HEIGHT = 0.01;
 	private static final double STEP_HEIGHT = 0.5;
+	public static final double CLIMBING_BLOCKS_PER_SECOND = 3;
 
 	// PROPERTIES
 	private Vector3D velocity = new Vector3D();
@@ -109,7 +111,19 @@ public class PhysicsNPC extends StateNPC
 
 	private void applyGravity()
 	{
+		Material materialAtFeet = this.location.getBlock().getType();
+		if(materialAtFeet == Material.LADDER || materialAtFeet == Material.VINE)
+			return;
+
 		this.velocity = this.velocity.add(0, GRAVITATIONAL_ACCELERATION, 0);
+
+		/*if(materialAtFeet == Material.LADDER || materialAtFeet == Material.VINE)
+		{
+			double climbingSpeedPerTick = CLIMBING_BLOCKS_PER_SECOND/20d;
+
+			if(this.velocity.y < -climbingSpeedPerTick)
+				this.velocity = new Vector3D(this.velocity.x, -climbingSpeedPerTick, this.velocity.z);
+		}*/
 	}
 
 	private void applyDrag()
