@@ -87,8 +87,8 @@ public class NPCTaskWalkTo extends NPCTask
 					this.npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
 							.getLocationAsString(this.target));
 			AnimulusLib.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
-			if(pathfinder.getError() != null)
-				AnimulusLib.getInstance().getLogger().severe("Error: '"+pathfinder.getError()+"'");
+			if(pathfinder.getFailure() != null)
+				AnimulusLib.getInstance().getLogger().severe("Error: '"+pathfinder.getFailure()+"'");
 
 			this.cancel();
 		}
