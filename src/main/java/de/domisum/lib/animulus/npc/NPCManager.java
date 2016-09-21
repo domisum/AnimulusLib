@@ -53,7 +53,8 @@ public class NPCManager implements Listener
 
 	private void registerListener()
 	{
-		this.npcInteractPacketListener = new NPCInteractPacketListener();
+		// FIXME reenable this listener
+		// this.npcInteractPacketListener = new NPCInteractPacketListener();
 
 		JavaPlugin instance = AnimulusLib.getInstance().getPlugin();
 		instance.getServer().getPluginManager().registerEvents(this, instance);
