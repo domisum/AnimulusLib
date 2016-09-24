@@ -104,7 +104,7 @@ public class PhysicsNPC extends StateNPC
 	{
 		applyGravity();
 
-		moveWithCollisions(this.velocity);
+		moveWithCollisions();
 
 		applyDrag();
 	}
@@ -135,7 +135,7 @@ public class PhysicsNPC extends StateNPC
 		this.velocity = new Vector3D(newVX, newVY, newVZ);
 	}
 
-	private void moveWithCollisions(Vector3D movement)
+	private void moveWithCollisions()
 	{
 		// GENERAL COLLISION
 		WorldServer nmsWorld = ((CraftWorld) this.location.getWorld()).getHandle();
@@ -144,13 +144,13 @@ public class PhysicsNPC extends StateNPC
 		// method #a() means addCoord
 		AxisAlignedBB aabb = this.baseAABB.c(this.location.getX(), this.location.getY(), this.location.getZ());
 		AxisAlignedBB aabbStartCopy = aabb;
-		AxisAlignedBB movedAABB = aabb.a(movement.x, movement.y, movement.z);
+		AxisAlignedBB movedAABB = aabb.a(this.velocity.x, this.velocity.y, this.velocity.z);
 		List<AxisAlignedBB> nearbyBlockAABBs = nmsWorld.getCubes(null, movedAABB);
 
 
-		double mX = movement.x;
-		double mY = movement.y;
-		double mZ = movement.z;
+		double mX = this.velocity.x;
+		double mY = this.velocity.y;
+		double mZ = this.velocity.z;
 
 		// y-collision, method #b() means y-offset
 		for(AxisAlignedBB a : nearbyBlockAABBs)
@@ -169,15 +169,17 @@ public class PhysicsNPC extends StateNPC
 
 
 		boolean onGroundBefore = this.onGround;
-		this.onGround = mY >= movement.y && movement.y <= 0;
+		this.onGround = mY >= this.velocity.y && this.velocity.y <= 0;
 		if(this.onGround)
 			this.ticksOnGround++;
 		else
 			this.ticksOnGround = 0;
 
+		// copy velocity at this point so moving up slabs doesn't accelerate the character upwards
+		Vector3D newVelocity = new Vector3D(mX, mY, mZ);
 
 		// MOVING UP STAIRS and slabs
-		boolean verticalCollision = mX != movement.x || mZ != movement.z;
+		boolean verticalCollision = mX != this.velocity.x || mZ != this.velocity.z;
 		if((this.onGround || onGroundBefore) && verticalCollision)
 		{
 			double mXBackup = mX;
@@ -190,16 +192,16 @@ public class PhysicsNPC extends StateNPC
 			/*AxisAlignedBB aabb1 = aabb;*/
 			aabb = aabbStartCopy;
 			AxisAlignedBB aabb2 = aabb;
-			AxisAlignedBB aabb3 = aabb2.a(movement.x, 0, movement.z);
+			AxisAlignedBB aabb3 = aabb2.a(this.velocity.x, 0, this.velocity.z);
 			AxisAlignedBB aabb4 = aabb;
 
 			mY = STEP_HEIGHT;
-			List<AxisAlignedBB> stepsNearbyBlockAABBs = nmsWorld.getCubes(null, aabb.a(movement.x, mY, movement.z));
+			List<AxisAlignedBB> stepsNearbyBlockAABBs = nmsWorld.getCubes(null, aabb.a(this.velocity.x, mY, this.velocity.z));
 
 
-			double s1X = movement.x;
+			double s1X = this.velocity.x;
 			double s1Y = mY;
-			double s1Z = movement.z;
+			double s1Z = this.velocity.z;
 
 			// y-collision, method #b() means y-offset
 			for(AxisAlignedBB a : stepsNearbyBlockAABBs)
@@ -217,9 +219,9 @@ public class PhysicsNPC extends StateNPC
 			aabb2 = aabb2.c(0, 0, s1Z);
 
 
-			double s2X = movement.x;
+			double s2X = this.velocity.x;
 			double s2Y = mY;
-			double s2Z = movement.z;
+			double s2Z = this.velocity.z;
 
 			// y-collision, method #b() means y-offset
 			for(AxisAlignedBB a : stepsNearbyBlockAABBs)
@@ -270,9 +272,10 @@ public class PhysicsNPC extends StateNPC
 
 		if(mY < 0)
 			mY += HOVER_HEIGHT;
-		movement = new Vector3D(mX, mY, mZ);
+		Vector3D movementVelocity = new Vector3D(mX, mY, mZ);
 
-		moveToNearby(this.location.clone().add(movement.x, movement.y, movement.z), true);
+		moveToNearby(this.location.clone().add(movementVelocity.x, movementVelocity.y, movementVelocity.z), true);
+		this.velocity = newVelocity;
 	}
 
 
