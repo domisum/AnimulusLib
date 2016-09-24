@@ -104,4 +104,29 @@ public class NPCTaskLookTowards extends NPCTask
 		return new Duo<>(stepDYaw, stepDPitch);
 	}
 
+	@APIUsage
+	public static Duo<Float, Float> getStepYawAndPitchSmooth(Location currentLocation, float targetYaw, float targetPitch,
+			double speedMultiplier)
+	{
+		float dYaw = (targetYaw-currentLocation.getYaw())%360;
+		if(dYaw < 0)
+			dYaw += 360;
+		if(dYaw > 180)
+			dYaw -= 360;
+
+		float dPitch = targetPitch-currentLocation.getPitch();
+
+		float stepDYaw = (float) (smoothFormula(dYaw)*speedMultiplier);
+		float stepDPitch = (float) (smoothFormula(dPitch)*speedMultiplier);
+		return new Duo<>(stepDYaw, stepDPitch);
+	}
+
+	private static float smoothFormula(float degrees)
+	{
+		float unsigned = (float) Math.pow(Math.abs(degrees)/180, 0.6)*15;
+		float value = (degrees < 0 ? -1 : 1)*unsigned;
+
+		return (float) MathUtil.clampAbs(value, Math.abs(degrees));
+	}
+
 }

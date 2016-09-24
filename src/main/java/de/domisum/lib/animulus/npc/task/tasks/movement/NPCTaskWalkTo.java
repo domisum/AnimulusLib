@@ -11,7 +11,6 @@ import de.domisum.lib.auxilium.data.container.math.Vector3D;
 import de.domisum.lib.auxilium.util.TextUtil;
 import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
-import de.domisum.lib.auxilium.util.java.debug.DebugUtil;
 import de.domisum.lib.auxilium.util.math.MathUtil;
 import de.domisum.lib.compitum.transitionalpath.node.TransitionType;
 import de.domisum.lib.compitum.transitionalpath.path.TransitionalPath;
@@ -166,7 +165,7 @@ public class NPCTaskWalkTo extends NPCTask
 		}
 
 		if(this.currentWaypointIndex+1 == this.path.getNumberOfWaypoints())
-			if(distanceXZSquared < 0.2)
+			if(distanceXZSquared < 0.3)
 			{
 				this.currentWaypointIndex++;
 				return;
@@ -204,9 +203,9 @@ public class NPCTaskWalkTo extends NPCTask
 
 		float targetYaw = directionLoc.getYaw();
 		float targetPitch = directionLoc.getPitch();
-		targetPitch = (float) MathUtil.clampAbs(targetPitch, 25);
+		targetPitch = (float) MathUtil.clampAbs(targetPitch, 30);
 
-		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitch(loc, targetYaw, targetPitch, 10);
+		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitchSmooth(loc, targetYaw, targetPitch, 1);
 		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
 	}
 
@@ -226,6 +225,17 @@ public class NPCTaskWalkTo extends NPCTask
 
 		Vector3D newVelocity = new Vector3D(ladderDirection.dX*0.05, stepY, ladderDirection.dZ*0.05);
 		this.npc.setVelocity(newVelocity);
+
+
+		// HEAD ROTATION
+		Location ladderLocation = location.clone().add(ladderDirection.dX, 0, ladderDirection.dZ);
+		Location directionLoc = LocationUtil.lookAt(location, ladderLocation);
+
+		float targetYaw = directionLoc.getYaw();
+		float targetPitch = (dY > 0 ? -1 : 1)*45;
+
+		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitchSmooth(location, targetYaw, targetPitch, 1.2);
+		this.npc.setYawPitch(location.getYaw()+stepYawAndPitch.a, location.getPitch()+stepYawAndPitch.b);
 	}
 
 }
