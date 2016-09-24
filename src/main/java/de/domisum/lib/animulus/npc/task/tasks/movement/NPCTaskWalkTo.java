@@ -5,6 +5,7 @@ import de.domisum.lib.animulus.npc.PhysicsNPC;
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
 import de.domisum.lib.auxilium.data.container.Duo;
+import de.domisum.lib.auxilium.data.container.dir.Direction2D;
 import de.domisum.lib.auxilium.data.container.math.Vector2D;
 import de.domisum.lib.auxilium.data.container.math.Vector3D;
 import de.domisum.lib.auxilium.util.TextUtil;
@@ -40,7 +41,7 @@ public class NPCTaskWalkTo extends NPCTask
 	private int unchangedPositionsInRow = 0;
 
 	// walking
-	private int reuseLastDirectionTicks = 0;
+	private int reuseLastDirectionTicks = 0; // TODO remove this and replace with inertia
 	private Vector2D lastDirection;
 
 
@@ -160,7 +161,7 @@ public class NPCTaskWalkTo extends NPCTask
 		if(distanceXZSquared < 0.01)
 		{
 			this.currentWaypointIndex++;
-			this.reuseLastDirectionTicks = 2;
+			this.reuseLastDirectionTicks = 1;
 			return;
 		}
 
@@ -212,19 +213,19 @@ public class NPCTaskWalkTo extends NPCTask
 	private void climb()
 	{
 		Location location = this.npc.getLocation();
+		Direction2D ladderDirection = (Direction2D) this.currentWaypoint.getData("ladderDirection");
 
 		double dY = this.currentWaypoint.getPosition().y-location.getY();
-
 		double stepY = MathUtil.clampAbs(dY, PhysicsNPC.CLIMBING_BLOCKS_PER_SECOND/20d);
-		this.npc.setVelocity(new Vector3D(0, stepY, 0));
-		DebugUtil.say("stepY: "+stepY);
 
-		if(Math.abs(dY) < 0.1)
+		if(Math.abs(dY) < 0.01)
 		{
-			this.currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex+1);
-			DebugUtil.say("walk");
-			walk();
+			this.currentWaypointIndex++;
+			return;
 		}
+
+		Vector3D newVelocity = new Vector3D(ladderDirection.dX*0.05, stepY, ladderDirection.dZ*0.05);
+		this.npc.setVelocity(newVelocity);
 	}
 
 }
