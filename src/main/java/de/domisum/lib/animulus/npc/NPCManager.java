@@ -157,7 +157,6 @@ public class NPCManager implements Listener
 	private void update()
 	{
 		/*long startNano = System.nanoTime();*/
-
 		for(StateNPC toRemove : this.npcsToRemove)
 			this.npcs.values().remove(toRemove);
 		this.npcsToRemove.clear();

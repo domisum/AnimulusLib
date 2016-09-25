@@ -122,7 +122,6 @@ public class NPCTaskWalkTo extends NPCTask
 				}
 			}
 
-
 		this.currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex);
 		int transitionType = this.currentWaypoint.getTransitionType();
 		if(transitionType == TransitionType.WALK || transitionType == TransitionType.JUMP)
