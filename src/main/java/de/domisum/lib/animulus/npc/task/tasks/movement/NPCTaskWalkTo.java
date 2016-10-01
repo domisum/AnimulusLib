@@ -123,15 +123,22 @@ public class NPCTaskWalkTo extends NPCTask
 			return true;
 
 		if(this.lastPosition != null)
+		{
 			if(this.npc.getPosition().subtract(this.lastPosition).lengthSquared() < NO_MOVEMENT_THRESHOLD)
 			{
 				this.unchangedPositionsInRow++;
 				if(this.unchangedPositionsInRow >= NO_MOVEMENT_STUCK_REPETITIONS)
 				{
+					AnimulusLib.getInstance().getLogger().warning(
+							"The npc '"+this.npc.getId()+"' got stuck and did no longer move @ '"+TextUtil
+									.getLocationAsString(this.npc.getLocation()));
 					this.npc.onWalkingFail();
 					return true;
 				}
 			}
+			else
+				this.unchangedPositionsInRow = 0;
+		}
 
 		this.currentWaypoint = this.path.getWaypoint(this.currentWaypointIndex);
 		int transitionType = this.currentWaypoint.getTransitionType();
