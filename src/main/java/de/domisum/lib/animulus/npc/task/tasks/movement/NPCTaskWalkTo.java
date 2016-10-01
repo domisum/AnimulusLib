@@ -65,6 +65,13 @@ public class NPCTaskWalkTo extends NPCTask
 		this.speedMultiplier = speedMultiplier;
 	}
 
+	@APIUsage
+	public NPCTaskWalkTo(TransitionalPath path, double speedMultiplier)
+	{
+		this.path = path;
+		this.speedMultiplier = speedMultiplier;
+	}
+
 
 	// -------
 	// GETTERS
@@ -82,6 +89,10 @@ public class NPCTaskWalkTo extends NPCTask
 	@Override
 	protected void onStart()
 	{
+		if(this.path != null)
+			return;
+
+
 		Location start = this.npc.getLocation();
 
 		UniversalPathfinder pathfinder = new UniversalPathfinder(start, this.target);

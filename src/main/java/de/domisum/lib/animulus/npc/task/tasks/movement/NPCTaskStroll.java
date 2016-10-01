@@ -4,6 +4,10 @@ import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import de.domisum.lib.auxilium.util.math.RandomUtil;
+import de.domisum.lib.compitum.transitionalpath.path.TransitionalBlockPath;
+import de.domisum.lib.compitum.transitionalpath.path.TransitionalPath;
+import de.domisum.lib.compitum.transitionalpath.pathfinders.TransitionalPathSmoother;
+import de.domisum.lib.compitum.transitionalpath.special.TransitionalStrollAStar;
 import org.bukkit.Location;
 
 @APIUsage
@@ -12,6 +16,7 @@ public class NPCTaskStroll extends NPCTask
 
 	// CONSTANTS
 	private static NPCTaskSlot[] USED_TASK_SLOTS = new NPCTaskSlot[] {NPCTaskSlot.MOVEMENT, NPCTaskSlot.HEAD_ROTATION};
+	private static final double MAX_STROLL_DISTANCE = 7;
 
 	// PROPERTIES
 	private int durationTicks;
@@ -23,7 +28,7 @@ public class NPCTaskStroll extends NPCTask
 	// STATUS
 	private int ticksToWait = 0;
 	private int ticksStrolled = 0;
-	private Location currentTarget;
+	private TransitionalPath currentPath;
 
 
 	// -------
@@ -76,13 +81,16 @@ public class NPCTaskStroll extends NPCTask
 			return false;
 		}
 
-		if(this.currentTarget == null)
+		if(this.currentPath == null)
 		{
-			this.currentTarget = findStrollLocation(this.startLocation, 7);
-			if(this.currentTarget == null)
+			findStrollPath();
+			if(this.currentPath == null)
+			{
+				this.ticksToWait = 10;
 				return false;
+			}
 
-			this.walkTask = new NPCTaskWalkTo(this.currentTarget, 0.9);
+			this.walkTask = new NPCTaskWalkTo(this.currentPath, 0.9);
 			this.walkTask.initialize(this.npc);
 			this.walkTask.onStart();
 
@@ -93,7 +101,7 @@ public class NPCTaskStroll extends NPCTask
 		if(arrived)
 		{
 			this.walkTask = null;
-			this.currentTarget = null;
+			this.currentPath = null;
 
 			this.ticksToWait = RandomUtil.distribute(4*20, 3*20);
 		}
@@ -107,44 +115,19 @@ public class NPCTaskStroll extends NPCTask
 
 	}
 
-
-	// -------
-	// UTIL
-	// -------
-	private Location findStrollLocation(Location base, double radius)
+	private void findStrollPath()
 	{
-		// 5 tries to find a location
-		for(int i = 0; i < 5; i++)
-		{
-			double randomAngle = RandomUtil.nextDouble()*2*Math.PI;
-			double randomDistance = RandomUtil.nextDouble()*radius;
-			double dX = Math.sin(randomAngle)*randomDistance;
-			double dZ = Math.cos(randomAngle)*randomDistance;
+		TransitionalStrollAStar strollAStar = new TransitionalStrollAStar(this.npc.getLocation(), this.startLocation,
+				MAX_STROLL_DISTANCE);
+		strollAStar.findPath();
 
-			for(int dY : new int[] {0, 1, -1, 2, -2})
-			{
-				Location location = base.clone().add(Math.round(dX), Math.round(dY), dZ);
+		if(!strollAStar.pathFound())
+			return;
+		TransitionalBlockPath blockPath = strollAStar.getPath();
 
-				if(canStandAt(location))
-					return location;
-			}
-		}
-
-		return null;
-	}
-
-	private boolean canStandAt(Location location)
-	{
-		if(location.getBlock().getType().isSolid())
-			return false;
-
-		if(location.clone().add(0, 1, 0).getBlock().getType().isSolid())
-			return false;
-
-		if(!location.clone().add(0, -1, 0).getBlock().getType().isSolid())
-			return false;
-
-		return true;
+		TransitionalPathSmoother smoother = new TransitionalPathSmoother(blockPath);
+		smoother.convert();
+		this.currentPath = smoother.getSmoothPath();
 	}
 
 }
