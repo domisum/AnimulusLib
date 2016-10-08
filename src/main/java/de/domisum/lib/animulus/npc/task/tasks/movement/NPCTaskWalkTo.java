@@ -195,7 +195,7 @@ public class NPCTaskWalkTo extends NPCTask
 
 		Vector2D mov = new Vector2D(dX, dZ);
 		double movLength = mov.length();
-		if(this.reuseLastDirectionTicks > 0)
+		if(this.lastDirection != null && this.reuseLastDirectionTicks > 0)
 		{
 			mov = this.lastDirection.multiply(movLength);
 			this.reuseLastDirectionTicks--;
