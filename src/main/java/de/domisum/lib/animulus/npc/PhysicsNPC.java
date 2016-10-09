@@ -21,7 +21,7 @@ public class PhysicsNPC extends StateNPC
 	private static final double AABB_XZ_LENGTH = 0.6;
 	private static final double AABB_Y_LENGTH = 1.8;
 
-	private static final double HOVER_HEIGHT = 0.01;
+	private static final double HOVER_HEIGHT = 0.001;
 	private static final double STEP_HEIGHT = 0.5;
 	public static final double CLIMBING_BLOCKS_PER_SECOND = 3;
 
