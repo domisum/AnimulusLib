@@ -22,7 +22,8 @@ public class NPCInteractPacketListener
 	// -------
 	public NPCInteractPacketListener()
 	{
-		listenForPackets();
+		// FIXME enable this again
+		// listenForPackets();
 	}
 
 	private void listenForPackets()
