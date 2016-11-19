@@ -8,7 +8,7 @@ public enum NPCTaskSlot
 	HEAD_ROTATION,
 	ITEM_MAINHAND,
 	ITEM_OFFHAND,
-	MOUTH;
+	MOUTH
 	// @formatter:on
 
 }

@@ -50,7 +50,7 @@ public class NPCTaskTeleport extends NPCTask
 	@Override
 	protected boolean onUpdate()
 	{
-		npc.teleport(target);
+		this.npc.teleport(this.target);
 
 		return true;
 	}
