@@ -18,9 +18,7 @@ public class NPCTaskWait extends NPCTask
 	private int ticksWaited = 0;
 
 
-	// -------
-	// CONSTRUCTOR
-	// -------
+	// INIT
 	@APIUsage public NPCTaskWait(int durationTicks)
 	{
 		super();
@@ -28,8 +26,6 @@ public class NPCTaskWait extends NPCTask
 	}
 
 
-	// -------
-	// GETTERS
 	// -------
 	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
@@ -42,12 +38,10 @@ public class NPCTaskWait extends NPCTask
 	}
 
 
-	// -------
 	// EXECUTION
-	// -------
 	@Override protected void onStart()
 	{
-
+		// nothing to start
 	}
 
 	@Override protected boolean onUpdate()
@@ -62,7 +56,7 @@ public class NPCTaskWait extends NPCTask
 
 	@Override protected void onCancel()
 	{
-
+		// nothing to cancel
 	}
 
 }
