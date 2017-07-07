@@ -107,7 +107,7 @@ public class PhysicsNPC extends StateNPC
 
 	private void moveWithCollisions()
 	{
-		// GENERAL COLLISION
+		// general collision
 		WorldServer nmsWorld = ((CraftWorld) this.location.getWorld()).getHandle();
 
 		// method #c() means offset
@@ -148,7 +148,7 @@ public class PhysicsNPC extends StateNPC
 		// copy velocity at this point so moving up slabs doesn't accelerate the character upwards
 		Vector3D newVelocity = new Vector3D(mX, mY, mZ);
 
-		// MOVING UP STAIRS and slabs
+		// moving up stairs and slabs
 		boolean verticalCollision = mX != this.velocity.x || mZ != this.velocity.z;
 		if((this.onGround || onGroundBefore) && verticalCollision)
 		{
