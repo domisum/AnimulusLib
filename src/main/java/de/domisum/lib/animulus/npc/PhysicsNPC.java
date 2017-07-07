@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import de.domisum.lib.auxilium.data.container.math.Vector3D;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.v1_9_R1.AxisAlignedBB;
 import net.minecraft.server.v1_9_R1.WorldServer;
 import org.bukkit.Location;
@@ -26,8 +28,8 @@ public class PhysicsNPC extends StateNPC
 	public static final double CLIMBING_BLOCKS_PER_SECOND = 3;
 
 	// PROPERTIES
-	private Vector3D velocity = new Vector3D();
-	private boolean onGround = false;
+	@Getter @Setter private Vector3D velocity = new Vector3D();
+	@Getter private boolean onGround = false;
 	private int ticksOnGround = 0;
 
 	// REFERENCES
@@ -35,9 +37,7 @@ public class PhysicsNPC extends StateNPC
 			AABB_Y_LENGTH, AABB_XZ_LENGTH/2d);
 
 
-	// -------
 	// CONSTRUCTOR
-	// -------
 	@DeserializationNoArgsConstructor public PhysicsNPC()
 	{
 		super();
@@ -49,14 +49,7 @@ public class PhysicsNPC extends StateNPC
 	}
 
 
-	// -------
 	// GETTERS
-	// -------
-	@APIUsage public boolean isOnGround()
-	{
-		return this.onGround;
-	}
-
 	@APIUsage public double getWalkSpeed()
 	{
 		if(isSprinting())
@@ -68,24 +61,8 @@ public class PhysicsNPC extends StateNPC
 		return 4.0/20d; // normal value: 4.3/20d;
 	}
 
-	@APIUsage public Vector3D getVelocity()
-	{
-		return this.velocity;
-	}
 
-
-	// -------
-	// SETTERS
-	// -------
-	@APIUsage public void setVelocity(Vector3D velocity)
-	{
-		this.velocity = velocity;
-	}
-
-
-	// -------
 	// UPDATING
-	// -------
 	@Override public void update()
 	{
 		super.update();
@@ -272,9 +249,7 @@ public class PhysicsNPC extends StateNPC
 	}
 
 
-	// -------
 	// PHYSICS INTERACTION
-	// -------
 	@APIUsage public void jump()
 	{
 		if(!this.onGround)
