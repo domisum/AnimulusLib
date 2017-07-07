@@ -512,7 +512,7 @@ public class StateNPC
 
 
 	// action
-	@APIUsage void sendAnimation(int animationId, Player... players)
+	@APIUsage protected void sendAnimation(int animationId, Player... players)
 	{
 		PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);
