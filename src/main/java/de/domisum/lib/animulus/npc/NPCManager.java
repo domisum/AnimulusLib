@@ -162,18 +162,15 @@ public class NPCManager implements Listener
 			if((this.updateCount%CHECK_PLAYER_DISTANCE_TICK_INTERVAL) == 0)
 				npc.updateVisibleForPlayers();
 
-			if(npc.isVisibleToSomebody())
-				if(LocationUtil.isChunkLoaded(npc.getLocation()))
+			if(npc.isVisibleToSomebody() && LocationUtil.isChunkLoaded(npc.getLocation()))
+				try
 				{
-					try
-					{
-						npc.update();
-					}
-					catch(Exception e)
-					{
-						e.printStackTrace();
-						removeNPC(npc);
-					}
+					npc.update();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					removeNPC(npc);
 				}
 		}
 
