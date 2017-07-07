@@ -31,9 +31,7 @@ public class NPCTaskStroll extends NPCTask
 	private TransitionalPath currentPath;
 
 
-	// -------
 	// CONSTRUCTOR
-	// -------
 	@APIUsage public NPCTaskStroll(int durationTicks)
 	{
 		super();
@@ -42,18 +40,14 @@ public class NPCTaskStroll extends NPCTask
 	}
 
 
-	// -------
 	// GETTERS
-	// -------
 	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
 
 
-	// -------
 	// EXECUTION
-	// -------
 	@Override protected void onStart()
 	{
 		this.startLocation = this.npc.getLocation();
@@ -107,7 +101,7 @@ public class NPCTaskStroll extends NPCTask
 
 	@Override protected void onCancel()
 	{
-
+		// nothing that needs to be canceled
 	}
 
 	private void findStrollPath()
