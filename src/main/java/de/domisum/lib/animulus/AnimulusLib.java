@@ -21,7 +21,6 @@ public class AnimulusLib
 	// -------
 	private AnimulusLib(JavaPlugin plugin)
 	{
-		instance = this;
 		this.plugin = plugin;
 
 		onEnable();
@@ -32,7 +31,7 @@ public class AnimulusLib
 		if(instance != null)
 			return;
 
-		new AnimulusLib(plugin);
+		instance = new AnimulusLib(plugin);
 	}
 
 	@APIUsage public static void disable()
