@@ -62,15 +62,13 @@ public class StateNPC
 	private transient int moveTeleportCounter = 0;
 
 
-	// -------
-	// CONSTRUCTOR
-	// -------
+	// INIT
 	@DeserializationNoArgsConstructor public StateNPC()
 	{
 
 	}
 
-	StateNPC(GameProfile gameProfile, Location location)
+	protected StateNPC(GameProfile gameProfile, Location location)
 	{
 		this.gameProfile = gameProfile;
 		this.location = location.clone();
@@ -96,9 +94,7 @@ public class StateNPC
 	}
 
 
-	// -------
 	// GETTERS
-	// -------
 	@APIUsage public String getId()
 	{
 		return this.id;
@@ -251,9 +247,7 @@ public class StateNPC
 	}
 
 
-	// -------
 	// SETTERS
-	// -------
 	@APIUsage public void setId(String id)
 	{
 		this.id = id;
@@ -383,9 +377,7 @@ public class StateNPC
 	}
 
 
-	// -------
 	// PLAYERS
-	// -------
 	@APIUsage protected void updateVisibleForPlayers()
 	{
 		for(Player p : Bukkit.getOnlinePlayers())
@@ -422,23 +414,19 @@ public class StateNPC
 	}
 
 
-	// -------
 	// INTERACTION
-	// -------
 	@APIUsage public void playerLeftClick(Player player)
 	{
-
+		// to be overridden
 	}
 
 	@APIUsage public void playerRightClick(Player player)
 	{
-
+		// to be overridden
 	}
 
 
-	// -------
 	// ACTION
-	// -------
 	@APIUsage public void swingArm()
 	{
 		sendAnimation(0, getPlayersVisibleToArray());
@@ -450,9 +438,7 @@ public class StateNPC
 	}
 
 
-	// -------
 	// MOVEMENT
-	// -------
 	@APIUsage public void moveToNearby(Location target)
 	{
 		moveToNearby(target, false);
@@ -516,19 +502,15 @@ public class StateNPC
 	}
 
 
-	// -------
 	// UPDATING
-	// -------
 	@APIUsage protected void update()
 	{
-
+		// to be overridden
 	}
 
 
-	// -------
 	// PACKETS
-	// -------
-	protected void sendToPlayer(Player... players)
+	private void sendToPlayer(Player... players)
 	{
 		sendPlayerInfo(players);
 		sendEntitySpawn(players);
@@ -556,7 +538,7 @@ public class StateNPC
 	}
 
 
-	// PLAYER INFO
+	// player info
 	private PlayerInfoData getPlayerInfoData(PacketPlayOutPlayerInfo packetPlayOutPlayerInfo)
 	{
 		return packetPlayOutPlayerInfo.new PlayerInfoData(this.gameProfile, 0, EnumGamemode.NOT_SET,
@@ -591,7 +573,7 @@ public class StateNPC
 	}
 
 
-	// ENTITY SPAWN
+	// entity spawn
 	private void sendEntitySpawn(Player... players)
 	{
 		PacketPlayOutNamedEntitySpawn packet = new PacketPlayOutNamedEntitySpawn();
@@ -609,7 +591,7 @@ public class StateNPC
 	}
 
 
-	// ENTITY DESPAWN
+	// entity despawn
 	private void sendEntityDespawn(Player... players)
 	{
 		PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy();
@@ -620,7 +602,7 @@ public class StateNPC
 	}
 
 
-	// ENTITY CHANGE
+	// entity change
 	private void sendEntityEquipmentChange(EnumItemSlot slot, ItemStack itemStack, Player... players)
 	{
 		PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(this.entityId, slot,
@@ -642,7 +624,7 @@ public class StateNPC
 	}
 
 
-	// MOVEMENT
+	// movement
 	private void sendRelativeMoveLook(Location target, Player... players)
 	{
 		double dX = target.getX()-this.location.getX();
@@ -705,7 +687,7 @@ public class StateNPC
 	}
 
 
-	// ACTION
+	// action
 	@APIUsage void sendAnimation(int animationId, Player... players)
 	{
 		PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
@@ -717,9 +699,7 @@ public class StateNPC
 	}
 
 
-	// -------
 	// UTIL
-	// -------
 	private static int getUnusedEntityId()
 	{
 		// the entityId of a new (net.minecraft.server.)Entity is set like this:
