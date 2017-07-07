@@ -26,7 +26,7 @@ public class NPCTaskWait extends NPCTask
 	}
 
 
-	// -------
+	// GETTERS
 	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
