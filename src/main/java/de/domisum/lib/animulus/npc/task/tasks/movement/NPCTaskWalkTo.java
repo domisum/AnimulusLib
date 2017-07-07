@@ -47,9 +47,7 @@ public class NPCTaskWalkTo extends NPCTask
 	// TODO stepping sounds
 
 
-	// -------
-	// CONSTRUCTOR
-	// -------
+	// INIT
 	@APIUsage public NPCTaskWalkTo(Location target)
 	{
 		this(target, 1);
@@ -70,18 +68,14 @@ public class NPCTaskWalkTo extends NPCTask
 	}
 
 
-	// -------
 	// GETTERS
-	// -------
 	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
 
 
-	// -------
 	// EXECUTION
-	// -------
 	@Override protected void onStart()
 	{
 		if(this.path != null)
@@ -118,7 +112,10 @@ public class NPCTaskWalkTo extends NPCTask
 
 		if(this.lastPosition != null)
 		{
-			if(this.npc.getPosition().subtract(this.lastPosition).lengthSquared() < NO_MOVEMENT_THRESHOLD)
+			Vector3D npcPosition = new Vector3D(this.npc.getLocation().getX(), this.npc.getLocation().getY(),
+					this.npc.getLocation().getZ());
+
+			if(npcPosition.subtract(this.lastPosition).lengthSquared() < NO_MOVEMENT_THRESHOLD)
 			{
 				this.unchangedPositionsInRow++;
 				if(this.unchangedPositionsInRow >= NO_MOVEMENT_STUCK_REPETITIONS)
@@ -144,19 +141,18 @@ public class NPCTaskWalkTo extends NPCTask
 			throw new UnsupportedOperationException("The TransitionType '"+transitionType+"' is not supported");
 
 
-		this.lastPosition = this.npc.getPosition();
+		this.lastPosition = new Vector3D(this.npc.getLocation().getX(), this.npc.getLocation().getY(),
+				this.npc.getLocation().getZ());
 		return false;
 	}
 
 	@Override protected void onCancel()
 	{
-
+		// nothing to cancel
 	}
 
 
-	// -------
 	// MOVEMENT TYPES
-	// -------
 	private void walk()
 	{
 		Location loc = this.npc.getLocation();
