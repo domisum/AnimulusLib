@@ -23,9 +23,7 @@ public class NPCTaskLookTowards extends NPCTask
 	private double speedMultiplier;
 
 
-	// -------
-	// CONSTRUCTOR
-	// -------
+	// INIT
 	@APIUsage public NPCTaskLookTowards(float targetYaw, float targetPitch)
 	{
 		this(targetYaw, targetPitch, 1);
@@ -41,21 +39,17 @@ public class NPCTaskLookTowards extends NPCTask
 	}
 
 
-	// -------
 	// GETTERS
-	// -------
 	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
 
 
-	// -------
 	// EXECUTION
-	// -------
 	@Override protected void onStart()
 	{
-
+		// nothing needs to be started
 	}
 
 	@Override protected boolean onUpdate()
@@ -75,13 +69,11 @@ public class NPCTaskLookTowards extends NPCTask
 
 	@Override protected void onCancel()
 	{
-
+		// nothing needs to be canceled
 	}
 
 
-	// -------
 	// UTIL
-	// -------
 	@APIUsage public static Duo<Float, Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch,
 			double speed)
 	{
