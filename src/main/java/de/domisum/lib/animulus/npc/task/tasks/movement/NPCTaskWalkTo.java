@@ -170,12 +170,11 @@ public class NPCTaskWalkTo extends NPCTask
 			return;
 		}
 
-		if(this.currentWaypointIndex+1 == this.path.getNumberOfWaypoints())
-			if(distanceXZSquared < 0.3)
-			{
-				this.currentWaypointIndex++;
-				return;
-			}
+		if(this.currentWaypointIndex+1 == this.path.getNumberOfWaypoints() && distanceXZSquared < 0.3)
+		{
+			this.currentWaypointIndex++;
+			return;
+		}
 
 		if(dY > 0 && this.currentWaypoint.getTransitionType() == TransitionType.JUMP)
 			this.npc.jump();
