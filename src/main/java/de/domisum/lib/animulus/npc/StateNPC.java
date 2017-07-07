@@ -2,13 +2,14 @@ package de.domisum.lib.animulus.npc;
 
 import com.mojang.authlib.GameProfile;
 import de.domisum.lib.animulus.AnimulusLib;
-import de.domisum.lib.auxilium.data.container.math.Vector3D;
 import de.domisum.lib.auxilium.util.java.ThreadUtil;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 import de.domisum.lib.auxiliumspigot.util.LocationUtil;
 import de.domisum.lib.auxiliumspigot.util.PacketUtil;
 import de.domisum.lib.auxiliumspigot.util.ReflectionUtil;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.v1_9_R1.*;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
@@ -36,24 +37,24 @@ public class StateNPC
 	private static final long RELATIVE_MOVE_TELEPORT_INTERVAL = 10;
 
 	// STATUS
-	private transient String id;
-	private transient int entityId;
+	@Getter @Setter private transient String id;
+	@Getter private transient int entityId;
 	@APIUsage protected transient GameProfile gameProfile;
 
 	protected transient Location location;
-	private transient ItemStack itemInHand = null;
-	private transient ItemStack itemInOffHand = null;
-	private transient ItemStack[] armor = new ItemStack[4]; // 0: boots, 1: leggings, 2: chestplate, 3: helmet
+	@Getter @Setter private transient ItemStack itemInHand = null;
+	@Getter @Setter private transient ItemStack itemInOffHand = null;
+	@Getter @Setter private transient ItemStack[] armor = new ItemStack[4]; // 0: boots, 1: leggings, 2: chestplate, 3: helmet
 
-	private transient boolean isOnFire = false;
-	private transient boolean isCrouched = false;
-	private transient boolean isSprinting = false;
-	private transient boolean isEating = false;
-	private transient boolean isDrinking = false;
-	private transient boolean isBlocking = false;
-	private transient boolean isGlowing = false;
+	@Getter @Setter private transient boolean isOnFire = false;
+	@Getter @Setter private transient boolean isCrouched = false;
+	@Getter @Setter private transient boolean isSprinting = false;
+	@Getter @Setter private transient boolean isEating = false;
+	@Getter @Setter private transient boolean isDrinking = false;
+	@Getter @Setter private transient boolean isBlocking = false;
+	@Getter @Setter private transient boolean isGlowing = false;
 
-	private transient int numberOfArrowsInBody = 0;
+	@Getter @Setter private transient int numberOfArrowsInBody = 0;
 
 	// PLAYERS
 	private transient Set<Player> visibleTo = new HashSet<>();
@@ -95,24 +96,9 @@ public class StateNPC
 
 
 	// GETTERS
-	@APIUsage public String getId()
-	{
-		return this.id;
-	}
-
-	@APIUsage public int getEntityId()
-	{
-		return this.entityId;
-	}
-
 	@APIUsage public Location getLocation()
 	{
 		return this.location.clone();
-	}
-
-	@APIUsage public Vector3D getPosition()
-	{
-		return new Vector3D(this.location.getX(), this.location.getY(), this.location.getZ());
 	}
 
 	@APIUsage public double getEyeHeight()
@@ -128,52 +114,32 @@ public class StateNPC
 		return this.location.clone().add(0, getEyeHeight(), 0);
 	}
 
-	@APIUsage public ItemStack getItemInHand()
+
+	@APIUsage public Set<Player> getPlayersVisibleTo()
 	{
-		return this.itemInHand;
+		return new HashSet<>(this.visibleTo);
 	}
 
-
-	@APIUsage public boolean isOnFire()
+	@APIUsage public boolean isVisibleTo(Player player)
 	{
-		return this.isOnFire;
+		return this.visibleTo.contains(player);
 	}
 
-	@APIUsage public boolean isCrouched()
+	@APIUsage public boolean isVisibleToSomebody()
 	{
-		return this.isCrouched;
+		return !this.visibleTo.isEmpty();
 	}
 
-	@APIUsage public boolean isSprinting()
+	@APIUsage public Player[] getPlayersVisibleToArray()
 	{
-		return this.isSprinting;
+		return this.visibleTo.toArray(new Player[this.visibleTo.size()]);
 	}
 
-	@APIUsage public boolean isEating()
-	{
-		return this.isEating;
-	}
-
-	@APIUsage public boolean isDrinking()
-	{
-		return this.isDrinking;
-	}
-
-	@APIUsage public boolean isBlocking()
-	{
-		return this.isBlocking;
-	}
 
 	@APIUsage public boolean isHandActive()
 	{
 		return isEating() || isDrinking() || isBlocking();
 	}
-
-	@APIUsage public boolean isGlowing()
-	{
-		return this.isGlowing;
-	}
-
 
 	private DataWatcher getMetadata()
 	{
@@ -226,154 +192,12 @@ public class StateNPC
 	}
 
 
-	@APIUsage public Set<Player> getPlayersVisibleTo()
-	{
-		return new HashSet<>(this.visibleTo);
-	}
-
-	@APIUsage public boolean isVisibleTo(Player player)
-	{
-		return this.visibleTo.contains(player);
-	}
-
-	@APIUsage public boolean isVisibleToSomebody()
-	{
-		return !this.visibleTo.isEmpty();
-	}
-
-	@APIUsage public Player[] getPlayersVisibleToArray()
-	{
-		return this.visibleTo.toArray(new Player[this.visibleTo.size()]);
-	}
-
-
 	// SETTERS
-	@APIUsage public void setId(String id)
-	{
-		this.id = id;
-	}
-
-	@APIUsage public void setItemInHand(ItemStack itemStack)
-	{
-		this.itemInHand = itemStack;
-
-		sendEntityEquipmentChange(EnumItemSlot.MAINHAND, itemStack, getPlayersVisibleToArray());
-	}
-
-	@APIUsage public void setItemInOffHand(ItemStack itemStack)
-	{
-		this.itemInOffHand = itemStack;
-		sendEntityEquipmentChange(EnumItemSlot.OFFHAND, itemStack, getPlayersVisibleToArray());
-	}
-
-	@APIUsage public void setArmor(ItemStack[] armor)
-	{
-		this.armor = armor;
-	}
-
 	@APIUsage public void setArmor(int slot, ItemStack itemStack)
 	{
 		this.armor[slot] = itemStack;
 
 		sendEntityEquipmentChange(getArmorItemSlot(slot), itemStack, getPlayersVisibleToArray());
-	}
-
-
-	@APIUsage public void setOnFire(boolean onFire)
-	{
-		if(this.isOnFire == onFire)
-			return;
-
-		this.isOnFire = onFire;
-		sendEntityMetadata(getPlayersVisibleToArray());
-	}
-
-	@APIUsage public void setCrouched(boolean crouched)
-	{
-		if(this.isCrouched == crouched)
-			return;
-
-		if(isSprinting())
-			throw new IllegalStateException("Can't crouch while sprinting");
-
-		this.isCrouched = crouched;
-		sendEntityMetadata(getPlayersVisibleToArray());
-	}
-
-	@APIUsage public void setSprinting(boolean sprinting)
-	{
-		if(this.isSprinting == sprinting)
-			return;
-
-		if(isCrouched())
-			throw new IllegalStateException("Can't sprint while crouching");
-
-		this.isSprinting = sprinting;
-		sendEntityMetadata(getPlayersVisibleToArray());
-	}
-
-	@APIUsage public void setEating(boolean eating)
-	{
-		// TODO maybe check if the item in the hand is eatable (or drinkable or blockable for the other hand activations)
-
-		if(this.isEating == eating)
-			return;
-
-		if(isDrinking())
-			throw new IllegalStateException("Can't eat while drinking");
-		if(isBlocking())
-			throw new IllegalStateException("Can't eat while blocking");
-
-		this.isEating = eating;
-		sendEntityMetadata(getPlayersVisibleToArray());
-	}
-
-	@APIUsage public void setDrinking(boolean drinking)
-	{
-		if(this.isDrinking == drinking)
-			return;
-
-		if(isEating())
-			throw new IllegalStateException("Can't drink while eating");
-		if(isBlocking())
-			throw new IllegalStateException("Can't drink while blocking");
-
-		this.isDrinking = drinking;
-		sendEntityMetadata(getPlayersVisibleToArray());
-	}
-
-	@APIUsage public void setBlocking(boolean blocking)
-	{
-		if(this.isBlocking == blocking)
-			return;
-
-		if(isEating())
-			throw new IllegalStateException("Can't block while eating");
-		if(isDrinking())
-			throw new IllegalStateException("Can't block while drinking");
-
-		this.isBlocking = blocking;
-		sendEntityMetadata(getPlayersVisibleToArray());
-	}
-
-
-	@APIUsage public void setGlowing(boolean glowing)
-	{
-		if(this.isGlowing == glowing)
-			return;
-
-		this.isGlowing = glowing;
-		sendEntityMetadata(getPlayersVisibleToArray());
-	}
-
-
-	@APIUsage public void setNumberOfArrowsInBody(byte numberOfArrowsInBody)
-	{
-		if(this.numberOfArrowsInBody == numberOfArrowsInBody)
-			return;
-
-		this.numberOfArrowsInBody = numberOfArrowsInBody;
-		sendEntityMetadata(getPlayersVisibleToArray());
 	}
 
 
