@@ -1,7 +1,6 @@
 package de.domisum.lib.animulus;
 
 import de.domisum.lib.animulus.npc.NPCManager;
-import de.domisum.lib.auxilium.AuxiliumLib;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,8 +46,6 @@ public class AnimulusLib
 
 	private void onEnable()
 	{
-		AuxiliumLib.enable(this.plugin);
-
 		npcManager = new NPCManager();
 
 		getLogger().info(this.getClass().getSimpleName()+" has been enabled");
@@ -58,8 +55,6 @@ public class AnimulusLib
 	{
 		if(npcManager != null)
 			npcManager.terminate();
-
-		AuxiliumLib.disable();
 
 		getLogger().info(this.getClass().getSimpleName()+" has been disabled");
 	}
