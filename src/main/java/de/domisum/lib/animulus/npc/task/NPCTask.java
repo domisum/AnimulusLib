@@ -29,7 +29,7 @@ public abstract class NPCTask
 
 
 	// GETTERS
-	public abstract NPCTaskSlot[] USED_TASK_SLOTS();
+	public abstract NPCTaskSlot[] getUsedTaskSlots();
 
 	protected boolean isRunSeparately()
 	{

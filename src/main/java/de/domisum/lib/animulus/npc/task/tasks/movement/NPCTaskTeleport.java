@@ -26,7 +26,7 @@ public class NPCTaskTeleport extends NPCTask
 
 
 	// GETTERS
-	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
+	@Override public NPCTaskSlot[] getUsedTaskSlots()
 	{
 		return USED_TASK_SLOTS;
 	}

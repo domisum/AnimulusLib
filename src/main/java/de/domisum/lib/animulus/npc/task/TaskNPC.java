@@ -118,12 +118,12 @@ public class TaskNPC extends PhysicsNPC
 		this.blockedTaskSlots.clear();
 
 		for(NPCTask task : this.activeTasks)
-			Collections.addAll(this.blockedTaskSlots, task.USED_TASK_SLOTS());
+			Collections.addAll(this.blockedTaskSlots, task.getUsedTaskSlots());
 	}
 
 	private boolean areTaskSlotsUnblocked(NPCTask task)
 	{
-		for(NPCTaskSlot slot : task.USED_TASK_SLOTS())
+		for(NPCTaskSlot slot : task.getUsedTaskSlots())
 			if(this.blockedTaskSlots.contains(slot))
 				return false;
 
