@@ -16,9 +16,7 @@ public abstract class NPCTask
 	private boolean canceled;
 
 
-	// -------
-	// CONSTRUCTOR
-	// -------
+	// INIT
 	@DeserializationNoArgsConstructor public NPCTask()
 	{
 
@@ -30,9 +28,7 @@ public abstract class NPCTask
 	}
 
 
-	// -------
 	// GETTERS
-	// -------
 	public abstract NPCTaskSlot[] USED_TASK_SLOTS();
 
 	protected boolean isRunSeparately()
@@ -40,15 +36,13 @@ public abstract class NPCTask
 		return this.runSeparately;
 	}
 
-	boolean isCanceled()
+	protected boolean isCanceled()
 	{
 		return this.canceled;
 	}
 
 
-	// -------
 	// SETTERS
-	// -------
 	@APIUsage public NPCTask setRunSeparately(boolean runSeparately)
 	{
 		this.runSeparately = runSeparately;
@@ -56,9 +50,7 @@ public abstract class NPCTask
 	}
 
 
-	// -------
 	// EXECUTION
-	// -------
 	protected abstract void onStart();
 
 	/**
