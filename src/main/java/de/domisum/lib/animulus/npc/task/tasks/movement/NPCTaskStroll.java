@@ -55,14 +55,14 @@ public class NPCTaskStroll extends NPCTask
 
 	@Override protected boolean onUpdate()
 	{
-		if(this.durationTicks > 0) // if duration <= 0, then do this forever
-			if(this.ticksStrolled >= this.durationTicks)
-			{
-				if(this.walkTask != null)
-					this.walkTask.onCancel();
+		// if duration <= 0, then do this forever
+		if(this.durationTicks > 0 && this.ticksStrolled >= this.durationTicks)
+		{
+			if(this.walkTask != null)
+				this.walkTask.onCancel();
 
-				return true;
-			}
+			return true;
+		}
 		this.ticksStrolled++;
 
 		if(this.ticksToWait > 0)
