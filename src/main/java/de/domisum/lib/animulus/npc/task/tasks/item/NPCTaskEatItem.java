@@ -25,14 +25,12 @@ public class NPCTaskEatItem extends NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@APIUsage
-	public NPCTaskEatItem(ItemStack itemStack)
+	@APIUsage public NPCTaskEatItem(ItemStack itemStack)
 	{
 		this(itemStack, 32);
 	}
 
-	@APIUsage
-	public NPCTaskEatItem(ItemStack itemStack, int durationTicks)
+	@APIUsage public NPCTaskEatItem(ItemStack itemStack, int durationTicks)
 	{
 		super();
 
@@ -44,8 +42,7 @@ public class NPCTaskEatItem extends NPCTask
 	// -------
 	// GETTERS
 	// -------
-	@Override
-	public NPCTaskSlot[] USED_TASK_SLOTS()
+	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
@@ -54,15 +51,13 @@ public class NPCTaskEatItem extends NPCTask
 	// -------
 	// EXECUTION
 	// -------
-	@Override
-	protected void onStart()
+	@Override protected void onStart()
 	{
 		this.npc.setItemInHand(this.itemStack);
 		this.npc.setEating(true);
 	}
 
-	@Override
-	protected boolean onUpdate()
+	@Override protected boolean onUpdate()
 	{
 		if(this.elapsedTicks >= this.durationTicks)
 		{
@@ -84,8 +79,7 @@ public class NPCTaskEatItem extends NPCTask
 		soundLocation.getWorld().playSound(soundLocation, sound, 2, 1);
 	}
 
-	@Override
-	protected void onCancel()
+	@Override protected void onCancel()
 	{
 		end();
 	}

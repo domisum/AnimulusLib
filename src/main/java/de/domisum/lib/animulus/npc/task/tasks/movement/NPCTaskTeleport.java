@@ -19,8 +19,7 @@ public class NPCTaskTeleport extends NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@APIUsage
-	public NPCTaskTeleport(Location target)
+	@APIUsage public NPCTaskTeleport(Location target)
 	{
 		super();
 
@@ -31,8 +30,7 @@ public class NPCTaskTeleport extends NPCTask
 	// -------
 	// GETTERS
 	// -------
-	@Override
-	public NPCTaskSlot[] USED_TASK_SLOTS()
+	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
@@ -41,22 +39,19 @@ public class NPCTaskTeleport extends NPCTask
 	// -------
 	// EXECUTION
 	// -------
-	@Override
-	protected void onStart()
+	@Override protected void onStart()
 	{
 
 	}
 
-	@Override
-	protected boolean onUpdate()
+	@Override protected boolean onUpdate()
 	{
 		npc.teleport(target);
 
 		return true;
 	}
 
-	@Override
-	protected void onCancel()
+	@Override protected void onCancel()
 	{
 
 	}

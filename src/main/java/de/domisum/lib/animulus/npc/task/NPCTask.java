@@ -19,8 +19,7 @@ public abstract class NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@DeserializationNoArgsConstructor
-	public NPCTask()
+	@DeserializationNoArgsConstructor public NPCTask()
 	{
 
 	}
@@ -50,8 +49,7 @@ public abstract class NPCTask
 	// -------
 	// SETTERS
 	// -------
-	@APIUsage
-	public NPCTask setRunSeparately(boolean runSeparately)
+	@APIUsage public NPCTask setRunSeparately(boolean runSeparately)
 	{
 		this.runSeparately = runSeparately;
 		return this;
@@ -70,8 +68,7 @@ public abstract class NPCTask
 
 	protected abstract void onCancel();
 
-	@APIUsage
-	public void cancel()
+	@APIUsage public void cancel()
 	{
 		onCancel();
 		this.canceled = true;

@@ -31,14 +31,12 @@ public class TaskNPC extends PhysicsNPC
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@DeserializationNoArgsConstructor
-	public TaskNPC()
+	@DeserializationNoArgsConstructor public TaskNPC()
 	{
 
 	}
 
-	@APIUsage
-	public TaskNPC(GameProfile gameProfile, Location location)
+	@APIUsage public TaskNPC(GameProfile gameProfile, Location location)
 	{
 		super(gameProfile, location);
 	}
@@ -47,14 +45,12 @@ public class TaskNPC extends PhysicsNPC
 	// -------
 	// GETTERS
 	// -------
-	@APIUsage
-	public Set<NPCTask> getActiveTasks()
+	@APIUsage public Set<NPCTask> getActiveTasks()
 	{
 		return this.activeTasks;
 	}
 
-	@APIUsage
-	public List<NPCTask> getTaskQueue()
+	@APIUsage public List<NPCTask> getTaskQueue()
 	{
 		return this.taskQueue;
 	}
@@ -63,8 +59,7 @@ public class TaskNPC extends PhysicsNPC
 	// -------
 	// SETTERS
 	// -------
-	@APIUsage
-	public void setBrain(NPCBrain brain)
+	@APIUsage public void setBrain(NPCBrain brain)
 	{
 		this.brain = brain;
 		brain.initialize(this);
@@ -74,8 +69,7 @@ public class TaskNPC extends PhysicsNPC
 	// -------
 	// QUEUE
 	// -------
-	@APIUsage
-	public void queueTask(NPCTask task)
+	@APIUsage public void queueTask(NPCTask task)
 	{
 		task.initialize(this);
 		this.taskQueue.add(task);
@@ -85,8 +79,7 @@ public class TaskNPC extends PhysicsNPC
 	// -------
 	// UPDATING
 	// -------
-	@Override
-	public void update()
+	@Override public void update()
 	{
 		super.update();
 
@@ -171,8 +164,7 @@ public class TaskNPC extends PhysicsNPC
 	// -------
 	// TASKS
 	// -------
-	@APIUsage
-	public void onWalkingFail()
+	@APIUsage public void onWalkingFail()
 	{
 
 	}

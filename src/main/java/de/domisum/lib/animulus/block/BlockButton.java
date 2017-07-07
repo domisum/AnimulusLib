@@ -34,8 +34,7 @@ public class BlockButton
 	// -------
 	// GETTERS
 	// -------
-	@SuppressWarnings("unused")
-	public boolean isPressed()
+	@SuppressWarnings("unused") public boolean isPressed()
 	{
 		WorldServer world = ((CraftWorld) this.location.getWorld()).getHandle();
 		BlockPosition blockPosition = new BlockPosition(this.location.getBlockX(), this.location.getBlockY(),

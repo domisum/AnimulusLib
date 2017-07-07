@@ -21,8 +21,7 @@ public class NPCTaskWait extends NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@APIUsage
-	public NPCTaskWait(int durationTicks)
+	@APIUsage public NPCTaskWait(int durationTicks)
 	{
 		super();
 		this.durationTicks = durationTicks;
@@ -32,14 +31,12 @@ public class NPCTaskWait extends NPCTask
 	// -------
 	// GETTERS
 	// -------
-	@Override
-	public NPCTaskSlot[] USED_TASK_SLOTS()
+	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
 
-	@Override
-	protected boolean isRunSeparately()
+	@Override protected boolean isRunSeparately()
 	{
 		return true;
 	}
@@ -48,14 +45,12 @@ public class NPCTaskWait extends NPCTask
 	// -------
 	// EXECUTION
 	// -------
-	@Override
-	protected void onStart()
+	@Override protected void onStart()
 	{
 
 	}
 
-	@Override
-	protected boolean onUpdate()
+	@Override protected boolean onUpdate()
 	{
 		if(this.ticksWaited >= this.durationTicks)
 			return true;
@@ -65,8 +60,7 @@ public class NPCTaskWait extends NPCTask
 	}
 
 
-	@Override
-	protected void onCancel()
+	@Override protected void onCancel()
 	{
 
 	}

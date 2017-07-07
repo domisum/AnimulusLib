@@ -50,14 +50,12 @@ public class NPCTaskWalkTo extends NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@APIUsage
-	public NPCTaskWalkTo(Location target)
+	@APIUsage public NPCTaskWalkTo(Location target)
 	{
 		this(target, 1);
 	}
 
-	@APIUsage
-	public NPCTaskWalkTo(Location target, double speedMultiplier)
+	@APIUsage public NPCTaskWalkTo(Location target, double speedMultiplier)
 	{
 		super();
 
@@ -65,8 +63,7 @@ public class NPCTaskWalkTo extends NPCTask
 		this.speedMultiplier = speedMultiplier;
 	}
 
-	@APIUsage
-	public NPCTaskWalkTo(TransitionalPath path, double speedMultiplier)
+	@APIUsage public NPCTaskWalkTo(TransitionalPath path, double speedMultiplier)
 	{
 		this.path = path;
 		this.speedMultiplier = speedMultiplier;
@@ -76,8 +73,7 @@ public class NPCTaskWalkTo extends NPCTask
 	// -------
 	// GETTERS
 	// -------
-	@Override
-	public NPCTaskSlot[] USED_TASK_SLOTS()
+	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
@@ -86,8 +82,7 @@ public class NPCTaskWalkTo extends NPCTask
 	// -------
 	// EXECUTION
 	// -------
-	@Override
-	protected void onStart()
+	@Override protected void onStart()
 	{
 		if(this.path != null)
 			return;
@@ -113,8 +108,7 @@ public class NPCTaskWalkTo extends NPCTask
 		}
 	}
 
-	@Override
-	protected boolean onUpdate()
+	@Override protected boolean onUpdate()
 	{
 		if(this.path == null)
 			return true;
@@ -154,8 +148,7 @@ public class NPCTaskWalkTo extends NPCTask
 		return false;
 	}
 
-	@Override
-	protected void onCancel()
+	@Override protected void onCancel()
 	{
 
 	}

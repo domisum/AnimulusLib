@@ -84,8 +84,7 @@ public class NPCManager implements Listener
 	// -------
 	// GETTERS
 	// -------
-	@APIUsage
-	public int getUpdateCount()
+	@APIUsage public int getUpdateCount()
 	{
 		return this.updateCount;
 	}
@@ -95,8 +94,7 @@ public class NPCManager implements Listener
 		return this.npcs.get(entityId);
 	}
 
-	@APIUsage
-	public StateNPC getNPC(String id)
+	@APIUsage public StateNPC getNPC(String id)
 	{
 		for(StateNPC npc : this.npcs.values())
 			if(npc.getId().equals(id))
@@ -109,8 +107,7 @@ public class NPCManager implements Listener
 	// -------
 	// CHANGERS
 	// -------
-	@APIUsage
-	public void addNPC(StateNPC npc)
+	@APIUsage public void addNPC(StateNPC npc)
 	{
 		// this sets the entity id, so do this first
 		npc.initialize();
@@ -118,8 +115,7 @@ public class NPCManager implements Listener
 		this.npcs.put(npc.getEntityId(), npc);
 	}
 
-	@APIUsage
-	public void removeNPC(StateNPC npc)
+	@APIUsage public void removeNPC(StateNPC npc)
 	{
 		this.npcsToRemove.add(npc);
 		npc.terminate();
@@ -195,15 +191,13 @@ public class NPCManager implements Listener
 	// -------
 	// EVENTS
 	// -------
-	@EventHandler
-	public void playerJoin(PlayerQuitEvent event)
+	@EventHandler public void playerJoin(PlayerQuitEvent event)
 	{
 		for(StateNPC npc : this.npcs.values())
 			npc.updateVisibilityForPlayer(event.getPlayer());
 	}
 
-	@EventHandler
-	public void playerQuit(PlayerQuitEvent event)
+	@EventHandler public void playerQuit(PlayerQuitEvent event)
 	{
 		Player player = event.getPlayer();
 
@@ -212,8 +206,7 @@ public class NPCManager implements Listener
 	}
 
 
-	@EventHandler
-	public void playerRespawn(PlayerRespawnEvent event)
+	@EventHandler public void playerRespawn(PlayerRespawnEvent event)
 	{
 		Player player = event.getPlayer();
 		// this is needed since the world is sent anew when the player respawns

@@ -26,14 +26,12 @@ public class NPCTaskLookTowards extends NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@APIUsage
-	public NPCTaskLookTowards(float targetYaw, float targetPitch)
+	@APIUsage public NPCTaskLookTowards(float targetYaw, float targetPitch)
 	{
 		this(targetYaw, targetPitch, 1);
 	}
 
-	@APIUsage
-	public NPCTaskLookTowards(float targetYaw, float targetPitch, double speedMultiplier)
+	@APIUsage public NPCTaskLookTowards(float targetYaw, float targetPitch, double speedMultiplier)
 	{
 		super();
 
@@ -46,8 +44,7 @@ public class NPCTaskLookTowards extends NPCTask
 	// -------
 	// GETTERS
 	// -------
-	@Override
-	public NPCTaskSlot[] USED_TASK_SLOTS()
+	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
@@ -56,14 +53,12 @@ public class NPCTaskLookTowards extends NPCTask
 	// -------
 	// EXECUTION
 	// -------
-	@Override
-	protected void onStart()
+	@Override protected void onStart()
 	{
 
 	}
 
-	@Override
-	protected boolean onUpdate()
+	@Override protected boolean onUpdate()
 	{
 		Location currentLocation = this.npc.getLocation();
 		Duo<Float, Float> stepYawAndPitch = getStepYawAndPitch(currentLocation, this.targetYaw, this.targetPitch,
@@ -78,8 +73,7 @@ public class NPCTaskLookTowards extends NPCTask
 		return false;
 	}
 
-	@Override
-	protected void onCancel()
+	@Override protected void onCancel()
 	{
 
 	}
@@ -88,8 +82,8 @@ public class NPCTaskLookTowards extends NPCTask
 	// -------
 	// UTIL
 	// -------
-	@APIUsage
-	public static Duo<Float, Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch, double speed)
+	@APIUsage public static Duo<Float, Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch,
+			double speed)
 	{
 		float dYaw = (targetYaw-currentLocation.getYaw())%360;
 		if(dYaw < 0)

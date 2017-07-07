@@ -28,8 +28,7 @@ public class AnimulusLib
 		onEnable();
 	}
 
-	@APIUsage
-	public static void enable(JavaPlugin plugin)
+	@APIUsage public static void enable(JavaPlugin plugin)
 	{
 		if(instance != null)
 			return;
@@ -37,8 +36,7 @@ public class AnimulusLib
 		new AnimulusLib(plugin);
 	}
 
-	@APIUsage
-	public static void disable()
+	@APIUsage public static void disable()
 	{
 		if(instance == null)
 			return;

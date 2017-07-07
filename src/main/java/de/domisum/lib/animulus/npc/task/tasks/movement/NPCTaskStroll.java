@@ -34,8 +34,7 @@ public class NPCTaskStroll extends NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@APIUsage
-	public NPCTaskStroll(int durationTicks)
+	@APIUsage public NPCTaskStroll(int durationTicks)
 	{
 		super();
 
@@ -46,8 +45,7 @@ public class NPCTaskStroll extends NPCTask
 	// -------
 	// GETTERS
 	// -------
-	@Override
-	public NPCTaskSlot[] USED_TASK_SLOTS()
+	@Override public NPCTaskSlot[] USED_TASK_SLOTS()
 	{
 		return USED_TASK_SLOTS;
 	}
@@ -56,14 +54,12 @@ public class NPCTaskStroll extends NPCTask
 	// -------
 	// EXECUTION
 	// -------
-	@Override
-	protected void onStart()
+	@Override protected void onStart()
 	{
 		this.startLocation = this.npc.getLocation();
 	}
 
-	@Override
-	protected boolean onUpdate()
+	@Override protected boolean onUpdate()
 	{
 		if(this.durationTicks > 0) // if duration <= 0, then do this forever
 			if(this.ticksStrolled >= this.durationTicks)
@@ -109,8 +105,7 @@ public class NPCTaskStroll extends NPCTask
 		return false;
 	}
 
-	@Override
-	protected void onCancel()
+	@Override protected void onCancel()
 	{
 
 	}

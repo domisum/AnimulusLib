@@ -38,14 +38,12 @@ public class PhysicsNPC extends StateNPC
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@DeserializationNoArgsConstructor
-	public PhysicsNPC()
+	@DeserializationNoArgsConstructor public PhysicsNPC()
 	{
 		super();
 	}
 
-	@APIUsage
-	public PhysicsNPC(GameProfile gameProfile, Location location)
+	@APIUsage public PhysicsNPC(GameProfile gameProfile, Location location)
 	{
 		super(gameProfile, location);
 	}
@@ -54,14 +52,12 @@ public class PhysicsNPC extends StateNPC
 	// -------
 	// GETTERS
 	// -------
-	@APIUsage
-	public boolean isOnGround()
+	@APIUsage public boolean isOnGround()
 	{
 		return this.onGround;
 	}
 
-	@APIUsage
-	public double getWalkSpeed()
+	@APIUsage public double getWalkSpeed()
 	{
 		if(isSprinting())
 			return 5.6/20d;
@@ -72,8 +68,7 @@ public class PhysicsNPC extends StateNPC
 		return 4.0/20d; // normal value: 4.3/20d;
 	}
 
-	@APIUsage
-	public Vector3D getVelocity()
+	@APIUsage public Vector3D getVelocity()
 	{
 		return this.velocity;
 	}
@@ -82,8 +77,7 @@ public class PhysicsNPC extends StateNPC
 	// -------
 	// SETTERS
 	// -------
-	@APIUsage
-	public void setVelocity(Vector3D velocity)
+	@APIUsage public void setVelocity(Vector3D velocity)
 	{
 		this.velocity = velocity;
 	}
@@ -92,8 +86,7 @@ public class PhysicsNPC extends StateNPC
 	// -------
 	// UPDATING
 	// -------
-	@Override
-	public void update()
+	@Override public void update()
 	{
 		super.update();
 
@@ -282,8 +275,7 @@ public class PhysicsNPC extends StateNPC
 	// -------
 	// PHYSICS INTERACTION
 	// -------
-	@APIUsage
-	public void jump()
+	@APIUsage public void jump()
 	{
 		if(!this.onGround)
 			return;
