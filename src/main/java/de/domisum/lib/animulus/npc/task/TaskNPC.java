@@ -5,6 +5,8 @@ import de.domisum.lib.animulus.npc.PhysicsNPC;
 import de.domisum.lib.animulus.npc.ai.NPCBrain;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -19,11 +21,11 @@ public class TaskNPC extends PhysicsNPC
 {
 
 	// REFERENCES
-	private NPCBrain brain;
+	@Getter @Setter private NPCBrain brain;
 
 	// TASKS
-	private Set<NPCTask> activeTasks = new HashSet<>();
-	private List<NPCTask> taskQueue = new ArrayList<>();
+	@Getter private Set<NPCTask> activeTasks = new HashSet<>();
+	@Getter private List<NPCTask> taskQueue = new ArrayList<>();
 
 	private Set<NPCTaskSlot> blockedTaskSlots = new HashSet<>();
 
@@ -37,26 +39,6 @@ public class TaskNPC extends PhysicsNPC
 	@APIUsage public TaskNPC(GameProfile gameProfile, Location location)
 	{
 		super(gameProfile, location);
-	}
-
-
-	// GETTERS
-	@APIUsage public Set<NPCTask> getActiveTasks()
-	{
-		return this.activeTasks;
-	}
-
-	@APIUsage public List<NPCTask> getTaskQueue()
-	{
-		return this.taskQueue;
-	}
-
-
-	// SETTERS
-	@APIUsage public void setBrain(NPCBrain brain)
-	{
-		this.brain = brain;
-		brain.initialize(this);
 	}
 
 
