@@ -28,9 +28,7 @@ public class TaskNPC extends PhysicsNPC
 	private Set<NPCTaskSlot> blockedTaskSlots = new HashSet<>();
 
 
-	// -------
-	// CONSTRUCTOR
-	// -------
+	// INIT
 	@DeserializationNoArgsConstructor public TaskNPC()
 	{
 
@@ -42,9 +40,7 @@ public class TaskNPC extends PhysicsNPC
 	}
 
 
-	// -------
 	// GETTERS
-	// -------
 	@APIUsage public Set<NPCTask> getActiveTasks()
 	{
 		return this.activeTasks;
@@ -56,9 +52,7 @@ public class TaskNPC extends PhysicsNPC
 	}
 
 
-	// -------
 	// SETTERS
-	// -------
 	@APIUsage public void setBrain(NPCBrain brain)
 	{
 		this.brain = brain;
@@ -66,9 +60,7 @@ public class TaskNPC extends PhysicsNPC
 	}
 
 
-	// -------
 	// QUEUE
-	// -------
 	@APIUsage public void queueTask(NPCTask task)
 	{
 		task.initialize(this);
@@ -76,9 +68,7 @@ public class TaskNPC extends PhysicsNPC
 	}
 
 
-	// -------
 	// UPDATING
-	// -------
 	@Override public void update()
 	{
 		super.update();
@@ -140,9 +130,7 @@ public class TaskNPC extends PhysicsNPC
 	}
 
 
-	// -------
 	// BLOCKING
-	// -------
 	private void determineBlockedTaskSlots()
 	{
 		this.blockedTaskSlots.clear();
@@ -161,12 +149,10 @@ public class TaskNPC extends PhysicsNPC
 	}
 
 
-	// -------
 	// TASKS
-	// -------
 	@APIUsage public void onWalkingFail()
 	{
-
+		// to be overridden
 	}
 
 }
