@@ -163,6 +163,7 @@ public class NPCTaskWalkTo extends NPCTask
 
 		double distanceXZSquared = dX*dX+dZ*dZ;
 
+		// close to next waypoint
 		if(distanceXZSquared < 0.01)
 		{
 			this.currentWaypointIndex++;
@@ -170,6 +171,7 @@ public class NPCTaskWalkTo extends NPCTask
 			return;
 		}
 
+		// reached last waypoint
 		if(this.currentWaypointIndex+1 == this.path.getNumberOfWaypoints() && distanceXZSquared < 0.3)
 		{
 			this.currentWaypointIndex++;
@@ -178,6 +180,7 @@ public class NPCTaskWalkTo extends NPCTask
 
 		if(dY > 0 && this.currentWaypoint.getTransitionType() == TransitionType.JUMP)
 			this.npc.jump();
+
 
 		double speed = this.npc.getWalkSpeed()*this.speedMultiplier;
 
@@ -192,16 +195,15 @@ public class NPCTaskWalkTo extends NPCTask
 		if(movLength > speed)
 			mov = mov.multiply(speed/movLength);
 
-		// inair acceleration is not that good
+		// reduce acceleration in air
 		if(!this.npc.isOnGround())
 			mov = mov.multiply(0.3);
 
 		this.npc.setVelocity(new Vector3D(mov.x, this.npc.getVelocity().y, mov.y));
-
 		this.lastDirection = direction;
 
 
-		// HEAD ROTATION
+		// head rotation
 		Location waypointLocation = new Location(loc.getWorld(), this.currentWaypoint.getPosition().x,
 				this.currentWaypoint.getPosition().y, this.currentWaypoint.getPosition().z);
 		Location directionLoc = LocationUtil.lookAt(loc, waypointLocation);
