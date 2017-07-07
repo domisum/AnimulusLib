@@ -3,12 +3,12 @@ package de.domisum.lib.animulus.npc;
 import com.mojang.authlib.GameProfile;
 import de.domisum.lib.animulus.AnimulusLib;
 import de.domisum.lib.auxilium.data.container.math.Vector3D;
-import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
-import de.domisum.lib.auxilium.util.bukkit.PacketUtil;
-import de.domisum.lib.auxilium.util.java.ReflectionUtil;
 import de.domisum.lib.auxilium.util.java.ThreadUtil;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
+import de.domisum.lib.auxiliumspigot.util.LocationUtil;
+import de.domisum.lib.auxiliumspigot.util.PacketUtil;
+import de.domisum.lib.auxiliumspigot.util.ReflectionUtil;
 import net.minecraft.server.v1_9_R1.*;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
@@ -116,7 +116,7 @@ public class StateNPC
 
 	@APIUsage public Vector3D getPosition()
 	{
-		return new Vector3D(this.location);
+		return new Vector3D(this.location.getX(), this.location.getY(), this.location.getZ());
 	}
 
 	@APIUsage public double getEyeHeight()

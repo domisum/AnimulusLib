@@ -8,10 +8,10 @@ import de.domisum.lib.auxilium.data.container.Duo;
 import de.domisum.lib.auxilium.data.container.dir.Direction2D;
 import de.domisum.lib.auxilium.data.container.math.Vector2D;
 import de.domisum.lib.auxilium.data.container.math.Vector3D;
-import de.domisum.lib.auxilium.util.TextUtil;
-import de.domisum.lib.auxilium.util.bukkit.LocationUtil;
 import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import de.domisum.lib.auxilium.util.math.MathUtil;
+import de.domisum.lib.auxiliumspigot.util.LocationUtil;
+import de.domisum.lib.auxiliumspigot.util.SpigotTextUtil;
 import de.domisum.lib.compitum.transitionalpath.node.TransitionType;
 import de.domisum.lib.compitum.transitionalpath.path.TransitionalPath;
 import de.domisum.lib.compitum.transitionalpath.path.TransitionalWaypoint;
@@ -98,7 +98,7 @@ public class NPCTaskWalkTo extends NPCTask
 		{
 			this.npc.onWalkingFail();
 			AnimulusLib.getInstance().getLogger().warning(
-					this.npc.getId()+": No path was found from "+TextUtil.getLocationAsString(start)+" to "+TextUtil
+					this.npc.getId()+": No path was found from "+SpigotTextUtil.getLocationAsString(start)+" to "+SpigotTextUtil
 							.getLocationAsString(this.target));
 			AnimulusLib.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
 			if(pathfinder.getFailure() != null)
@@ -124,7 +124,7 @@ public class NPCTaskWalkTo extends NPCTask
 				if(this.unchangedPositionsInRow >= NO_MOVEMENT_STUCK_REPETITIONS)
 				{
 					AnimulusLib.getInstance().getLogger().warning(
-							"The npc '"+this.npc.getId()+"' got stuck and did no longer move @ '"+TextUtil
+							"The npc '"+this.npc.getId()+"' got stuck and did no longer move @ '"+SpigotTextUtil
 									.getLocationAsString(this.npc.getLocation()));
 					this.npc.onWalkingFail();
 					return true;
