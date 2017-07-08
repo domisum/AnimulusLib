@@ -12,10 +12,10 @@ import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
 import de.domisum.lib.auxilium.util.math.MathUtil;
 import de.domisum.lib.auxiliumspigot.util.LocationUtil;
 import de.domisum.lib.auxiliumspigot.util.SpigotTextUtil;
-import de.domisum.lib.compitum.transitionalpath.node.TransitionType;
-import de.domisum.lib.compitum.transitionalpath.path.TransitionalPath;
-import de.domisum.lib.compitum.transitionalpath.path.TransitionalWaypoint;
-import de.domisum.lib.compitum.universal.UniversalPathfinder;
+import de.domisum.lib.compitum.UniversalPathfinder;
+import de.domisum.lib.compitum.path.Path;
+import de.domisum.lib.compitum.path.PathWaypoint;
+import de.domisum.lib.compitum.path.node.TransitionType;
 import org.bukkit.Location;
 
 @APIUsage
@@ -32,9 +32,9 @@ public class NPCTaskWalkTo extends NPCTask
 	private double speedMultiplier;
 
 	// STATUS
-	private TransitionalPath path;
+	private Path path;
 	private int currentWaypointIndex = 0;
-	private TransitionalWaypoint currentWaypoint;
+	private PathWaypoint currentWaypoint;
 
 	private Vector3D lastPosition;
 	private int unchangedPositionsInRow = 0;
@@ -61,7 +61,7 @@ public class NPCTaskWalkTo extends NPCTask
 		this.speedMultiplier = speedMultiplier;
 	}
 
-	@APIUsage public NPCTaskWalkTo(TransitionalPath path, double speedMultiplier)
+	@APIUsage public NPCTaskWalkTo(Path path, double speedMultiplier)
 	{
 		this.path = path;
 		this.speedMultiplier = speedMultiplier;
