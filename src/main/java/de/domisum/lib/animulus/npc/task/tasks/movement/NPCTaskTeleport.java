@@ -2,10 +2,10 @@ package de.domisum.lib.animulus.npc.task.tasks.movement;
 
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import org.bukkit.Location;
 
-@APIUsage
+@API
 public class NPCTaskTeleport extends NPCTask
 {
 
@@ -17,7 +17,7 @@ public class NPCTaskTeleport extends NPCTask
 
 
 	// INIT
-	@APIUsage public NPCTaskTeleport(Location target)
+	@API public NPCTaskTeleport(Location target)
 	{
 		super();
 

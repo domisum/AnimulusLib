@@ -2,7 +2,7 @@ package de.domisum.lib.animulus.npc;
 
 import com.mojang.authlib.GameProfile;
 import de.domisum.lib.auxilium.data.container.math.Vector3D;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 
 import java.util.List;
 
-@APIUsage
+@API
 public class PhysicsNPC extends StateNPC
 {
 
@@ -43,14 +43,14 @@ public class PhysicsNPC extends StateNPC
 		super();
 	}
 
-	@APIUsage public PhysicsNPC(GameProfile gameProfile, Location location)
+	@API public PhysicsNPC(GameProfile gameProfile, Location location)
 	{
 		super(gameProfile, location);
 	}
 
 
 	// GETTERS
-	@APIUsage public double getWalkSpeed()
+	@API public double getWalkSpeed()
 	{
 		if(isSprinting())
 			return 5.6/20d;
@@ -250,7 +250,7 @@ public class PhysicsNPC extends StateNPC
 
 
 	// PHYSICS INTERACTION
-	@APIUsage public void jump()
+	@API public void jump()
 	{
 		if(!this.onGround)
 			return;

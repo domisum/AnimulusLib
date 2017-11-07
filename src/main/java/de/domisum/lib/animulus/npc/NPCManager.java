@@ -2,7 +2,7 @@ package de.domisum.lib.animulus.npc;
 
 import de.domisum.lib.animulus.AnimulusLib;
 import de.domisum.lib.animulus.listener.NPCInteractPacketListener;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxiliumspigot.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -84,7 +84,7 @@ public class NPCManager implements Listener
 	// -------
 	// GETTERS
 	// -------
-	@APIUsage public int getUpdateCount()
+	@API public int getUpdateCount()
 	{
 		return this.updateCount;
 	}
@@ -94,7 +94,7 @@ public class NPCManager implements Listener
 		return this.npcs.get(entityId);
 	}
 
-	@APIUsage public StateNPC getNPC(String id)
+	@API public StateNPC getNPC(String id)
 	{
 		for(StateNPC npc : this.npcs.values())
 			if(npc.getId().equals(id))
@@ -107,7 +107,7 @@ public class NPCManager implements Listener
 	// -------
 	// CHANGERS
 	// -------
-	@APIUsage public void addNPC(StateNPC npc)
+	@API public void addNPC(StateNPC npc)
 	{
 		// this sets the entity id, so do this first
 		npc.initialize();
@@ -115,7 +115,7 @@ public class NPCManager implements Listener
 		this.npcs.put(npc.getEntityId(), npc);
 	}
 
-	@APIUsage public void removeNPC(StateNPC npc)
+	@API public void removeNPC(StateNPC npc)
 	{
 		this.npcsToRemove.add(npc);
 		npc.terminate();

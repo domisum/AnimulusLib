@@ -8,7 +8,7 @@ import de.domisum.lib.auxilium.data.container.Duo;
 import de.domisum.lib.auxilium.data.container.dir.Direction2D;
 import de.domisum.lib.auxilium.data.container.math.Vector2D;
 import de.domisum.lib.auxilium.data.container.math.Vector3D;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.math.MathUtil;
 import de.domisum.lib.auxiliumspigot.util.LocationUtil;
 import de.domisum.lib.auxiliumspigot.util.SpigotTextUtil;
@@ -18,7 +18,7 @@ import de.domisum.lib.compitum.path.PathWaypoint;
 import de.domisum.lib.compitum.path.node.TransitionType;
 import org.bukkit.Location;
 
-@APIUsage
+@API
 public class NPCTaskWalkTo extends NPCTask
 {
 
@@ -48,12 +48,12 @@ public class NPCTaskWalkTo extends NPCTask
 
 
 	// INIT
-	@APIUsage public NPCTaskWalkTo(Location target)
+	@API public NPCTaskWalkTo(Location target)
 	{
 		this(target, 1);
 	}
 
-	@APIUsage public NPCTaskWalkTo(Location target, double speedMultiplier)
+	@API public NPCTaskWalkTo(Location target, double speedMultiplier)
 	{
 		super();
 
@@ -61,7 +61,7 @@ public class NPCTaskWalkTo extends NPCTask
 		this.speedMultiplier = speedMultiplier;
 	}
 
-	@APIUsage public NPCTaskWalkTo(Path path, double speedMultiplier)
+	@API public NPCTaskWalkTo(Path path, double speedMultiplier)
 	{
 		this.path = path;
 		this.speedMultiplier = speedMultiplier;

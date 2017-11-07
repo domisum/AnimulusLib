@@ -3,7 +3,7 @@ package de.domisum.lib.animulus.npc.task;
 import com.mojang.authlib.GameProfile;
 import de.domisum.lib.animulus.npc.PhysicsNPC;
 import de.domisum.lib.animulus.npc.ai.NPCBrain;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-@APIUsage
+@API
 public class TaskNPC extends PhysicsNPC
 {
 
@@ -36,14 +36,14 @@ public class TaskNPC extends PhysicsNPC
 
 	}
 
-	@APIUsage public TaskNPC(GameProfile gameProfile, Location location)
+	@API public TaskNPC(GameProfile gameProfile, Location location)
 	{
 		super(gameProfile, location);
 	}
 
 
 	// QUEUE
-	@APIUsage public void queueTask(NPCTask task)
+	@API public void queueTask(NPCTask task)
 	{
 		task.initialize(this);
 		this.taskQueue.add(task);
@@ -132,7 +132,7 @@ public class TaskNPC extends PhysicsNPC
 
 
 	// TASKS
-	@APIUsage public void onWalkingFail()
+	@API public void onWalkingFail()
 	{
 		// to be overridden
 	}

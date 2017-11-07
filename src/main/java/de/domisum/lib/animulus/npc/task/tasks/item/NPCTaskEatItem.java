@@ -2,12 +2,12 @@ package de.domisum.lib.animulus.npc.task.tasks.item;
 
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
-@APIUsage
+@API
 public class NPCTaskEatItem extends NPCTask
 {
 
@@ -25,12 +25,12 @@ public class NPCTaskEatItem extends NPCTask
 	// -------
 	// CONSTRUCTOR
 	// -------
-	@APIUsage public NPCTaskEatItem(ItemStack itemStack)
+	@API public NPCTaskEatItem(ItemStack itemStack)
 	{
 		this(itemStack, 32);
 	}
 
-	@APIUsage public NPCTaskEatItem(ItemStack itemStack, int durationTicks)
+	@API public NPCTaskEatItem(ItemStack itemStack, int durationTicks)
 	{
 		super();
 

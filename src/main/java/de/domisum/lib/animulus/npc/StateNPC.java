@@ -3,7 +3,7 @@ package de.domisum.lib.animulus.npc;
 import com.mojang.authlib.GameProfile;
 import de.domisum.lib.animulus.AnimulusLib;
 import de.domisum.lib.auxilium.util.java.ThreadUtil;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 import de.domisum.lib.auxiliumspigot.util.LocationUtil;
 import de.domisum.lib.auxiliumspigot.util.PacketUtil;
@@ -39,7 +39,7 @@ public class StateNPC
 	// STATUS
 	@Getter @Setter private transient String id;
 	@Getter private transient int entityId;
-	@APIUsage protected transient GameProfile gameProfile;
+	@API protected transient GameProfile gameProfile;
 
 	protected transient Location location;
 	@Getter @Setter private transient ItemStack itemInHand = null;
@@ -77,7 +77,7 @@ public class StateNPC
 		initialize();
 	}
 
-	@APIUsage protected void initialize()
+	@API protected void initialize()
 	{
 		this.entityId = getUnusedEntityId();
 	}
@@ -88,7 +88,7 @@ public class StateNPC
 		this.visibleTo.clear();
 	}
 
-	@APIUsage public void despawn()
+	@API public void despawn()
 	{
 		AnimulusLib.getNPCManager().removeNPC(this);
 		// terminate(); the method above already calls terminate
@@ -96,12 +96,12 @@ public class StateNPC
 
 
 	// GETTERS
-	@APIUsage public Location getLocation()
+	@API public Location getLocation()
 	{
 		return this.location.clone();
 	}
 
-	@APIUsage public double getEyeHeight()
+	@API public double getEyeHeight()
 	{
 		if(this.isCrouched)
 			return 1.54;
@@ -109,34 +109,34 @@ public class StateNPC
 		return 1.62;
 	}
 
-	@APIUsage public Location getEyeLocation()
+	@API public Location getEyeLocation()
 	{
 		return this.location.clone().add(0, getEyeHeight(), 0);
 	}
 
 
-	@APIUsage public Set<Player> getPlayersVisibleTo()
+	@API public Set<Player> getPlayersVisibleTo()
 	{
 		return new HashSet<>(this.visibleTo);
 	}
 
-	@APIUsage public boolean isVisibleTo(Player player)
+	@API public boolean isVisibleTo(Player player)
 	{
 		return this.visibleTo.contains(player);
 	}
 
-	@APIUsage public boolean isVisibleToSomebody()
+	@API public boolean isVisibleToSomebody()
 	{
 		return !this.visibleTo.isEmpty();
 	}
 
-	@APIUsage public Player[] getPlayersVisibleToArray()
+	@API public Player[] getPlayersVisibleToArray()
 	{
 		return this.visibleTo.toArray(new Player[this.visibleTo.size()]);
 	}
 
 
-	@APIUsage public boolean isHandActive()
+	@API public boolean isHandActive()
 	{
 		return isEating() || isDrinking() || isBlocking();
 	}
@@ -193,7 +193,7 @@ public class StateNPC
 
 
 	// SETTERS
-	@APIUsage public void setArmor(int slot, ItemStack itemStack)
+	@API public void setArmor(int slot, ItemStack itemStack)
 	{
 		this.armor[slot] = itemStack;
 
@@ -202,13 +202,13 @@ public class StateNPC
 
 
 	// PLAYERS
-	@APIUsage protected void updateVisibleForPlayers()
+	@API protected void updateVisibleForPlayers()
 	{
 		for(Player p : Bukkit.getOnlinePlayers())
 			updateVisibilityForPlayer(p);
 	}
 
-	@APIUsage protected void updateVisibilityForPlayer(Player player)
+	@API protected void updateVisibilityForPlayer(Player player)
 	{
 		boolean sameWorld = player.getWorld() == this.location.getWorld();
 		if(sameWorld && player.getLocation().distanceSquared(getLocation()) < (VISIBILITY_RANGE*VISIBILITY_RANGE))
@@ -223,13 +223,13 @@ public class StateNPC
 		}
 	}
 
-	@APIUsage public void becomeVisibleFor(Player player)
+	@API public void becomeVisibleFor(Player player)
 	{
 		this.visibleTo.add(player);
 		sendToPlayer(player);
 	}
 
-	@APIUsage public void becomeInvisibleFor(Player player, boolean sendPackets)
+	@API public void becomeInvisibleFor(Player player, boolean sendPackets)
 	{
 		this.visibleTo.remove(player);
 
@@ -239,36 +239,36 @@ public class StateNPC
 
 
 	// INTERACTION
-	@APIUsage public void playerLeftClick(Player player)
+	@API public void playerLeftClick(Player player)
 	{
 		// to be overridden
 	}
 
-	@APIUsage public void playerRightClick(Player player)
+	@API public void playerRightClick(Player player)
 	{
 		// to be overridden
 	}
 
 
 	// ACTION
-	@APIUsage public void swingArm()
+	@API public void swingArm()
 	{
 		sendAnimation(0, getPlayersVisibleToArray());
 	}
 
-	@APIUsage public void swingOffhandArm()
+	@API public void swingOffhandArm()
 	{
 		sendAnimation(3, getPlayersVisibleToArray());
 	}
 
 
 	// MOVEMENT
-	@APIUsage public void moveToNearby(Location target)
+	@API public void moveToNearby(Location target)
 	{
 		moveToNearby(target, false);
 	}
 
-	@APIUsage public void moveToNearby(Location target, boolean forceExact)
+	@API public void moveToNearby(Location target, boolean forceExact)
 	{
 		if(target.equals(this.location))
 			return;
@@ -286,7 +286,7 @@ public class StateNPC
 		sendHeadRotation(getPlayersVisibleToArray());
 	}
 
-	@APIUsage public void teleport(Location target)
+	@API public void teleport(Location target)
 	{
 		this.location = target;
 
@@ -306,14 +306,14 @@ public class StateNPC
 		sendLookHeadRotation(getPlayersVisibleToArray());
 	}
 
-	@APIUsage public void lookAt(Location lookAt)
+	@API public void lookAt(Location lookAt)
 	{
 		this.location = LocationUtil.lookAt(this.location, lookAt);
 		sendLookHeadRotation(getPlayersVisibleToArray());
 	}
 
 
-	@APIUsage public boolean canStandAt(Location location)
+	@API public boolean canStandAt(Location location)
 	{
 		if(location.getBlock().getType().isSolid())
 			return false;
@@ -327,7 +327,7 @@ public class StateNPC
 
 
 	// UPDATING
-	@APIUsage protected void update()
+	@API protected void update()
 	{
 		// to be overridden
 	}
@@ -470,7 +470,7 @@ public class StateNPC
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	@APIUsage protected void sendTeleport(Player... players)
+	@API protected void sendTeleport(Player... players)
 	{
 		PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);
@@ -512,7 +512,7 @@ public class StateNPC
 
 
 	// action
-	@APIUsage protected void sendAnimation(int animationId, Player... players)
+	@API protected void sendAnimation(int animationId, Player... players)
 	{
 		PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
 		ReflectionUtil.setDeclaredFieldValue(packet, "a", this.entityId);

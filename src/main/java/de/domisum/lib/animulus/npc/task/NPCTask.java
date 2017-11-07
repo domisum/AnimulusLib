@@ -1,6 +1,6 @@
 package de.domisum.lib.animulus.npc.task;
 
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.java.annotations.DeserializationNoArgsConstructor;
 
 public abstract class NPCTask
@@ -43,7 +43,7 @@ public abstract class NPCTask
 
 
 	// SETTERS
-	@APIUsage public NPCTask setRunSeparately(boolean runSeparately)
+	@API public NPCTask setRunSeparately(boolean runSeparately)
 	{
 		this.runSeparately = runSeparately;
 		return this;
@@ -60,7 +60,7 @@ public abstract class NPCTask
 
 	protected abstract void onCancel();
 
-	@APIUsage public void cancel()
+	@API public void cancel()
 	{
 		onCancel();
 		this.canceled = true;

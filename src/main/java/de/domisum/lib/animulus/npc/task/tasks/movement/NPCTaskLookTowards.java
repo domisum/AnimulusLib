@@ -3,11 +3,11 @@ package de.domisum.lib.animulus.npc.task.tasks.movement;
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
 import de.domisum.lib.auxilium.data.container.Duo;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.math.MathUtil;
 import org.bukkit.Location;
 
-@APIUsage
+@API
 public class NPCTaskLookTowards extends NPCTask
 {
 
@@ -24,12 +24,12 @@ public class NPCTaskLookTowards extends NPCTask
 
 
 	// INIT
-	@APIUsage public NPCTaskLookTowards(float targetYaw, float targetPitch)
+	@API public NPCTaskLookTowards(float targetYaw, float targetPitch)
 	{
 		this(targetYaw, targetPitch, 1);
 	}
 
-	@APIUsage public NPCTaskLookTowards(float targetYaw, float targetPitch, double speedMultiplier)
+	@API public NPCTaskLookTowards(float targetYaw, float targetPitch, double speedMultiplier)
 	{
 		super();
 
@@ -74,7 +74,7 @@ public class NPCTaskLookTowards extends NPCTask
 
 
 	// UTIL
-	@APIUsage public static Duo<Float, Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch,
+	@API public static Duo<Float, Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch,
 			double speed)
 	{
 		float dYaw = (targetYaw-currentLocation.getYaw())%360;
@@ -90,7 +90,7 @@ public class NPCTaskLookTowards extends NPCTask
 		return new Duo<>(stepDYaw, stepDPitch);
 	}
 
-	@APIUsage
+	@API
 	public static Duo<Float, Float> getStepYawAndPitchSmooth(Location currentLocation, float targetYaw, float targetPitch,
 			double speedMultiplier)
 	{

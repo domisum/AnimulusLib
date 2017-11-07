@@ -2,9 +2,9 @@ package de.domisum.lib.animulus.npc.task.tasks.util;
 
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 
-@APIUsage
+@API
 public class NPCTaskWait extends NPCTask
 {
 
@@ -19,7 +19,7 @@ public class NPCTaskWait extends NPCTask
 
 
 	// INIT
-	@APIUsage public NPCTaskWait(int durationTicks)
+	@API public NPCTaskWait(int durationTicks)
 	{
 		super();
 		this.durationTicks = durationTicks;

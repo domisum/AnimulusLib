@@ -1,7 +1,7 @@
 package de.domisum.lib.animulus;
 
 import de.domisum.lib.animulus.npc.NPCManager;
-import de.domisum.lib.auxilium.util.java.annotations.APIUsage;
+import de.domisum.lib.auxilium.util.java.annotations.API;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -26,7 +26,7 @@ public class AnimulusLib
 		onEnable();
 	}
 
-	@APIUsage public static void enable(JavaPlugin plugin)
+	@API public static void enable(JavaPlugin plugin)
 	{
 		if(instance != null)
 			return;
@@ -34,7 +34,7 @@ public class AnimulusLib
 		instance = new AnimulusLib(plugin);
 	}
 
-	@APIUsage public static void disable()
+	@API public static void disable()
 	{
 		if(instance == null)
 			return;
