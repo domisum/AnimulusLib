@@ -22,8 +22,6 @@ public class AnimulusLib
 	private AnimulusLib(JavaPlugin plugin)
 	{
 		this.plugin = plugin;
-
-		onEnable();
 	}
 
 	@API public static void enable(JavaPlugin plugin)
@@ -32,6 +30,7 @@ public class AnimulusLib
 			return;
 
 		instance = new AnimulusLib(plugin);
+		instance.onEnable();
 	}
 
 	@API public static void disable()
@@ -64,6 +63,9 @@ public class AnimulusLib
 	// -------
 	public static AnimulusLib getInstance()
 	{
+		if(instance == null)
+			throw new IllegalArgumentException(AnimulusLib.class.getSimpleName()+" has to be initialized before usage");
+
 		return instance;
 	}
 
