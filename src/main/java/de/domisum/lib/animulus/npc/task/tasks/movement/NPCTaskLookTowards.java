@@ -2,7 +2,7 @@ package de.domisum.lib.animulus.npc.task.tasks.movement;
 
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
-import de.domisum.lib.auxilium.data.container.Duo;
+import de.domisum.lib.auxilium.data.container.tuple.Duo;
 import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.math.MathUtil;
 import org.bukkit.Location;
@@ -55,15 +55,17 @@ public class NPCTaskLookTowards extends NPCTask
 	@Override protected boolean onUpdate()
 	{
 		Location currentLocation = this.npc.getLocation();
-		Duo<Float, Float> stepYawAndPitch = getStepYawAndPitch(currentLocation, this.targetYaw, this.targetPitch,
+		Duo<Float> stepYawAndPitch = getStepYawAndPitch(currentLocation,
+				this.targetYaw,
+				this.targetPitch,
 				BASE_SPEED*this.speedMultiplier);
 
 
-		if(Math.abs(stepYawAndPitch.a)+Math.abs(stepYawAndPitch.b) < TOLERANCE)
+		if(Math.abs(stepYawAndPitch.getA())+Math.abs(stepYawAndPitch.getB()) < TOLERANCE)
 			return true;
 
 
-		this.npc.setYawPitch(currentLocation.getYaw()+stepYawAndPitch.a, currentLocation.getPitch()+stepYawAndPitch.b);
+		this.npc.setYawPitch(currentLocation.getYaw()+stepYawAndPitch.getA(), currentLocation.getPitch()+stepYawAndPitch.getB());
 		return false;
 	}
 
@@ -74,8 +76,7 @@ public class NPCTaskLookTowards extends NPCTask
 
 
 	// UTIL
-	@API public static Duo<Float, Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch,
-			double speed)
+	@API public static Duo<Float> getStepYawAndPitch(Location currentLocation, float targetYaw, float targetPitch, double speed)
 	{
 		float dYaw = (targetYaw-currentLocation.getYaw())%360;
 		if(dYaw < 0)
@@ -90,8 +91,10 @@ public class NPCTaskLookTowards extends NPCTask
 		return new Duo<>(stepDYaw, stepDPitch);
 	}
 
-	@API
-	public static Duo<Float, Float> getStepYawAndPitchSmooth(Location currentLocation, float targetYaw, float targetPitch,
+	@API public static Duo<Float> getStepYawAndPitchSmooth(
+			Location currentLocation,
+			float targetYaw,
+			float targetPitch,
 			double speedMultiplier)
 	{
 		float dYaw = (targetYaw-currentLocation.getYaw())%360;

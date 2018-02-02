@@ -4,10 +4,10 @@ import de.domisum.lib.animulus.AnimulusLib;
 import de.domisum.lib.animulus.npc.PhysicsNPC;
 import de.domisum.lib.animulus.npc.task.NPCTask;
 import de.domisum.lib.animulus.npc.task.NPCTaskSlot;
-import de.domisum.lib.auxilium.data.container.Duo;
-import de.domisum.lib.auxilium.data.container.dir.Direction2D;
+import de.domisum.lib.auxilium.data.container.direction.Direction2D;
 import de.domisum.lib.auxilium.data.container.math.Vector2D;
 import de.domisum.lib.auxilium.data.container.math.Vector3D;
+import de.domisum.lib.auxilium.data.container.tuple.Duo;
 import de.domisum.lib.auxilium.util.java.annotations.API;
 import de.domisum.lib.auxilium.util.math.MathUtil;
 import de.domisum.lib.auxiliumspigot.util.LocationUtil;
@@ -91,9 +91,11 @@ public class NPCTaskWalkTo extends NPCTask
 		if(this.path == null)
 		{
 			this.npc.onWalkingFail();
-			AnimulusLib.getInstance().getLogger().warning(
-					this.npc.getId()+": No path was found from "+SpigotTextUtil.getLocationAsString(start)+" to "+SpigotTextUtil
-							.getLocationAsString(this.target));
+			AnimulusLib
+					.getInstance()
+					.getLogger()
+					.warning(this.npc.getId()+": No path was found from "+SpigotTextUtil.getLocationAsString(start)+" to "
+							+SpigotTextUtil.getLocationAsString(this.target));
 			AnimulusLib.getInstance().getLogger().warning("Pathfinder Data: "+pathfinder.getDiagnose());
 			if(pathfinder.getFailure() != null)
 				AnimulusLib.getInstance().getLogger().severe("Error: '"+pathfinder.getFailure()+"'");
@@ -112,7 +114,8 @@ public class NPCTaskWalkTo extends NPCTask
 
 		if(this.lastPosition != null)
 		{
-			Vector3D npcPosition = new Vector3D(this.npc.getLocation().getX(), this.npc.getLocation().getY(),
+			Vector3D npcPosition = new Vector3D(this.npc.getLocation().getX(),
+					this.npc.getLocation().getY(),
 					this.npc.getLocation().getZ());
 
 			if(npcPosition.subtract(this.lastPosition).lengthSquared() < NO_MOVEMENT_THRESHOLD)
@@ -120,9 +123,11 @@ public class NPCTaskWalkTo extends NPCTask
 				this.unchangedPositionsInRow++;
 				if(this.unchangedPositionsInRow >= NO_MOVEMENT_STUCK_REPETITIONS)
 				{
-					AnimulusLib.getInstance().getLogger().warning(
-							"The npc '"+this.npc.getId()+"' got stuck and did no longer move @ '"+SpigotTextUtil
-									.getLocationAsString(this.npc.getLocation()));
+					AnimulusLib
+							.getInstance()
+							.getLogger()
+							.warning("The npc '"+this.npc.getId()+"' got stuck and did no longer move @ '"
+									+SpigotTextUtil.getLocationAsString(this.npc.getLocation()));
 					this.npc.onWalkingFail();
 					return true;
 				}
@@ -141,7 +146,8 @@ public class NPCTaskWalkTo extends NPCTask
 			throw new UnsupportedOperationException("The TransitionType '"+transitionType+"' is not supported");
 
 
-		this.lastPosition = new Vector3D(this.npc.getLocation().getX(), this.npc.getLocation().getY(),
+		this.lastPosition = new Vector3D(this.npc.getLocation().getX(),
+				this.npc.getLocation().getY(),
 				this.npc.getLocation().getZ());
 		return false;
 	}
@@ -199,21 +205,23 @@ public class NPCTaskWalkTo extends NPCTask
 		if(!this.npc.isOnGround())
 			mov = mov.multiply(0.3);
 
-		this.npc.setVelocity(new Vector3D(mov.x, this.npc.getVelocity().y, mov.y));
+		this.npc.setVelocity(new Vector3D(mov.getX(), this.npc.getVelocity().y, mov.getY()));
 		this.lastDirection = direction;
 
 
 		// head rotation
-		Location waypointLocation = new Location(loc.getWorld(), this.currentWaypoint.getPosition().x,
-				this.currentWaypoint.getPosition().y, this.currentWaypoint.getPosition().z);
+		Location waypointLocation = new Location(loc.getWorld(),
+				this.currentWaypoint.getPosition().x,
+				this.currentWaypoint.getPosition().y,
+				this.currentWaypoint.getPosition().z);
 		Location directionLoc = LocationUtil.lookAt(loc, waypointLocation);
 
 		float targetYaw = directionLoc.getYaw();
 		float targetPitch = directionLoc.getPitch();
 		targetPitch = (float) MathUtil.clampAbs(targetPitch, 30);
 
-		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitchSmooth(loc, targetYaw, targetPitch, 1);
-		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.a, loc.getPitch()+stepYawAndPitch.b);
+		Duo<Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitchSmooth(loc, targetYaw, targetPitch, 1);
+		this.npc.setYawPitch(loc.getYaw()+stepYawAndPitch.getA(), loc.getPitch()+stepYawAndPitch.getB());
 	}
 
 	private void climb()
@@ -241,8 +249,8 @@ public class NPCTaskWalkTo extends NPCTask
 		float targetYaw = directionLoc.getYaw();
 		float targetPitch = (dY > 0 ? -1 : 1)*45;
 
-		Duo<Float, Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitchSmooth(location, targetYaw, targetPitch, 1.2);
-		this.npc.setYawPitch(location.getYaw()+stepYawAndPitch.a, location.getPitch()+stepYawAndPitch.b);
+		Duo<Float> stepYawAndPitch = NPCTaskLookTowards.getStepYawAndPitchSmooth(location, targetYaw, targetPitch, 1.2);
+		this.npc.setYawPitch(location.getYaw()+stepYawAndPitch.getA(), location.getPitch()+stepYawAndPitch.getB());
 	}
 
 }
